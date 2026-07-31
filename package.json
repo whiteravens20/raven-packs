@@ -1,0 +1,25 @@
+{
+  "name": "raven-packs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minecraft modpacks for Raven Forge — one definition, published as a launcher manifest, a .mrpack, and a plain client zip",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "whiteravens20",
+    "url": "https://github.com/whiteravens20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whiteravens20/raven-packs.git"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "validate": "node scripts/validate.mjs",
+    "keygen": "node scripts/keygen.mjs",
+    "sign": "node scripts/sign.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

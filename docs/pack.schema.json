@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://whiteravens20.github.io/raven-packs/pack.schema.json",
+  "title": "Raven Packs pack definition",
+  "description": "Source of truth for one modpack. See docs/AUTHORING.md.",
+  "type": "object",
+  "required": ["slug", "name", "version", "minecraft", "loader"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Must match the containing directory name; used in URLs and filenames."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "description": "Semver. Bump on every release."
+    },
+    "summary": { "type": "string" },
+    "author": { "type": "string" },
+    "minecraft": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact Minecraft version, e.g. \"26.2\"."
+    },
+    "loader": {
+      "type": "object",
+      "required": ["type", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["fabric", "quilt", "forge", "neoforge"] },
+        "version": {
+          "type": "string",
+          "description": "Pin it — an unpinned loader makes builds irreproducible."
+        }
+      }
+    },
+    "recommendedRamMb": { "type": "integer", "minimum": 1024 },
+    "server": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ip": { "type": "string" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      }
+    },
+    "mods": { "$ref": "#/$defs/entryList" },
+    "resourcePacks": { "$ref": "#/$defs/entryList" },
+    "shaders": { "$ref": "#/$defs/entryList" }
+  },
+  "$defs": {
+    "entryList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "oneOf": [
+        { "required": ["slug"] },
+        { "required": ["url"] }
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "description": "Modrinth project slug or ID."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Direct download URL, for content Modrinth does not host."
+        },
+        "version": {
+          "type": "string",
+          "description": "Pin a version. Matches Modrinth version_number, then version id. Omit for the newest stable release."
+        },
+        "allowPrerelease": {
+          "type": "boolean",
+          "default": false,
+          "description": "Permit alpha/beta releases when resolving unpinned entries."
+        },
+        "id": {
+          "type": "string",
+          "description": "Stable identifier for URL entries; defaults to the filename."
+        },
+        "name": { "type": "string", "description": "Display name for URL entries." },
+        "filename": { "type": "string", "description": "Override the derived filename for URL entries." },
+        "reason": {
+          "type": "string",
+          "description": "Why this is in the pack. Ignored by the build; read by humans later."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "../../docs/pack.schema.json",
+  "slug": "ravenmc",
+  "name": "Raven MC",
+  "version": "1.0.0",
+  "summary": "Performance and quality-of-life pack for Raven MC — no gameplay changes, vanilla-compatible.",
+  "author": "White Ravens",
+  "minecraft": "26.2",
+  "loader": {
+    "type": "fabric",
+    "version": "0.19.3"
+  },
+  "recommendedRamMb": 4096,
+  "server": {
+    "ip": "mc.example.net",
+    "port": 25565
+  },
+  "mods": [
+    { "slug": "fabric-api", "reason": "Required by nearly everything below" },
+    { "slug": "fabric-language-kotlin", "reason": "Kotlin runtime — required by zoomify" },
+    { "slug": "placeholder-api", "reason": "Required by modmenu" },
+
+    { "slug": "sodium", "reason": "Rendering engine rewrite — the single biggest FPS win" },
+    { "slug": "lithium", "reason": "General game-logic optimisation" },
+    { "slug": "ferrite-core", "reason": "Cuts memory usage" },
+    { "slug": "entityculling", "reason": "Skips rendering entities behind walls" },
+    { "slug": "immediatelyfast", "reason": "Speeds up immediate-mode rendering" },
+    { "slug": "krypton", "reason": "Network stack optimisation" },
+    { "slug": "dynamic-fps", "reason": "Throttles FPS when the window is unfocused" },
+    { "slug": "bobby", "reason": "Keeps far chunks cached beyond the server view distance" },
+
+    { "slug": "iris", "reason": "Shader support, Sodium-compatible" },
+    { "slug": "sodium-extra", "reason": "Extra Sodium video options" },
+    { "slug": "reeses-sodium-options", "reason": "Nicer Sodium options screen" },
+    { "slug": "continuity", "reason": "Connected textures" },
+    { "slug": "lambdynamiclights", "reason": "Held items emit light" },
+
+    { "slug": "modmenu", "reason": "In-game mod list and config access" },
+    { "slug": "cloth-config", "reason": "Config library used by several mods here" },
+    { "slug": "yacl", "reason": "Config library used by several mods here" },
+    { "slug": "jade", "reason": "Shows what block/entity you are looking at" },
+    { "slug": "appleskin", "reason": "Food saturation and hunger detail" },
+    { "slug": "betterf3", "reason": "Readable, configurable debug screen" },
+    { "slug": "zoomify", "reason": "Configurable zoom key" },
+    { "slug": "xaeros-minimap", "reason": "Minimap with waypoints" },
+    { "slug": "no-chat-reports", "reason": "Disables chat reporting telemetry" }
+  ],
+  "resourcePacks": [],
+  "shaders": []
+}
