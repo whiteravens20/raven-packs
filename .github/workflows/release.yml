@@ -45,19 +45,25 @@ jobs:
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
           echo "Releasing pack: $slug"
 
+      - name: Verify lockfile is in sync
+        run: node scripts/validate.mjs "${{ steps.meta.outputs.slug }}"
+
+      # Only the client zip needs the actual jars; keyed on the lockfile so the
+      # cache invalidates exactly when the mod set changes.
       - name: Cache downloaded mod jars
         uses: actions/cache@v4
         with:
           path: .cache/downloads
-          key: mods-${{ hashFiles('packs/*/pack.json') }}
+          key: mods-${{ hashFiles('packs/*/pack.lock.json') }}
           restore-keys: mods-
 
+      # --with-zip bundles the jars for the launcher-free install path.
       # PACK_BASE_URL is where the published overrides live, so the manifest's
       # configFiles[] point at real, fetchable URLs.
       - name: Build pack
         env:
           PACK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
-        run: node scripts/build.mjs "${{ steps.meta.outputs.slug }}"
+        run: node scripts/build.mjs "${{ steps.meta.outputs.slug }}" --with-zip
 
       - name: Sign manifest
         if: ${{ env.PACK_SIGNING_KEY != '' }}

@@ -1,155 +1,65 @@
 #!/usr/bin/env node
 /**
- * Build one pack (or all packs) into every distribution format.
+ * Build packs from their lockfiles into every distribution format.
  *
- *   node scripts/build.mjs              # every pack under packs/
- *   node scripts/build.mjs ravenmc      # just this one
+ *   node scripts/build.mjs                    # all packs, metadata only
+ *   node scripts/build.mjs ravenmc            # one pack
+ *   node scripts/build.mjs ravenmc --with-zip # also bundle the jars
+ *
+ * This script is **offline by default**. It reads `packs/<slug>/pack.lock.json`
+ * — which already holds every URL, size and hash — and touches no API. Adding a
+ * hundred mods therefore costs a hundred lines of lockfile and no build time.
+ * Run `node scripts/lock.mjs` when the definition changes.
  *
  * Outputs, per pack, into dist/<slug>/:
  *
- *   manifest.json              Raven Forge manifest schema v2 — the URL players
- *                              paste into the launcher; sync is hash-verified.
+ *   manifest.json              Raven Forge manifest v2 — the URL players paste
+ *                              into the launcher. Carries direct download URLs
+ *                              and sha512, so the launcher resolves nothing.
  *   <slug>-<version>.mrpack    Modrinth pack — Prism, ATLauncher, MultiMC,
- *                              Modrinth App. Ships references, not jars.
- *   <slug>-<version>.zip       Plain mods/ + config/ tree to drop into an
- *                              existing .minecraft. No launcher required.
- *   pack.json / index.html     Machine- and human-readable pack metadata.
+ *                              Modrinth App. References, not jars.
+ *   <slug>-<version>.zip       Only with --with-zip. Real jars for a manual,
+ *                              launcher-free install.
+ *   pack.json                  Human-readable metadata and license list.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getProject, resolveVersion, findMissingDependencies } from './lib/modrinth.mjs';
 import { fetchFile, sha256, listFiles } from './lib/download.mjs';
+import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { ZipWriter } from './lib/zip.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
 const DIST_DIR = path.join(ROOT, 'dist');
 
-// ── Console helpers ────────────────────────────────────────
-
 const ok = (msg) => console.log(`  \x1b[32m✓\x1b[0m ${msg}`);
 const warn = (msg) => console.log(`  \x1b[33m!\x1b[0m ${msg}`);
 const step = (msg) => console.log(`\n\x1b[1m${msg}\x1b[0m`);
 
-// ── Pack definition ────────────────────────────────────────
-
-async function readPackDefinition(slug) {
-  const file = path.join(PACKS_DIR, slug, 'pack.json');
-  let raw;
-  try {
-    raw = await fs.readFile(file, 'utf8');
-  } catch {
-    throw new Error(`No pack.json for "${slug}" (looked in ${path.relative(ROOT, file)})`);
-  }
-
-  const pack = JSON.parse(raw);
-
-  const required = ['slug', 'name', 'version', 'minecraft', 'loader'];
-  const missing = required.filter((key) => !pack[key]);
-  if (missing.length > 0) {
-    throw new Error(`${slug}/pack.json is missing: ${missing.join(', ')}`);
-  }
-  if (pack.slug !== slug) {
-    throw new Error(`${slug}/pack.json declares slug "${pack.slug}" — must match its directory`);
-  }
-
-  pack.mods ??= [];
-  pack.resourcePacks ??= [];
-  pack.shaders ??= [];
-  return pack;
-}
-
-// ── Resolution ─────────────────────────────────────────────
-
-/**
- * Resolve every entry to a concrete file, downloading it so we can hash it.
- *
- * Entries are either Modrinth-backed (`slug`) or a direct URL (`url`), which is
- * how a pack ships something Modrinth does not host.
- */
-async function resolveEntries(entries, pack, kind) {
-  const loader = pack.loader.type;
-  const resolved = [];
-
-  for (const entry of entries) {
-    if (entry.url) {
-      const file = await fetchFile(entry.url);
-      const filename = entry.filename ?? path.basename(new URL(entry.url).pathname);
-      ok(`${entry.name ?? filename} ${file.cached ? '(cached)' : ''}`);
-      resolved.push({
-        kind,
-        id: entry.id ?? filename.replace(/\.(jar|zip)$/i, ''),
-        name: entry.name ?? filename,
-        source: 'url',
-        url: entry.url,
-        filename,
-        version: entry.version ?? 'unknown',
-        file,
-        project: { id: entry.id ?? entry.url, slug: entry.id ?? filename, license: 'unknown' },
-        version_: { dependencies: [] },
-      });
-      continue;
-    }
-
-    if (!entry.slug) {
-      throw new Error(`${kind} entry must have either "slug" (Modrinth) or "url": ${JSON.stringify(entry)}`);
-    }
-
-    const project = await getProject(entry.slug);
-    const version = await resolveVersion(entry.slug, {
-      mcVersion: pack.minecraft,
-      loader,
-      pin: entry.version,
-      allowPrerelease: entry.allowPrerelease ?? false,
-    });
-    const file = await fetchFile(version.file.url, { sha1: version.file.sha1 });
-
-    const notes = [
-      entry.version ? 'pinned' : null,
-      version.usedPrerelease ? `\x1b[33m${version.versionType}\x1b[0m` : null,
-      file.cached ? 'cached' : null,
-    ].filter(Boolean);
-
-    ok(`${project.title} ${version.versionNumber}${notes.length ? ` (${notes.join(', ')})` : ''}`);
-
-    // Client-side packs should not be shipping server-only mods.
-    if (kind === 'mod' && project.clientSide === 'unsupported') {
-      warn(`${project.title} is marked client-side: unsupported — it will do nothing for players`);
-    }
-
-    resolved.push({
-      kind,
-      id: project.slug,
-      name: project.title,
-      source: 'modrinth',
-      projectId: project.id,
-      versionId: version.versionId,
-      url: version.file.url,
-      filename: version.file.filename,
-      version: version.versionNumber,
-      file,
-      project,
-      version_: version,
-    });
-  }
-
-  return resolved;
-}
+const DIR_FOR_KIND = { mod: 'mods', shader: 'shaderpacks', resourcepack: 'resourcepacks' };
 
 // ── Output: Raven Forge manifest (schema v2) ───────────────
 
-function buildRavenForgeManifest(pack, mods, resourcePacks, shaders, configFiles) {
-  const contentEntry = (item) => ({
-    id: item.id,
-    name: item.name,
-    version: item.version,
-    source: item.source,
-    ...(item.projectId ? { projectId: item.projectId } : {}),
-    ...(item.source === 'url' ? { url: item.url } : {}),
-    sha256: item.file.sha256,
+function buildRavenForgeManifest(pack, lock, configFiles) {
+  const entry = (file) => ({
+    id: file.id,
+    name: file.name,
+    version: file.version,
+    source: file.source,
+    ...(file.projectId ? { projectId: file.projectId } : {}),
+    // The direct URL plus fileName means the launcher performs no API lookup at
+    // sync time, and the pack keeps working even if Modrinth is unreachable.
+    url: file.url,
+    fileName: file.fileName,
+    // sha512 comes straight from Modrinth; sha256 only exists for URL entries,
+    // where we had to download the bytes anyway.
+    ...(file.sha512 ? { sha512: file.sha512 } : {}),
+    ...(file.sha256 ? { sha256: file.sha256 } : {}),
   });
+
+  const byKind = (kind) => lock.files.filter((f) => f.kind === kind);
 
   return {
     manifestVersion: 2,
@@ -157,13 +67,9 @@ function buildRavenForgeManifest(pack, mods, resourcePacks, shaders, configFiles
     minecraftVersion: pack.minecraft,
     modLoader: pack.loader.type,
     modLoaderVersion: pack.loader.version,
-    mods: mods.map((mod) => ({
-      ...contentEntry(mod),
-      required: true,
-      side: 'client',
-    })),
-    resourcePacks: resourcePacks.map(contentEntry),
-    shaders: shaders.map(contentEntry),
+    mods: byKind('mod').map((file) => ({ ...entry(file), required: true, side: 'client' })),
+    resourcePacks: byKind('resourcepack').map(entry),
+    shaders: byKind('shader').map(entry),
     configFiles,
   };
 }
@@ -172,14 +78,16 @@ function buildRavenForgeManifest(pack, mods, resourcePacks, shaders, configFiles
 
 /**
  * Modrinth pack format v1: a zip holding `modrinth.index.json` plus an
- * `overrides/` tree. Files are referenced by URL, so the archive stays small and
- * the launcher fetches jars itself.
+ * `overrides/` tree, referencing files by URL rather than embedding them.
  * https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack
  */
-function buildMrpackIndex(pack, downloadables) {
-  const loaderKey = { fabric: 'fabric-loader', quilt: 'quilt-loader', forge: 'forge', neoforge: 'neoforge' }[
-    pack.loader.type
-  ];
+function buildMrpackIndex(pack, lock) {
+  const loaderKey = {
+    fabric: 'fabric-loader',
+    quilt: 'quilt-loader',
+    forge: 'forge',
+    neoforge: 'neoforge',
+  }[pack.loader.type];
   if (!loaderKey) throw new Error(`Loader "${pack.loader.type}" has no .mrpack dependency key`);
 
   return {
@@ -188,12 +96,12 @@ function buildMrpackIndex(pack, downloadables) {
     versionId: pack.version,
     name: pack.name,
     summary: pack.summary ?? '',
-    files: downloadables.map((item) => ({
-      path: `${item.kind === 'mod' ? 'mods' : item.kind === 'shader' ? 'shaderpacks' : 'resourcepacks'}/${item.filename}`,
-      hashes: { sha1: item.file.sha1, sha512: item.file.sha512 },
-      env: { client: 'required', server: item.kind === 'mod' ? 'optional' : 'unsupported' },
-      downloads: [item.url],
-      fileSize: item.file.size,
+    files: lock.files.map((file) => ({
+      path: `${DIR_FOR_KIND[file.kind]}/${file.fileName}`,
+      hashes: { sha1: file.sha1, sha512: file.sha512 },
+      env: { client: 'required', server: file.kind === 'mod' ? 'optional' : 'unsupported' },
+      downloads: [file.url],
+      fileSize: file.size,
     })),
     dependencies: {
       minecraft: pack.minecraft,
@@ -202,70 +110,62 @@ function buildMrpackIndex(pack, downloadables) {
   };
 }
 
-// ── Output: plain client zip ───────────────────────────────
-
-function targetDir(kind) {
-  return kind === 'mod' ? 'mods' : kind === 'shader' ? 'shaderpacks' : 'resourcepacks';
-}
-
 // ── Build one pack ─────────────────────────────────────────
 
-async function buildPack(slug) {
-  const pack = await readPackDefinition(slug);
+async function buildPack(slug, { withZip }) {
+  const packFile = path.join(PACKS_DIR, slug, 'pack.json');
+  let pack;
+  try {
+    pack = JSON.parse(await fs.readFile(packFile, 'utf8'));
+  } catch {
+    throw new Error(`No pack.json for "${slug}"`);
+  }
+
+  const lock = await readLockfile(PACKS_DIR, slug);
+  if (!lock) {
+    throw new Error(`${slug} has no lockfile — run: node scripts/lock.mjs ${slug}`);
+  }
+
+  // A lockfile that no longer matches the definition would silently ship the
+  // wrong mod list.
+  const drift = diffLockfile(pack, lock);
+  if (!drift.inSync) {
+    for (const a of drift.added) console.log(`  \x1b[33m+ ${a.label} (${a.kind}) not in lockfile\x1b[0m`);
+    for (const r of drift.removed) console.log(`  \x1b[33m- ${r.label} (${r.kind}) still in lockfile\x1b[0m`);
+    if (drift.packChanged) console.log('  \x1b[33m~ Minecraft/loader version changed\x1b[0m');
+    throw new Error(`${slug}: pack.json and pack.lock.json disagree — run: node scripts/lock.mjs ${slug}`);
+  }
+  if (lock.pack.version !== pack.version) {
+    warn(`lockfile records pack version ${lock.pack.version}, definition says ${pack.version}`);
+  }
 
   console.log(
     `\n\x1b[1m\x1b[36m${pack.name}\x1b[0m v${pack.version} — ` +
       `Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}`,
   );
 
-  step(`Resolving ${pack.mods.length} mods`);
-  const mods = await resolveEntries(pack.mods, pack, 'mod');
+  const counts = {
+    mod: lock.files.filter((f) => f.kind === 'mod').length,
+    resourcepack: lock.files.filter((f) => f.kind === 'resourcepack').length,
+    shader: lock.files.filter((f) => f.kind === 'shader').length,
+  };
+  ok(`${lock.files.length} locked files (${counts.mod} mods, ${counts.resourcepack} resource packs, ${counts.shader} shaders)`);
 
-  const resourcePacks = pack.resourcePacks.length
-    ? (step(`Resolving ${pack.resourcePacks.length} resource packs`),
-      await resolveEntries(pack.resourcePacks, pack, 'resourcepack'))
-    : [];
-
-  const shaders = pack.shaders.length
-    ? (step(`Resolving ${pack.shaders.length} shaders`),
-      await resolveEntries(pack.shaders, pack, 'shader'))
-    : [];
-
-  const all = [...mods, ...resourcePacks, ...shaders];
-
-  step('Checking dependencies');
-  const modrinthBacked = all.filter((item) => item.source === 'modrinth');
-  const missing = await findMissingDependencies(
-    modrinthBacked.map((item) => ({ project: item.project, version: item.version_ })),
-  );
-  if (missing.length > 0) {
-    for (const dep of missing) {
-      warn(`missing required dependency: ${dep.title} (${dep.slug}) — needed by ${dep.requiredBy.join(', ')}`);
-    }
-    throw new Error(
-      `${missing.length} required dependencies are not in the pack. ` +
-        `Add them to packs/${slug}/pack.json: ${missing.map((d) => `{ "slug": "${d.slug}" }`).join(', ')}`,
-    );
-  }
-  ok('all required dependencies are present');
-
-  // Overrides — config files and anything else dropped into the instance.
   const overridesDir = path.join(PACKS_DIR, slug, 'overrides');
   const overrides = await listFiles(overridesDir);
-  if (overrides.length > 0) ok(`${overrides.length} override files`);
+  const overrideContents = await Promise.all(
+    overrides.map(async (file) => ({ ...file, data: await fs.readFile(file.absolute) })),
+  );
+  if (overrideContents.length > 0) ok(`${overrideContents.length} override files`);
 
   const outDir = path.join(DIST_DIR, slug);
   await fs.rm(outDir, { recursive: true, force: true });
   await fs.mkdir(outDir, { recursive: true });
 
-  const overrideContents = await Promise.all(
-    overrides.map(async (file) => ({ ...file, data: await fs.readFile(file.absolute) })),
-  );
-
   step('Writing outputs');
 
-  // 1. Raven Forge manifest. Overrides are published as `configFiles[]` served
-  //    from the same release, so the launcher applies them on sync.
+  // 1. Raven Forge manifest. Overrides publish as configFiles[] served from the
+  //    same site, so the launcher applies them on sync.
   const baseUrl = (process.env.PACK_BASE_URL ?? '').replace(/\/$/, '');
   const configFiles = overrideContents.map((file) => ({
     path: file.relative,
@@ -274,16 +174,14 @@ async function buildPack(slug) {
       : `https://example.invalid/${slug}/overrides/${file.relative}`,
     sha256: sha256(file.data),
   }));
-
   if (overrideContents.length > 0 && !baseUrl) {
     warn('PACK_BASE_URL is unset — configFiles[] URLs are placeholders (CI sets this)');
   }
 
-  const manifest = buildRavenForgeManifest(pack, mods, resourcePacks, shaders, configFiles);
+  const manifest = buildRavenForgeManifest(pack, lock, configFiles);
   await fs.writeFile(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
   ok(`manifest.json (${manifest.mods.length} mods, ${configFiles.length} config files)`);
 
-  // Overrides are also published as loose files so configFiles[] URLs resolve.
   for (const file of overrideContents) {
     const dest = path.join(outDir, 'overrides', file.relative);
     await fs.mkdir(path.dirname(dest), { recursive: true });
@@ -292,29 +190,39 @@ async function buildPack(slug) {
 
   // 2. Modrinth .mrpack
   const mrpack = new ZipWriter();
-  mrpack.add('modrinth.index.json', JSON.stringify(buildMrpackIndex(pack, all), null, 2));
-  for (const file of overrideContents) {
-    mrpack.add(`overrides/${file.relative}`, file.data);
-  }
+  mrpack.add('modrinth.index.json', JSON.stringify(buildMrpackIndex(pack, lock), null, 2));
+  for (const file of overrideContents) mrpack.add(`overrides/${file.relative}`, file.data);
   const mrpackName = `${slug}-${pack.version}.mrpack`;
-  await fs.writeFile(path.join(outDir, mrpackName), mrpack.toBuffer());
-  ok(`${mrpackName} (${mrpack.entryCount} entries)`);
+  const mrpackBuffer = mrpack.toBuffer();
+  await fs.writeFile(path.join(outDir, mrpackName), mrpackBuffer);
+  ok(`${mrpackName} (${(mrpackBuffer.length / 1024).toFixed(1)} KiB)`);
 
-  // 3. Plain client zip — jars included, ready to unzip into .minecraft
-  const clientZip = new ZipWriter();
-  for (const item of all) {
-    clientZip.add(`${targetDir(item.kind)}/${item.filename}`, item.file.data, { store: true });
-  }
-  for (const file of overrideContents) {
-    clientZip.add(file.relative, file.data);
-  }
-  clientZip.add('INSTALL.txt', clientInstructions(pack, all));
-  const zipName = `${slug}-${pack.version}.zip`;
-  const zipBuffer = clientZip.toBuffer();
-  await fs.writeFile(path.join(outDir, zipName), zipBuffer);
-  ok(`${zipName} (${clientZip.entryCount} entries, ${(zipBuffer.length / 1048576).toFixed(1)} MiB)`);
+  // 3. Plain client zip — the only output that needs the actual bytes, so it is
+  //    opt-in. CI passes --with-zip for releases; local builds skip it.
+  if (withZip) {
+    step(`Downloading ${lock.files.length} files for the client zip`);
+    const clientZip = new ZipWriter();
+    let downloaded = 0;
 
-  // 4. Metadata for the landing page / launcher discovery
+    for (const file of lock.files) {
+      const payload = await fetchFile(file.url, { sha1: file.sha1 });
+      if (!payload.cached) downloaded++;
+      clientZip.add(`${DIR_FOR_KIND[file.kind]}/${file.fileName}`, payload.data, { store: true });
+    }
+    ok(`${lock.files.length} files (${downloaded} downloaded, ${lock.files.length - downloaded} cached)`);
+
+    for (const file of overrideContents) clientZip.add(file.relative, file.data);
+    clientZip.add('INSTALL.txt', clientInstructions(pack, lock));
+
+    const zipName = `${slug}-${pack.version}.zip`;
+    const zipBuffer = clientZip.toBuffer();
+    await fs.writeFile(path.join(outDir, zipName), zipBuffer);
+    ok(`${zipName} (${clientZip.entryCount} entries, ${(zipBuffer.length / 1048576).toFixed(1)} MiB)`);
+  } else {
+    console.log('  \x1b[90m·\x1b[0m client zip skipped (pass --with-zip to bundle jars)');
+  }
+
+  // 4. Metadata for the landing page and for auditing licenses
   const meta = {
     slug: pack.slug,
     name: pack.name,
@@ -325,22 +233,24 @@ async function buildPack(slug) {
     recommendedRamMb: pack.recommendedRamMb ?? 4096,
     server: pack.server ?? null,
     builtAt: new Date().toISOString(),
-    counts: { mods: mods.length, resourcePacks: resourcePacks.length, shaders: shaders.length },
-    mods: all.map((item) => ({
-      id: item.id,
-      name: item.name,
-      version: item.version,
-      license: item.project.license,
-      url: item.projectId ? `https://modrinth.com/project/${item.id}` : item.url,
+    lockedAt: lock.generatedAt,
+    counts: { mods: counts.mod, resourcePacks: counts.resourcepack, shaders: counts.shader },
+    totalDownloadBytes: lock.files.reduce((sum, f) => sum + (f.size ?? 0), 0),
+    mods: lock.files.map((file) => ({
+      id: file.id,
+      name: file.name,
+      version: file.version,
+      license: file.license,
+      url: file.projectId ? `https://modrinth.com/project/${file.id}` : file.url,
     })),
   };
   await fs.writeFile(path.join(outDir, 'pack.json'), JSON.stringify(meta, null, 2));
-  ok('pack.json');
+  ok(`pack.json (${(meta.totalDownloadBytes / 1048576).toFixed(1)} MiB of mods)`);
 
   return { pack, meta, outDir };
 }
 
-function clientInstructions(pack, items) {
+function clientInstructions(pack, lock) {
   return [
     `${pack.name} ${pack.version}`,
     `Minecraft ${pack.minecraft} — ${pack.loader.type} ${pack.loader.version}`,
@@ -360,7 +270,7 @@ function clientInstructions(pack, items) {
     '     macOS    ~/Library/Application Support/minecraft',
     `4. Allocate at least ${pack.recommendedRamMb ?? 4096} MB of RAM to the profile.`,
     '',
-    `Contents: ${items.length} files.`,
+    `Contents: ${lock.files.length} files.`,
     '',
     'Every mod keeps its own license — see pack.json for the list.',
   ].join('\n');
@@ -369,7 +279,9 @@ function clientInstructions(pack, items) {
 // ── Entry point ────────────────────────────────────────────
 
 async function main() {
-  const requested = process.argv.slice(2).filter((a) => !a.startsWith('-'));
+  const args = process.argv.slice(2);
+  const withZip = args.includes('--with-zip');
+  const requested = args.filter((a) => !a.startsWith('-'));
 
   const slugs = requested.length
     ? requested
@@ -384,9 +296,7 @@ async function main() {
   }
 
   const built = [];
-  for (const slug of slugs) {
-    built.push(await buildPack(slug));
-  }
+  for (const slug of slugs) built.push(await buildPack(slug, { withZip }));
 
   console.log(`\n\x1b[1m\x1b[32mBuilt ${built.length} pack(s)\x1b[0m → dist/`);
   for (const { meta, outDir } of built) {

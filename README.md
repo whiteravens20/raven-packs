@@ -8,9 +8,12 @@ launcher, or with no launcher at all.
 
 | Output | For | Contains |
 |---|---|---|
-| `manifest.json` | Raven Forge | Mod list with SHA-256 hashes, optionally Ed25519-signed |
+| `manifest.json` | Raven Forge | Mod list with direct URLs + SHA-512, optionally Ed25519-signed |
 | `<pack>-<version>.mrpack` | Prism, ATLauncher, MultiMC, Modrinth App | Download references (small, ~5 KB) |
 | `<pack>-<version>.zip` | Manual install, no launcher | The actual jars plus configs (~30 MB) |
+
+Mod jars are never committed — the repo stores references only, so a 100-mod pack
+costs about 70 KB of git history. See [the lockfile](#the-lockfile).
 
 ---
 
@@ -62,8 +65,9 @@ Everything about a pack lives in one hand-edited file, `packs/<slug>/pack.json`:
 Then:
 
 ```bash
-node scripts/validate.mjs          # check every entry resolves — no downloads
-node scripts/build.mjs ravenmc     # build all three outputs into dist/
+node scripts/lock.mjs ravenmc      # resolve → pack.lock.json (the only online step)
+node scripts/build.mjs ravenmc     # offline: manifest + .mrpack in milliseconds
+git add packs/ravenmc/            # commit the definition and the lockfile
 ```
 
 No `npm install` needed — the toolchain is dependency-free and runs on stock
@@ -71,17 +75,40 @@ Node 22+.
 
 Full authoring guide: **[docs/AUTHORING.md](docs/AUTHORING.md)**.
 
-### What the build does for you
+### The lockfile
 
-- Resolves each Modrinth slug to its **newest stable release** for the target
-  Minecraft version and loader. Prereleases are only used when a project has
-  published nothing else, and the build log says so.
-- **Fails if a required dependency is missing.** It reports what to add rather
-  than silently pulling in transitive mods, so the pack always lists every jar
-  it ships.
-- Downloads every jar (cached in `.cache/`), verifies the upstream SHA-1, and
-  records SHA-256 for the launcher manifest and SHA-1 + SHA-512 for the `.mrpack`.
-- Warns about mods marked client-side `unsupported`.
+`packs/<slug>/pack.lock.json` is committed and holds the resolved state: exact
+versions, filenames, CDN URLs, sizes and hashes. It is this repo's equivalent of
+packwiz's `index.toml`, and it is what keeps large packs cheap:
+
+| | 25-mod pack | 81-mod pack |
+|---|---|---|
+| Committed to git | 24 KB | 68 KB |
+| `build.mjs`, cold | 0.11 s | 0.06 s |
+| Network calls at build | 0 | 0 |
+| Published `.mrpack` | 4.7 KB | 12 KB |
+| Mod bytes stored in the repo | 0 | 0 |
+
+**No mod jars are ever committed.** They live on Modrinth's CDN; the repo stores
+only references. Builds are offline because the lockfile already records every
+URL and hash — verified by running the build with networking disabled.
+
+Because the manifest carries each mod's direct URL and SHA-512, **the launcher
+also makes zero API calls** when syncing a pack, and keeps working when Modrinth
+is down.
+
+### What the tooling does for you
+
+- `lock.mjs` resolves each Modrinth slug to its **newest stable release** for the
+  target Minecraft version and loader. Prereleases are used only when a project
+  has published nothing else, and it says so.
+- Entries already locked are **left alone** unless you pass `--update`, so adding
+  one mod never silently bumps the other ninety-nine.
+- **Fails if a required dependency is missing**, listing every one at once rather
+  than stopping at the first. It reports what to add instead of silently pulling
+  in transitive mods, so the pack always lists every jar it ships.
+- `validate.mjs` (offline) fails when a definition was edited without re-locking.
+- Warns about mods marked client-side `unsupported` and flags prerelease pins.
 
 ---
 

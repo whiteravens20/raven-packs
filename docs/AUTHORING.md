@@ -82,24 +82,57 @@ under `overrides/`, and the client zip at the archive root.
 > player's video settings — consider a mod like YOSBR that applies defaults only
 > on first run.
 
+## The lockfile
+
+`packs/<slug>/pack.lock.json` is committed and records the *resolved* state:
+exact versions, filenames, CDN URLs, sizes and hashes. `pack.json` says what you
+want; the lockfile says what you got.
+
+This is what keeps big packs cheap. Mod jars are never committed — an 81-mod pack
+is 68 KB of git — and because every URL and hash is already recorded, `build.mjs`
+runs entirely offline in well under a second.
+
+Only `lock.mjs` talks to Modrinth. Always commit `pack.json` and `pack.lock.json`
+together.
+
 ## Workflow
 
 ```bash
-node scripts/validate.mjs ravenmc   # fast: resolves versions, no downloads
-node scripts/build.mjs ravenmc      # full build into dist/ravenmc/
+# 1. edit packs/ravenmc/pack.json
+# 2. resolve — the only step that needs network
+node scripts/lock.mjs ravenmc
+
+# 3. build — offline, milliseconds
+node scripts/build.mjs ravenmc
+
+# 4. commit both files together
+git add packs/ravenmc/
 ```
 
 Inspect what you built before tagging:
 
 ```bash
-cat dist/ravenmc/pack.json | head -40      # resolved versions and licenses
-unzip -l dist/ravenmc/ravenmc-1.0.0.zip    # what players actually get
+head -40 dist/ravenmc/pack.json              # resolved versions and licenses
+node scripts/build.mjs ravenmc --with-zip    # bundle jars, then:
+unzip -l dist/ravenmc/ravenmc-1.0.0.zip      # what manual installers get
 ```
+
+`--with-zip` is the only thing that downloads jars. CI passes it for releases;
+skip it locally unless you are testing the launcher-free install path.
 
 ### Updating mods
 
-Unpinned entries pick up new releases automatically — rebuild and the versions
-move. Pinned entries do not; bump the `version` field.
+Locking is **conservative**: entries already in the lockfile are kept as they
+are, so adding one mod never bumps the other ninety-nine.
+
+```bash
+node scripts/lock.mjs ravenmc            # resolve only new/changed entries
+node scripts/lock.mjs ravenmc --update   # re-resolve everything unpinned
+git diff packs/ravenmc/pack.lock.json    # review exactly what moved
+```
+
+Changing `minecraft` or `loader.type` re-resolves everything automatically —
+versions from the old target are meaningless.
 
 Bump the pack's own `version` whenever the resolved set changes, then tag:
 
@@ -107,7 +140,10 @@ Bump the pack's own `version` whenever the resolved set changes, then tag:
 git tag ravenmc-v1.1.0 && git push --tags
 ```
 
-### When the build fails
+### When locking fails
+
+Failures are collected and reported together, so one run tells you everything
+that needs attention rather than stopping at the first problem.
 
 **"required dependencies are not in the pack"** — a mod needs something you did
 not list. The message tells you exactly what to paste into `pack.json`. Do not
@@ -115,10 +151,20 @@ work around it; a pack that relies on another launcher's dependency resolution
 will break on the manual-install path.
 
 **"no release for Minecraft X"** — the mod has not updated yet. Wait, drop it, or
-pin an older Minecraft version for the whole pack.
+pin an older Minecraft version for the whole pack. Expect a lot of these right
+after a Minecraft release: large tech mods routinely lag by months.
+
+**"Not found on Modrinth"** — wrong slug, or the mod is CurseForge-only. Use the
+slug from the project's Modrinth URL; for CurseForge-only mods, host the jar
+yourself and add it as a `url` entry.
 
 **"pinned version not found"** — the author pulled or renamed that version. The
 error lists recent versions to pick from.
+
+### When the build fails
+
+**"pack.json and pack.lock.json disagree"** — you edited the definition without
+re-locking. Run `node scripts/lock.mjs <slug>` and commit both.
 
 ## Signing
 

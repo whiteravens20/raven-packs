@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 /**
- * Validate pack definitions without building them.
+ * Validate pack definitions. Offline — no API calls, no downloads.
  *
  *   node scripts/validate.mjs [slug...]
  *
- * Cheap structural checks plus one API round trip per mod to confirm the pinned
- * version still exists. Runs on every pull request so a broken pack.json fails
- * before anyone waits on a full download.
+ * Checks structure, then that each pack's lockfile is present and agrees with
+ * its definition. Runs on every pull request; a definition edited without
+ * re-running `lock.mjs` fails here rather than silently shipping a stale mod
+ * list.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getProject, resolveVersion } from './lib/modrinth.mjs';
+import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -69,23 +70,37 @@ async function validatePack(slug) {
 
   console.log(`  ${entries.length} entries, Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}`);
 
-  for (const [kind, entry] of entries) {
-    if (!entry.slug) continue;
-    try {
-      const project = await getProject(entry.slug);
-      const version = await resolveVersion(entry.slug, {
-        mcVersion: pack.minecraft,
-        loader: pack.loader.type,
-        pin: entry.version,
-        allowPrerelease: entry.allowPrerelease ?? false,
-      });
-      const flag = version.usedPrerelease ? ` \x1b[33m[${version.versionType}]\x1b[0m` : '';
-      console.log(`  \x1b[32m✓\x1b[0m ${project.title} → ${version.versionNumber}${flag}`);
-    } catch (err) {
-      console.log(`  \x1b[31m✗\x1b[0m ${entry.slug} — ${err.message}`);
-      fail(slug, `${kind} "${entry.slug}": ${err.message}`);
-    }
+  const lock = await readLockfile(PACKS_DIR, slug);
+  if (!lock) {
+    fail(slug, `no pack.lock.json — run: node scripts/lock.mjs ${slug}`);
+    console.log('  \x1b[31m✗\x1b[0m no lockfile');
+    return;
   }
+
+  const drift = diffLockfile(pack, lock);
+  if (!drift.inSync) {
+    for (const a of drift.added) console.log(`  \x1b[31m+\x1b[0m ${a.label} (${a.kind}) not in lockfile`);
+    for (const r of drift.removed) console.log(`  \x1b[31m-\x1b[0m ${r.label} (${r.kind}) still in lockfile`);
+    if (drift.packChanged) console.log('  \x1b[31m~\x1b[0m Minecraft/loader version changed');
+    fail(slug, `pack.json and pack.lock.json disagree — run: node scripts/lock.mjs ${slug}`);
+    return;
+  }
+
+  // Every locked file needs enough metadata for an offline build to emit both
+  // the launcher manifest and the .mrpack.
+  for (const file of lock.files) {
+    const missing = ['url', 'fileName', 'size'].filter((k) => !file[k]);
+    if (!file.sha512 && !file.sha256) missing.push('sha512/sha256');
+    if (file.kind !== 'url' && !file.sha1 && file.source === 'modrinth') missing.push('sha1');
+    if (missing.length > 0) fail(slug, `locked file "${file.id}" is missing: ${missing.join(', ')}`);
+  }
+
+  const prereleases = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version));
+  if (prereleases.length > 0) {
+    console.log(`  \x1b[33m!\x1b[0m ${prereleases.length} prerelease version(s): ${prereleases.map((f) => f.id).join(', ')}`);
+  }
+
+  console.log(`  \x1b[32m✓\x1b[0m lockfile in sync — ${lock.files.length} files, locked ${lock.generatedAt.slice(0, 10)}`);
 }
 
 async function main() {

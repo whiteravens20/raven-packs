@@ -18,29 +18,14 @@ jobs:
         with:
           node-version: 22
 
-      # Structural checks plus one Modrinth lookup per entry — catches a broken
-      # pack.json or a pinned version that was pulled, without downloading jars.
-      - name: Validate pack definitions
+      # Offline: structure plus lockfile-in-sync. A pack.json edited without
+      # re-running lock.mjs fails here instead of shipping a stale mod list.
+      - name: Validate pack definitions and lockfiles
         run: node scripts/validate.mjs
 
-  build:
-    runs-on: ubuntu-latest
-    needs: validate
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Cache downloaded mod jars
-        uses: actions/cache@v4
-        with:
-          path: .cache/downloads
-          key: mods-${{ hashFiles('packs/*/pack.json') }}
-          restore-keys: mods-
-
-      - name: Build all packs
+      # Also offline — reads the lockfiles, emits manifest + .mrpack in
+      # milliseconds. The client zip is skipped; only releases bundle jars.
+      - name: Build packs (metadata only)
         run: node scripts/build.mjs
 
       - uses: actions/upload-artifact@v4
@@ -48,3 +33,28 @@ jobs:
           name: packs
           path: dist/
           retention-days: 14
+
+  # Separate, non-blocking: tells us when unpinned mods have newer releases
+  # upstream, without failing anyone's pull request.
+  check-updates:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Re-resolve against Modrinth
+        run: node scripts/lock.mjs --update
+
+      - name: Report drift
+        run: |
+          if git diff --quiet -- 'packs/*/pack.lock.json'; then
+            echo "All packs are on the newest releases."
+          else
+            echo "::notice::Newer mod versions are available — run 'node scripts/lock.mjs --update' and commit."
+            git diff --stat -- 'packs/*/pack.lock.json'
+          fi
