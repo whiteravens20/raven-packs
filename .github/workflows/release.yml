@@ -1,6 +1,21 @@
 name: release
 
 # Tag a pack release as <slug>-v<version>, e.g. ravenmc-v1.0.0.
+#
+# Two outputs, deliberately different in scope:
+#
+#   GitHub Release — the tagged pack only: .mrpack, client zip, server zip,
+#                    manifest.json.
+#   GitHub Pages   — *every* pack, because deploy-pages replaces the whole
+#                    site. Publishing only the tagged pack's dist/ would take
+#                    every other pack's manifest offline, breaking the launcher
+#                    for players who are not on the pack being released.
+#
+# Required secret:
+#   PACK_SIGNING_KEY   base64 Ed25519 private key from `npm run keygen`.
+#                      The job FAILS without it. A manifest decides which code
+#                      lands on a player's machine; silently publishing one
+#                      unsigned is the failure mode this is written to prevent.
 on:
   push:
     tags:
@@ -12,10 +27,7 @@ on:
         required: true
         default: ravenmc
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: pages
@@ -24,6 +36,8 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the GitHub Release
     outputs:
       slug: ${{ steps.meta.outputs.slug }}
     steps:
@@ -35,21 +49,29 @@ jobs:
 
       - name: Resolve pack slug
         id: meta
+        env:
+          INPUT_SLUG: ${{ inputs.slug }}
         run: |
-          if [ -n "${{ inputs.slug }}" ]; then
-            slug="${{ inputs.slug }}"
+          if [ -n "$INPUT_SLUG" ]; then
+            slug="$INPUT_SLUG"
           else
             # ravenmc-v1.0.0 → ravenmc
             slug="${GITHUB_REF_NAME%-v*}"
           fi
+          if [ ! -d "packs/$slug" ]; then
+            echo "::error::No pack named '$slug' — expected packs/$slug/pack.json."
+            exit 1
+          fi
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
           echo "Releasing pack: $slug"
 
-      - name: Verify lockfile is in sync
-        run: node scripts/validate.mjs "${{ steps.meta.outputs.slug }}"
+      # Every pack, not just the tagged one: they all go to Pages below, and a
+      # pack with a stale lockfile would be republished from stale data.
+      - name: Verify every lockfile is in sync
+        run: node scripts/validate.mjs
 
-      # Only the client zip needs the actual jars; keyed on the lockfile so the
-      # cache invalidates exactly when the mod set changes.
+      # Only the zips need the actual jars; keyed on the lockfiles so the cache
+      # invalidates exactly when a mod set changes.
       - name: Cache downloaded mod jars
         uses: actions/cache@v4
         with:
@@ -57,19 +79,38 @@ jobs:
           key: mods-${{ hashFiles('packs/*/pack.lock.json') }}
           restore-keys: mods-
 
-      # --with-zip bundles the jars for the launcher-free install path.
+      # Order matters. buildPack wipes dist/<slug> before writing it, so the
+      # tagged pack is built *last* — an all-packs pass afterwards would delete
+      # the zips this release needs.
+      #
       # PACK_BASE_URL is where the published overrides live, so the manifest's
       # configFiles[] point at real, fetchable URLs.
-      - name: Build pack
+      - name: Build every pack (metadata only)
+        env:
+          PACK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: node scripts/build.mjs
+
+      - name: Rebuild the tagged pack with bundled jars
         env:
           PACK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: node scripts/build.mjs "${{ steps.meta.outputs.slug }}" --with-zip
 
-      - name: Sign manifest
-        if: ${{ env.PACK_SIGNING_KEY != '' }}
+      # Signing is not optional, and not conditional on the secret being
+      # present: `${{ env.X }}` in a step-level `if:` cannot see that step's own
+      # `env:` block, so the obvious guard silently skips signing forever.
+      # sign.mjs verifies its own output before exiting, so reaching the next
+      # step means every published manifest carries a signature that validates.
+      - name: Sign every manifest
         env:
           PACK_SIGNING_KEY: ${{ secrets.PACK_SIGNING_KEY }}
-        run: node scripts/sign.mjs "dist/${{ steps.meta.outputs.slug }}/manifest.json"
+        run: |
+          if [ -z "$PACK_SIGNING_KEY" ]; then
+            echo "::error::secrets.PACK_SIGNING_KEY is not set. Refusing to publish unsigned manifests — run 'npm run keygen', then 'gh secret set PACK_SIGNING_KEY < keys/ravenpacks.key'."
+            exit 1
+          fi
+          for manifest in dist/*/manifest.json; do
+            node scripts/sign.mjs "$manifest"
+          done
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
@@ -79,6 +120,7 @@ jobs:
             dist/${{ steps.meta.outputs.slug }}/*.mrpack
             dist/${{ steps.meta.outputs.slug }}/*.zip
             dist/${{ steps.meta.outputs.slug }}/manifest.json
+          fail_on_unmatched_files: true
           generate_release_notes: true
 
       - uses: actions/upload-pages-artifact@v3
@@ -88,6 +130,9 @@ jobs:
   deploy-pages:
     runs-on: ubuntu-latest
     needs: release
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
