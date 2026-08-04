@@ -33,6 +33,7 @@ import { ZipWriter } from './lib/zip.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
 const DIST_DIR = path.join(ROOT, 'dist');
+const SITE_DIR = path.join(ROOT, 'site');
 
 const ok = (msg) => console.log(`  \x1b[32m✓\x1b[0m ${msg}`);
 const warn = (msg) => console.log(`  \x1b[33m!\x1b[0m ${msg}`);
@@ -519,6 +520,29 @@ function clientInstructions(pack, clientFiles) {
   ].join('\n');
 }
 
+/**
+ * Copy `site/` into `dist/` verbatim.
+ *
+ * Not everything the Pages site serves is pack output. The launcher fetches its
+ * news and announcement feeds from a URL too, and those are plain JSON nobody
+ * builds — they are edited by hand and reviewed like any other change. Putting
+ * them here means one Pages deployment, one CODEOWNERS gate, and no second
+ * publishing surface to keep alive.
+ *
+ * `buildPack` only ever wipes `dist/<slug>`, so this runs last and survives.
+ */
+async function copySite() {
+  const files = await listFiles(SITE_DIR).catch(() => []);
+  if (files.length === 0) return;
+
+  for (const file of files) {
+    const dest = path.join(DIST_DIR, file.relative);
+    await fs.mkdir(path.dirname(dest), { recursive: true });
+    await fs.copyFile(file.absolute, dest);
+  }
+  ok(`${files.length} static file(s) from site/`);
+}
+
 // ── Entry point ────────────────────────────────────────────
 
 async function main() {
@@ -540,6 +564,9 @@ async function main() {
 
   const built = [];
   for (const slug of slugs) built.push(await buildPack(slug, { withZip }));
+
+  step('Static site files');
+  await copySite();
 
   console.log(`\n\x1b[1m\x1b[32mBuilt ${built.length} pack(s)\x1b[0m → dist/`);
   for (const { meta, outDir } of built) {

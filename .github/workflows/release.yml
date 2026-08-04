@@ -1,15 +1,22 @@
-name: release
+name: publish
 
-# Tag a pack release as <slug>-v<version>, e.g. ravenmc-v1.0.0.
+# Publishes the site, and cuts a GitHub Release when a tag asks for one.
+#
+# Two triggers, because the site has two kinds of content:
+#
+#   push to main   — republish the site only. `site/` holds the launcher's news
+#                    and announcement feeds, which are edited by hand; making a
+#                    news correction wait for a pack release would be absurd.
+#   tag <slug>-v*  — the above, plus a GitHub Release for that one pack.
 #
 # Two outputs, deliberately different in scope:
 #
 #   GitHub Release — the tagged pack only: .mrpack, client zip, server zip,
 #                    manifest.json.
-#   GitHub Pages   — *every* pack, because deploy-pages replaces the whole
-#                    site. Publishing only the tagged pack's dist/ would take
-#                    every other pack's manifest offline, breaking the launcher
-#                    for players who are not on the pack being released.
+#   GitHub Pages   — *every* pack plus site/, because deploy-pages replaces the
+#                    whole site. Publishing only the tagged pack's dist/ would
+#                    take every other pack's manifest offline, breaking the
+#                    launcher for players who are not on the pack being released.
 #
 # Required secret:
 #   PACK_SIGNING_KEY   base64 Ed25519 private key from `npm run keygen`.
@@ -18,14 +25,15 @@ name: release
 #                      unsigned is the failure mode this is written to prevent.
 on:
   push:
+    branches:
+      - main
     tags:
       - '*-v*'
   workflow_dispatch:
     inputs:
       slug:
-        description: Pack slug to release
-        required: true
-        default: ravenmc
+        description: Pack slug to release (leave blank to republish the site only)
+        required: false
 
 permissions: {}
 
@@ -34,7 +42,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write # create the GitHub Release
@@ -47,6 +55,8 @@ jobs:
         with:
           node-version: 22
 
+      # An empty slug means "site only" and is a normal outcome, not a failure —
+      # that is every push to main. A slug that names no pack is a failure.
       - name: Resolve pack slug
         id: meta
         env:
@@ -54,16 +64,24 @@ jobs:
         run: |
           if [ -n "$INPUT_SLUG" ]; then
             slug="$INPUT_SLUG"
-          else
+          elif [ "$GITHUB_REF_TYPE" = tag ]; then
             # ravenmc-v1.0.0 → ravenmc
             slug="${GITHUB_REF_NAME%-v*}"
+          else
+            slug=""
           fi
-          if [ ! -d "packs/$slug" ]; then
+
+          if [ -n "$slug" ] && [ ! -d "packs/$slug" ]; then
             echo "::error::No pack named '$slug' — expected packs/$slug/pack.json."
             exit 1
           fi
+
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
-          echo "Releasing pack: $slug"
+          if [ -n "$slug" ]; then
+            echo "Releasing pack: $slug"
+          else
+            echo "No pack tagged — republishing the site only."
+          fi
 
       # Every pack, not just the tagged one: they all go to Pages below, and a
       # pack with a stale lockfile would be republished from stale data.
@@ -91,6 +109,7 @@ jobs:
         run: node scripts/build.mjs
 
       - name: Rebuild the tagged pack with bundled jars
+        if: steps.meta.outputs.slug != ''
         env:
           PACK_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: node scripts/build.mjs "${{ steps.meta.outputs.slug }}" --with-zip
@@ -114,7 +133,7 @@ jobs:
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+        if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
         with:
           files: |
             dist/${{ steps.meta.outputs.slug }}/*.mrpack
@@ -129,7 +148,7 @@ jobs:
 
   deploy-pages:
     runs-on: ubuntu-latest
-    needs: release
+    needs: build
     permissions:
       pages: write
       id-token: write

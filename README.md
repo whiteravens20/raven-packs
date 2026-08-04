@@ -128,9 +128,29 @@ Tag as `<slug>-v<version>`:
 git tag ravenmc-v1.0.0 && git push --tags
 ```
 
-CI validates, builds, signs the manifest if `PACK_SIGNING_KEY` is set, attaches
-the artifacts to a GitHub Release, and deploys `dist/` to GitHub Pages — which
+CI validates, builds, **signs every manifest** — the job fails without
+`PACK_SIGNING_KEY` rather than publishing an unsigned one — attaches the tagged
+pack's artifacts to a GitHub Release, and deploys `dist/` to GitHub Pages, which
 is what gives each pack its stable manifest URL.
+
+Every pack is rebuilt on release, not just the tagged one: `deploy-pages`
+replaces the whole site, so publishing one pack's `dist/` alone would take every
+other pack's manifest offline.
+
+## The launcher's feeds
+
+`site/` is copied into `dist/` verbatim and serves the JSON Raven Forge fetches
+that is not pack output:
+
+| URL | Set in the launcher under |
+|---|---|
+| `…/raven-forge/news.json` | Settings → News feed |
+| `…/raven-forge/announcements.json` | Settings → Announcement feed |
+
+Edit them by hand and push to `main` — that alone republishes the site, with no
+tag and no pack release. They are **not signed**, unlike manifests: whoever can
+write here controls the headlines and links shown inside the launcher, so this
+directory deserves the same review gate as a manifest.
 
 ### Signing
 
