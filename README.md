@@ -10,7 +10,12 @@ launcher, or with no launcher at all.
 |---|---|---|
 | `manifest.json` | Raven Forge | Mod list with direct URLs + SHA-512, optionally Ed25519-signed |
 | `<pack>-<version>.mrpack` | Prism, ATLauncher, MultiMC, Modrinth App | Download references (small, ~5 KB) |
-| `<pack>-<version>.zip` | Manual install, no launcher | The actual jars plus configs (~30 MB) |
+| `<pack>-<version>.zip` | Manual install, no launcher | Client jars plus configs |
+| `<pack>-<version>-server.zip` | Server operators | Server jars, `server.properties`, Fabric launcher, start scripts |
+
+Client and server come from the same definition, so they cannot drift apart. The
+client never receives server-only mods or `server.properties`; the server never
+receives a minimap. See [docs/SERVER.md](docs/SERVER.md).
 
 Mod jars are never committed — the repo stores references only, so a 100-mod pack
 costs about 70 KB of git history. See [the lockfile](#the-lockfile).
@@ -40,6 +45,9 @@ https://whiteravens20.github.io/raven-packs/ravenmc/manifest.json
 
 **No launcher** — install [Fabric](https://fabricmc.net/use/installer), download
 the `.zip`, unzip it into `.minecraft`.
+
+**Running a server** — download the `-server.zip`, unzip, run `start.sh`.
+Full guide: **[docs/SERVER.md](docs/SERVER.md)**.
 
 ---
 

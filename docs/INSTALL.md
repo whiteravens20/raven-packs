@@ -2,6 +2,8 @@
 
 Three ways, easiest first. You only need one.
 
+> Running the server rather than playing on it? See **[SERVER.md](SERVER.md)**.
+
 ---
 
 ## 1. Raven Forge (recommended)
