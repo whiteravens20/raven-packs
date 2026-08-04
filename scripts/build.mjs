@@ -40,6 +40,38 @@ const step = (msg) => console.log(`\n\x1b[1m${msg}\x1b[0m`);
 
 const DIR_FOR_KIND = { mod: 'mods', shader: 'shaderpacks', resourcepack: 'resourcepacks' };
 
+const forClient = (file) => file.side === 'client' || file.side === 'both';
+const forServer = (file) => file.side === 'server' || file.side === 'both';
+
+/**
+ * CRLF for files Windows reads.
+ *
+ * `cmd.exe` is unreliable with LF-only batch files — labels and multi-line
+ * blocks can misparse — and Notepad only learned to render lone LF in Windows
+ * 10 1809. Both are cheap to avoid.
+ */
+const crlf = (text) => text.replace(/\r?\n/g, '\r\n');
+
+/**
+ * Collect override files for one side.
+ *
+ * Mirrors the .mrpack layout: `overrides/` applies to both, `client-overrides/`
+ * and `server-overrides/` to one each. Keeping them separate is what stops a
+ * client download from carrying `server.properties` or an operator list.
+ */
+async function readOverrides(slug, side) {
+  const dirs = ['overrides', side === 'client' ? 'client-overrides' : 'server-overrides'];
+  const files = [];
+
+  for (const dir of dirs) {
+    const found = await listFiles(path.join(PACKS_DIR, slug, dir));
+    for (const file of found) {
+      files.push({ ...file, data: await fs.readFile(file.absolute) });
+    }
+  }
+  return files;
+}
+
 // ── Output: Raven Forge manifest (schema v2) ───────────────
 
 function buildRavenForgeManifest(pack, lock, configFiles) {
@@ -59,7 +91,10 @@ function buildRavenForgeManifest(pack, lock, configFiles) {
     ...(file.sha256 ? { sha256: file.sha256 } : {}),
   });
 
-  const byKind = (kind) => lock.files.filter((f) => f.kind === kind);
+  // Only client-relevant content reaches the manifest. The launcher would skip
+  // `side: "server"` entries anyway, but shipping them would mean every player
+  // downloads a mod list describing files they must never install.
+  const byKind = (kind) => lock.files.filter((f) => f.kind === kind && forClient(f));
 
   return {
     manifestVersion: 2,
@@ -67,7 +102,13 @@ function buildRavenForgeManifest(pack, lock, configFiles) {
     minecraftVersion: pack.minecraft,
     modLoader: pack.loader.type,
     modLoaderVersion: pack.loader.version,
-    mods: byKind('mod').map((file) => ({ ...entry(file), required: true, side: 'client' })),
+    mods: byKind('mod').map((file) => ({
+      ...entry(file),
+      required: true,
+      // `both` is preserved so the launcher and the player can see that the
+      // server runs it too; only `server` is filtered out entirely.
+      side: file.side === 'both' ? 'both' : 'client',
+    })),
     resourcePacks: byKind('resourcepack').map(entry),
     shaders: byKind('shader').map(entry),
     configFiles,
@@ -96,10 +137,15 @@ function buildMrpackIndex(pack, lock) {
     versionId: pack.version,
     name: pack.name,
     summary: pack.summary ?? '',
+    // `env` carries the real side, so an importing launcher installs a
+    // server-only mod only when creating a server instance.
     files: lock.files.map((file) => ({
       path: `${DIR_FOR_KIND[file.kind]}/${file.fileName}`,
       hashes: { sha1: file.sha1, sha512: file.sha512 },
-      env: { client: 'required', server: file.kind === 'mod' ? 'optional' : 'unsupported' },
+      env: {
+        client: forClient(file) ? 'required' : 'unsupported',
+        server: forServer(file) ? 'required' : 'unsupported',
+      },
       downloads: [file.url],
       fileSize: file.size,
     })),
@@ -151,12 +197,14 @@ async function buildPack(slug, { withZip }) {
   };
   ok(`${lock.files.length} locked files (${counts.mod} mods, ${counts.resourcepack} resource packs, ${counts.shader} shaders)`);
 
-  const overridesDir = path.join(PACKS_DIR, slug, 'overrides');
-  const overrides = await listFiles(overridesDir);
-  const overrideContents = await Promise.all(
-    overrides.map(async (file) => ({ ...file, data: await fs.readFile(file.absolute) })),
-  );
-  if (overrideContents.length > 0) ok(`${overrideContents.length} override files`);
+  const clientFiles = lock.files.filter(forClient);
+  const serverFiles = lock.files.filter(forServer);
+  ok(`client pack: ${clientFiles.length} files · server pack: ${serverFiles.length} files`);
+
+  const overrideContents = await readOverrides(slug, 'client');
+  const serverOverrides = await readOverrides(slug, 'server');
+  if (overrideContents.length > 0) ok(`${overrideContents.length} client override files`);
+  if (serverOverrides.length > 0) ok(`${serverOverrides.length} server override files`);
 
   const outDir = path.join(DIST_DIR, slug);
   await fs.rm(outDir, { recursive: true, force: true });
@@ -197,29 +245,68 @@ async function buildPack(slug, { withZip }) {
   await fs.writeFile(path.join(outDir, mrpackName), mrpackBuffer);
   ok(`${mrpackName} (${(mrpackBuffer.length / 1024).toFixed(1)} KiB)`);
 
-  // 3. Plain client zip — the only output that needs the actual bytes, so it is
-  //    opt-in. CI passes --with-zip for releases; local builds skip it.
+  // 3. Bundled zips — the only outputs needing the actual bytes, so they are
+  //    opt-in. CI passes --with-zip for releases; local builds skip them.
   if (withZip) {
-    step(`Downloading ${lock.files.length} files for the client zip`);
-    const clientZip = new ZipWriter();
+    step(`Downloading jars for the bundled zips`);
+    const payloads = new Map();
     let downloaded = 0;
 
     for (const file of lock.files) {
       const payload = await fetchFile(file.url, { sha1: file.sha1 });
       if (!payload.cached) downloaded++;
-      clientZip.add(`${DIR_FOR_KIND[file.kind]}/${file.fileName}`, payload.data, { store: true });
+      payloads.set(file.id, payload);
     }
     ok(`${lock.files.length} files (${downloaded} downloaded, ${lock.files.length - downloaded} cached)`);
 
+    // Client zip — client + both, client overrides only.
+    const clientZip = new ZipWriter();
+    for (const file of clientFiles) {
+      clientZip.add(`${DIR_FOR_KIND[file.kind]}/${file.fileName}`, payloads.get(file.id).data, { store: true });
+    }
     for (const file of overrideContents) clientZip.add(file.relative, file.data);
-    clientZip.add('INSTALL.txt', clientInstructions(pack, lock));
+    // Most players opening this are on Windows, reading it in Notepad.
+    clientZip.add('INSTALL.txt', crlf(clientInstructions(pack, clientFiles)));
 
     const zipName = `${slug}-${pack.version}.zip`;
     const zipBuffer = clientZip.toBuffer();
     await fs.writeFile(path.join(outDir, zipName), zipBuffer);
     ok(`${zipName} (${clientZip.entryCount} entries, ${(zipBuffer.length / 1048576).toFixed(1)} MiB)`);
+
+    // Server zip — server + both, server overrides, plus start scripts and the
+    // Fabric server launcher so an admin can unzip and run.
+    if (serverFiles.length > 0) {
+      const serverZip = new ZipWriter();
+      for (const file of serverFiles) {
+        if (file.kind !== 'mod') continue; // shaders/resource packs are client-only
+        serverZip.add(`mods/${file.fileName}`, payloads.get(file.id).data, { store: true });
+      }
+      for (const file of serverOverrides) serverZip.add(file.relative, file.data);
+
+      const launcher = lock.pack.serverLauncher;
+      if (launcher) {
+        const jar = await fetchFile(launcher.url);
+        serverZip.add(launcher.fileName, jar.data, { store: true });
+        ok(`bundled ${launcher.fileName} (Fabric installer ${launcher.installerVersion})`);
+      } else {
+        warn(`no server launcher for loader "${pack.loader.type}" — admins must install it manually`);
+      }
+
+      const requiredJava = lock.pack.requiredJava;
+      // 0o755 so an admin can run ./start.sh straight out of the archive.
+      serverZip.add('start.sh', startScriptUnix(pack, launcher, requiredJava), { mode: 0o755 });
+      serverZip.add('start.bat', crlf(startScriptWindows(pack, launcher, requiredJava)));
+      serverZip.add('SERVER-INSTALL.txt', crlf(serverInstructions(pack, serverFiles, launcher, requiredJava)));
+
+      const serverZipName = `${slug}-${pack.version}-server.zip`;
+      const serverBuffer = serverZip.toBuffer();
+      await fs.writeFile(path.join(outDir, serverZipName), serverBuffer);
+      ok(`${serverZipName} (${serverZip.entryCount} entries, ${(serverBuffer.length / 1048576).toFixed(1)} MiB)`);
+    } else {
+      console.log('  \x1b[90m·\x1b[0m no server-side mods — server zip not built');
+    }
   } else {
-    console.log('  \x1b[90m·\x1b[0m client zip skipped (pass --with-zip to bundle jars)');
+    console.log('  \x1b[90m·\x1b[0m zips skipped (pass --with-zip to bundle jars)');
   }
 
   // 4. Metadata for the landing page and for auditing licenses
@@ -234,12 +321,20 @@ async function buildPack(slug, { withZip }) {
     server: pack.server ?? null,
     builtAt: new Date().toISOString(),
     lockedAt: lock.generatedAt,
-    counts: { mods: counts.mod, resourcePacks: counts.resourcepack, shaders: counts.shader },
-    totalDownloadBytes: lock.files.reduce((sum, f) => sum + (f.size ?? 0), 0),
+    counts: {
+      mods: counts.mod,
+      resourcePacks: counts.resourcepack,
+      shaders: counts.shader,
+      client: clientFiles.length,
+      server: serverFiles.length,
+    },
+    totalDownloadBytes: clientFiles.reduce((sum, f) => sum + (f.size ?? 0), 0),
+    serverDownloadBytes: serverFiles.reduce((sum, f) => sum + (f.size ?? 0), 0),
     mods: lock.files.map((file) => ({
       id: file.id,
       name: file.name,
       version: file.version,
+      side: file.side,
       license: file.license,
       url: file.projectId ? `https://modrinth.com/project/${file.id}` : file.url,
     })),
@@ -250,7 +345,154 @@ async function buildPack(slug, { withZip }) {
   return { pack, meta, outDir };
 }
 
-function clientInstructions(pack, lock) {
+// ── Server pack extras ─────────────────────────────────────
+
+/**
+ * Server RAM: more than the client, but capped well below "all of it".
+ * Large heaps mean longer garbage-collection pauses, which players feel as lag
+ * spikes far more than they feel a smaller cache.
+ */
+function serverRamMb(pack) {
+  return Math.min(Math.max(pack.recommendedRamMb ?? 4096, 4096), 8192);
+}
+
+/**
+ * The EULA is deliberately not pre-accepted — that is the operator's legal
+ * agreement with Mojang to make, not something a build script forges. The
+ * scripts detect the first-run state and say exactly what to do.
+ */
+function startScriptUnix(pack, launcher, requiredJava) {
+  const ram = serverRamMb(pack);
+  const jar = launcher?.fileName ?? 'server.jar';
+
+  // Check Java *before* launching. Without this an admin on an older JDK gets
+  // an UnsupportedClassVersionError stack trace out of Fabric's bootstrap,
+  // which says nothing about what to actually install.
+  const javaCheck = requiredJava
+    ? `
+REQUIRED_JAVA=${requiredJava}
+if ! command -v java >/dev/null 2>&1; then
+  echo "Java is not installed or not on PATH. This pack needs Java $REQUIRED_JAVA." >&2
+  exit 1
+fi
+
+# "1.8.0_411" -> 8, "25.0.1" -> 25
+JAVA_RAW=$(java -version 2>&1 | head -n1 | sed 's/.*version "\\([^"]*\\)".*/\\1/')
+JAVA_MAJOR=$(echo "$JAVA_RAW" | awk -F'[."]' '/^1\\./ {print $2; exit} {print $1; exit}')
+
+if [ -n "$JAVA_MAJOR" ] && [ "$JAVA_MAJOR" -lt "$REQUIRED_JAVA" ]; then
+  echo "Minecraft ${pack.minecraft} needs Java $REQUIRED_JAVA, but 'java' is version $JAVA_RAW." >&2
+  echo "Install a newer JDK (https://adoptium.net/) or point JAVA_HOME at one." >&2
+  exit 1
+fi
+`
+    : '';
+
+  return `#!/usr/bin/env sh
+# ${pack.name} ${pack.version} — Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}
+set -e
+cd "$(dirname "$0")"
+
+if [ ! -f "${jar}" ]; then
+  echo "Missing ${jar} — re-extract the server pack." >&2
+  exit 1
+fi
+${javaCheck}
+if [ ! -f eula.txt ]; then
+  echo "First run: accept the Minecraft EULA."
+  echo "  https://aka.ms/MinecraftEULA"
+  echo "Then create eula.txt containing:  eula=true"
+  exit 1
+fi
+
+exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
+  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
+  -jar "${jar}" nogui
+`;
+}
+
+function startScriptWindows(pack, launcher, requiredJava) {
+  const ram = serverRamMb(pack);
+  const jar = launcher?.fileName ?? 'server.jar';
+
+  const javaCheck = requiredJava
+    ? `
+where java >nul 2>&1
+if errorlevel 1 (
+  echo Java is not installed or not on PATH. This pack needs Java ${requiredJava}.
+  pause
+  exit /b 1
+)
+`
+    : '';
+
+  return `@echo off
+REM ${pack.name} ${pack.version} — Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}
+REM Requires Java ${requiredJava ?? '17 or newer'}.
+cd /d "%~dp0"
+
+if not exist "${jar}" (
+  echo Missing ${jar} - re-extract the server pack.
+  pause
+  exit /b 1
+)
+${javaCheck}
+if not exist eula.txt (
+  echo First run: accept the Minecraft EULA.
+  echo   https://aka.ms/MinecraftEULA
+  echo Then create eula.txt containing:  eula=true
+  pause
+  exit /b 1
+)
+
+java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -jar "${jar}" nogui
+pause
+`;
+}
+
+function serverInstructions(pack, serverFiles, launcher, requiredJava) {
+  const ram = serverRamMb(pack);
+  const java = requiredJava ? `Java ${requiredJava} or newer` : 'a current JDK';
+  return [
+    `${pack.name} ${pack.version} — SERVER PACK`,
+    `Minecraft ${pack.minecraft} — ${pack.loader.type} ${pack.loader.version}`,
+    `Requires ${java}.`,
+    '',
+    'SETUP',
+    '',
+    '1. Unzip this archive into an empty directory on the server.',
+    `2. Install ${java} and make sure it is on PATH: https://adoptium.net/`,
+    '   The start script checks this and refuses to run on anything older.',
+    '3. Run start.sh (Linux/macOS) or start.bat (Windows).',
+    '   The first run stops and asks you to accept the Minecraft EULA:',
+    '   create a file named eula.txt containing exactly:  eula=true',
+    '4. Run the start script again. Fabric downloads the Minecraft server and',
+    '   its libraries on first launch, so allow a few minutes and keep it online.',
+    '',
+    `RAM: the scripts allocate ${ram} MB. Edit start.sh / start.bat to change it.`,
+    'Do not raise it far beyond this — oversized heaps cause longer GC pauses,',
+    'which players experience as lag spikes.',
+    '',
+    'WHAT IS IN HERE',
+    '',
+    `  mods/     ${serverFiles.filter((f) => f.kind === 'mod').length} server-side mods`,
+    launcher ? `  ${launcher.fileName}  Fabric server launcher` : '  (no launcher bundled)',
+    '  start.sh / start.bat',
+    '',
+    'Client-only mods are deliberately absent — installing them here would waste',
+    'memory at best and fail to load at worst. Players get those from the client',
+    'pack; the two are built from one definition, so they cannot drift apart.',
+    '',
+    'PORTS',
+    '',
+    '  25565/tcp must be reachable for players to connect.',
+    '  Edit server.properties after the first run to change it.',
+    '',
+    'Every mod keeps its own license.',
+  ].join('\n');
+}
+
+function clientInstructions(pack, clientFiles) {
   return [
     `${pack.name} ${pack.version}`,
     `Minecraft ${pack.minecraft} — ${pack.loader.type} ${pack.loader.version}`,
@@ -270,7 +512,8 @@ function clientInstructions(pack, lock) {
     '     macOS    ~/Library/Application Support/minecraft',
     `4. Allocate at least ${pack.recommendedRamMb ?? 4096} MB of RAM to the profile.`,
     '',
-    `Contents: ${lock.files.length} files.`,
+    `Contents: ${clientFiles.length} files (client-side only — server-only mods`,
+    'are excluded, and are shipped in the separate server pack instead).',
     '',
     'Every mod keeps its own license — see pack.json for the list.',
   ].join('\n');

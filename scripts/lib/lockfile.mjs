@@ -16,26 +16,38 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-export const LOCKFILE_VERSION = 1;
+export const LOCKFILE_VERSION = 2;
 
 export function lockfilePath(packsDir, slug) {
   return path.join(packsDir, slug, 'pack.lock.json');
 }
 
-export async function readLockfile(packsDir, slug) {
+/**
+ * Read a lockfile, or null when there is none.
+ *
+ * @param {{ outdatedIsNull?: boolean }} [options]
+ *        `outdatedIsNull` makes a version mismatch return null instead of
+ *        throwing. `lock.mjs` needs that — it is the tool that *fixes* an
+ *        outdated lockfile, so refusing to run would leave no way forward.
+ *        Consumers (build, validate) leave it off and fail loudly instead.
+ */
+export async function readLockfile(packsDir, slug, options = {}) {
+  let raw;
   try {
-    const raw = await fs.readFile(lockfilePath(packsDir, slug), 'utf8');
-    const lock = JSON.parse(raw);
-    if (lock.lockfileVersion !== LOCKFILE_VERSION) {
-      throw new Error(
-        `${slug}/pack.lock.json is version ${lock.lockfileVersion}, expected ${LOCKFILE_VERSION} — re-run: node scripts/lock.mjs ${slug}`,
-      );
-    }
-    return lock;
+    raw = await fs.readFile(lockfilePath(packsDir, slug), 'utf8');
   } catch (err) {
     if (err.code === 'ENOENT') return null;
     throw err;
   }
+
+  const lock = JSON.parse(raw);
+  if (lock.lockfileVersion !== LOCKFILE_VERSION) {
+    if (options.outdatedIsNull) return null;
+    throw new Error(
+      `${slug}/pack.lock.json is version ${lock.lockfileVersion}, expected ${LOCKFILE_VERSION} — re-run: node scripts/lock.mjs ${slug}`,
+    );
+  }
+  return lock;
 }
 
 export async function writeLockfile(packsDir, slug, lock) {
@@ -52,6 +64,9 @@ function entryKey(entry) {
     url: entry.url ?? null,
     version: entry.version ?? null,
     allowPrerelease: entry.allowPrerelease ?? false,
+    // An explicit side change must re-lock: it moves the mod between the client
+    // and server packs, which is not something a stale lock should decide.
+    side: entry.side ?? null,
   });
 }
 
