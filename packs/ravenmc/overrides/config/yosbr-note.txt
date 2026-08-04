@@ -1,8 +1,0 @@
-Config files placed in this folder are shipped with the pack:
-
-  - Raven Forge applies them on manifest sync (manifest.configFiles[])
-  - .mrpack carries them under overrides/
-  - the plain client zip carries them at the archive root
-
-Paths here are relative to .minecraft, so this file lands at
-.minecraft/config/yosbr-note.txt. Delete it once you add real configs.
