@@ -126,22 +126,43 @@ is down.
 
 ---
 
-## Releasing
+## Publishing
 
-Tag as `<slug>-v<version>`:
+Two triggers, because the site holds two kinds of content.
+
+**Any push to `main` republishes the site.** That is the whole path for the
+launcher's feeds: `site/` is hand-edited prose, and making a news correction or
+an announcement wait for a pack release would be absurd. Nothing needs tagging.
+
+```bash
+git switch main && git merge dev && git push   # feeds live within a minute or two
+```
+
+**A tag additionally cuts a GitHub Release for one pack:**
 
 ```bash
 git tag ravenmc-v1.0.0 && git push --tags
 ```
 
-CI validates, builds, **signs every manifest** — the job fails without
-`PACK_SIGNING_KEY` rather than publishing an unsigned one — attaches the tagged
-pack's artifacts to a GitHub Release, and deploys `dist/` to GitHub Pages, which
-is what gives each pack its stable manifest URL.
+Either way CI validates, builds and **signs every manifest** — the job fails
+without `PACK_SIGNING_KEY` rather than publishing an unsigned one — then deploys
+`dist/` to GitHub Pages, which is what gives each pack its stable manifest URL.
+The tag path adds the `.mrpack`, the client zip and the server zip as release
+assets, for the tagged pack only.
 
-Every pack is rebuilt on release, not just the tagged one: `deploy-pages`
-replaces the whole site, so publishing one pack's `dist/` alone would take every
-other pack's manifest offline.
+The two outputs differ in scope on purpose:
+
+| | Contents |
+|---|---|
+| **GitHub Pages** | Every pack, plus `site/` |
+| **GitHub Release** | The tagged pack's artifacts |
+
+Pages gets everything because `deploy-pages` replaces the whole site: publishing
+one pack's `dist/` alone would take every other pack's manifest offline and
+break the launcher for players who are not on the pack being released. That is
+also why a pack's manifest goes live from `main`, not from its tag — the tag
+decides which pack gets downloadable artifacts, never which packs stay
+reachable.
 
 ## The launcher's feeds
 
