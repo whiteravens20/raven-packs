@@ -1,0 +1,111 @@
+{
+  "$schema": "../../docs/pack.schema.json",
+  "slug": "ravenclassic",
+  "name": "White Ravens Classic",
+  "version": "1.0.0",
+  "summary": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
+  "author": "White Ravens",
+  "minecraft": "26.2",
+  "loader": {
+    "type": "fabric",
+    "version": "0.19.3"
+  },
+  "recommendedRamMb": 6144,
+  "mods": [
+    { "slug": "fabric-api", "reason": "Required by most of the list" },
+    {
+      "slug": "fabric-language-kotlin",
+      "reason": "Kotlin runtime — Zoomify and Inventory Profiles Next are written in it"
+    },
+    { "slug": "yacl", "reason": "Config screens for Zoomify and friends" },
+    { "slug": "libipn", "reason": "Required by Inventory Profiles Next" },
+    { "slug": "searchables", "reason": "Required by Controlling" },
+    { "slug": "cloth-config", "reason": "Config screens" },
+    {
+      "slug": "forge-config-api-port",
+      "reason": "Config format used by Traveler's Backpack and Open Parties and Claims"
+    },
+    { "slug": "placeholder-api", "reason": "Text placeholders — Styled Chat and Mod Menu" },
+    {
+      "slug": "polymer",
+      "reason": "Serves server-side content to vanilla clients — graves and shops ride on it"
+    },
+    { "slug": "balm", "reason": "Required by Waystones" },
+    { "slug": "shogi", "reason": "Required by Waystones" },
+    { "slug": "fabric-permissions-api", "reason": "Permission checks the server mods delegate to LuckPerms" },
+
+    { "slug": "sodium", "reason": "Rendering engine rewrite — the single biggest FPS win" },
+    { "slug": "sodium-extra", "reason": "Extra Sodium video options" },
+    { "slug": "reeses-sodium-options", "reason": "Nicer Sodium options screen" },
+    { "slug": "iris", "reason": "Shader support, Sodium-compatible" },
+    { "slug": "lithium", "reason": "General game-logic optimisation — helps the server as much as the client" },
+    { "slug": "ferrite-core", "reason": "Cuts memory usage" },
+    { "slug": "krypton", "reason": "Network stack optimisation" },
+    { "slug": "entityculling", "reason": "Skips rendering entities behind walls" },
+    { "slug": "immediatelyfast", "reason": "Speeds up immediate-mode rendering" },
+    { "slug": "dynamic-fps", "reason": "Throttles FPS when the window is unfocused" },
+    { "slug": "bobby", "reason": "Keeps far chunks cached beyond the server view distance" },
+
+    { "slug": "xaeros-minimap", "reason": "Minimap — draws Open Parties and Claims claims natively", "side": "client" },
+    { "slug": "xaeros-world-map", "reason": "Full-screen map, same claim integration", "side": "client" },
+    {
+      "slug": "jei",
+      "allowPrerelease": true,
+      "reason": "Recipe viewer. 26.2 only has a beta build; EMI and REI have none at all",
+      "side": "client"
+    },
+    { "slug": "jade", "reason": "What am I looking at — block and mob tooltips", "side": "client" },
+    { "slug": "appleskin", "reason": "Shows saturation and what food actually does" },
+    { "slug": "mouse-tweaks", "reason": "Drag-to-move stacks in every inventory", "side": "client" },
+    { "slug": "inventory-profiles-next", "reason": "Inventory sorting", "side": "client" },
+    { "slug": "controlling", "reason": "Searchable, conflict-aware key bindings", "side": "client" },
+    { "slug": "zoomify", "reason": "Zoom key — the one thing OptiFine users miss first", "side": "client" },
+    { "slug": "chat-heads", "reason": "Faces next to chat lines; helps on a busy server", "side": "client" },
+    { "slug": "no-chat-reports", "reason": "Keeps chat off Mojang's reporting pipeline" },
+    { "slug": "not-enough-animations", "reason": "Third-person animations for what your hands are doing", "side": "client" },
+    { "slug": "lambdynamiclights", "reason": "Held torches light the world", "side": "client" },
+    { "slug": "continuity", "reason": "Connected textures" },
+    { "slug": "betterf3", "reason": "Readable debug screen", "side": "client" },
+    { "slug": "modmenu", "reason": "Lists the pack's mods and opens their settings", "side": "client" },
+    {
+      "slug": "modonomicon",
+      "reason": "Carries the in-game starter guide. Patchouli has no 26.2 build — its newest Fabric release is 26.1"
+    },
+
+    { "slug": "travelersbackpack", "reason": "Backpacks — worn, craftable, upgradeable" },
+    { "slug": "waystones", "reason": "Discoverable fast-travel points, found rather than granted" },
+    { "slug": "fallingtree", "reason": "Fell a tree with one cut. Server-side, so nothing to install to use it", "side": "server" },
+    { "slug": "universal-graves", "reason": "Death drops go into a grave. Server-side via Polymer", "side": "server" },
+    { "slug": "simple-voice-chat", "reason": "Proximity voice chat — needs both sides" },
+    {
+      "slug": "open-parties-and-claims",
+      "allowPrerelease": true,
+      "reason": "Land claims, parties and per-player chunk forceloading. Beta is the only 26.2 build; limits read from LuckPerms"
+    },
+
+    { "slug": "luckperms", "reason": "Permissions and the rank ladder that sets claim and forceload limits", "side": "server" },
+    { "slug": "universal-shops", "reason": "Player and admin trade shops, item for item", "side": "server" },
+    { "slug": "essential-commands", "reason": "/home, /tpa, /rtp, /back", "side": "server" },
+    { "slug": "ledger", "reason": "Logs every block change and rolls grief back", "side": "server" },
+    { "slug": "easyauth", "reason": "Password login. Without it an offline-mode server lets anyone take any name", "side": "server" },
+    { "slug": "chunky", "reason": "World pregeneration — keeps first exploration from lagging", "side": "server" },
+    { "slug": "spark", "reason": "Profiler for when the server does lag", "side": "server" },
+    { "slug": "servercore", "reason": "Dynamic server-side performance tuning", "side": "server" },
+    { "slug": "styled-chat", "reason": "Chat formatting driven by LuckPerms ranks", "side": "server" },
+    { "slug": "styled-nicknames", "reason": "Player-set nicknames, permission-gated", "side": "server" },
+    { "slug": "vanish", "reason": "Staff can look without being seen", "side": "server" },
+    { "slug": "bluemap", "reason": "Web map of the world", "side": "server" },
+    { "slug": "fastback", "reason": "Incremental world backups", "side": "server" },
+    { "slug": "discord-mc-chat", "reason": "Bridges server chat to Discord", "side": "server" }
+  ],
+  "shaders": [
+    {
+      "slug": "complementary-reimagined",
+      "reason": "Default shader — semi-realistic light and water, vanilla's look kept intact"
+    },
+    {
+      "slug": "complementary-unbound",
+      "reason": "The same pack pushed further, for players who want the transformed look"
+    }
+  ]
+}
