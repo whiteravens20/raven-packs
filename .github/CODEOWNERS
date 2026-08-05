@@ -1,0 +1,7 @@
+# ── Code Owners ───────────────────────────────────────────────────────────────
+# Everything here decides which jars a launcher downloads and runs on someone
+# else's machine, so there is nothing in this repository a non-owner should be
+# able to merge. Branch protection on main and dev requires this review, which
+# is the mechanism behind "no pull requests" in CONTRIBUTING.md.
+
+* @pavlojs
