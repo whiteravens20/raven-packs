@@ -144,6 +144,13 @@ git switch main && git merge dev && git push   # feeds live within a minute or t
 git tag ravenmc-v1.0.0 && git push --tags
 ```
 
+The slug in the tag picks the pack, and the version must match that pack's
+`pack.json` — CI refuses the tag otherwise, because `pack.json` is what names
+the built `.mrpack` and a `v1.0.0` release containing `ravenmc-1.0.1.mrpack`
+helps nobody. Tag a commit on `main` that is current: the build runs on the
+tagged tree and `deploy-pages` replaces the whole site, so tagging an old commit
+republishes the feeds and every other pack's manifest as they were then.
+
 Either way CI validates, builds and **signs every manifest** — the job fails
 without `PACK_SIGNING_KEY` rather than publishing an unsigned one — then deploys
 `dist/` to GitHub Pages, which is what gives each pack its stable manifest URL.
