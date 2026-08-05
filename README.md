@@ -13,6 +13,10 @@ launcher, or with no launcher at all.
 | `<pack>-<version>.zip` | Manual install, no launcher | Client jars plus configs |
 | `<pack>-<version>-server.zip` | Server operators | Server jars, `server.properties`, Fabric launcher, start scripts |
 
+Plus one file for the site as a whole: `packs.json`, a catalogue of every
+published pack with its manifest URL. Raven Forge fetches it to offer the packs
+as a choice, so a player picks a pack by name instead of pasting an address.
+
 Client and server come from the same definition, so they cannot drift apart. The
 client never receives server-only mods or `server.properties`; the server never
 receives a minimap. See [docs/SERVER.md](docs/SERVER.md).
@@ -34,7 +38,9 @@ costs about 70 KB of git history. See [the lockfile](#the-lockfile).
 
 See **[docs/INSTALL.md](docs/INSTALL.md)** for the player-facing guide. Short version:
 
-**Raven Forge** — create a profile, paste the manifest URL, hit sync:
+**Raven Forge** — new profile → *Play on the White Ravens servers*, and pick the
+pack. The launcher reads the catalogue and does the rest. Pasting the manifest URL
+by hand still works and comes to the same thing:
 
 ```
 https://whiteravens20.github.io/raven-packs/ravenmc/manifest.json
