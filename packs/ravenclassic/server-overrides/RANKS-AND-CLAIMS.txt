@@ -1,0 +1,104 @@
+White Ravens Classic — rangi, działki i sklepy
+==============================================
+
+Ten plik opisuje jednorazową konfigurację, której nie da się zapakować w zip:
+LuckPerms trzyma grupy w bazie, a Open Parties and Claims generuje swój config
+dopiero przy pierwszym starcie. Wszystko poniżej wklejasz raz, w konsoli
+serwera albo na czacie jako operator.
+
+
+1. Drabinka rang
+----------------
+
+Awans za obecność, nie za pieniądze. Każdy szczebel to więcej działek i więcej
+wymuszonych chunków — czyli dokładnie ta sama dźwignia, którą później podepnie
+sklep, jeśli zdecydujemy się go zautomatyzować.
+
+    /lp creategroup nowy
+    /lp creategroup osadnik
+    /lp creategroup obywatel
+    /lp creategroup rada
+
+    /lp createtrack rangi
+    /lp track rangi append nowy
+    /lp track rangi append osadnik
+    /lp track rangi append obywatel
+    /lp track rangi append rada
+
+    /lp group default parent add nowy
+
+Awans jednego gracza o jeden szczebel:
+
+    /lp user <nick> promote rangi
+
+
+2. Limity działek i forceloadu
+------------------------------
+
+Open Parties and Claims czyta limity z LuckPermsa — obsługa jest wbudowana,
+nic nie trzeba doklejać. Nazwy węzłów uprawnień wypisuje sam mod w swoim
+configu, więc weź je stamtąd zamiast zgadywać:
+
+    <świat>/serverconfig/openpartiesandclaims-server.toml
+    config/openpartiesandclaims-server.toml     (czasem tu, na Fabricu)
+
+Zatrzymaj serwer przed edycją tego pliku — działający nadpisze zmiany.
+
+Proponowany rozkład (liczby do ustawienia przy węzłach z toml-a):
+
+    nowy       3 działki,   0 forceload
+    osadnik    8 działek,   1 forceload
+    obywatel  20 działek,   4 forceload
+    rada      bez limitu,   8 forceload
+
+Forceload to jedyny chunkloading na tym serwerze — nie ma craftowalnych bloków
+ładujących chunki. Dzięki temu obciążenie serwera jest ograniczone czymś, co
+ustawiasz ty, a nie tym, ile kto naklepie bloków.
+
+
+3. Sklepy
+---------
+
+Universal Shops: gracz craftuje blok Trade Shop (4 deski + wełna + sztabka
+żelaza), stawia go przy skrzyni i ustawia cenę. Waluta to przedmiot — na
+klasycznym serwerze zwykle diament albo szmaragd. Sklepy admina stawia się tym
+samym blokiem, tylko z uprawnieniem administratora.
+
+Uwaga na styk z działkami: Universal Shops sprawdza dostęp do skrzyni przez
+Common Protection API, którego OPAC nie udostępnia. W praktyce sklep czyta tę
+skrzynię, którą wskaże mu właściciel bloku, a OPAC i tak nie pozwoli postawić
+sklepu na cudzej działce. Nie dokładaj drugiego moda ochronnego — dwa systemy
+claimów na jednym serwerze to gwarantowany kłopot.
+
+Rang na razie nie da się kupić automatycznie. Na Fabricu 26.2 nie ma moda,
+który przyjąłby przedmioty i nadał grupę w LuckPermsie (KubeJS nie ma jeszcze
+buildu na 26.2). Do czasu automatu: gracz płaci w sklepie admina, obsługa
+nadaje rangę komendą `promote` z punktu 1.
+
+
+4. Logowanie
+------------
+
+Serwer chodzi w offline mode, bo logowanie przez Microsoft w Raven Forge czeka
+na zatwierdzenie przez Mojang. Trzyma to w ryzach EasyAuth: gracz rejestruje
+hasło i serwer wiąże je z nickiem.
+
+    /auth register <hasło> <hasło>
+    /auth login <hasło>
+
+Gdy logowanie MS ruszy: ustaw online-mode=true w server.properties i wyrzuć
+EasyAuth z paczki — w tej samej zmianie, nigdy osobno.
+
+
+5. Zanim wpuścisz graczy
+------------------------
+
+    /chunky radius 3000
+    /chunky start
+
+Pregeneracja świata. Bez niej pierwsze tygodnie to lagi przy każdym wyjściu
+poza spawn.
+
+Backupy robi Fastback (przyrostowo, na gicie) — sprawdź `/backup` zaraz po
+starcie, a nie po pierwszym griefie. Ledger loguje każdą zmianę bloku i cofa
+szkody: `/lg inspect`, `/lg rollback`.
