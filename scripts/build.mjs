@@ -21,6 +21,11 @@
  *   <slug>-<version>.zip       Only with --with-zip. Real jars for a manual,
  *                              launcher-free install.
  *   pack.json                  Human-readable metadata and license list.
+ *
+ * Plus one file for the whole site:
+ *
+ *   packs.json                 Catalogue of every pack in dist/ — what the
+ *                              launcher fetches to offer a choice.
  */
 
 import fs from 'node:fs/promises';
@@ -521,6 +526,64 @@ function clientInstructions(pack, clientFiles) {
 }
 
 /**
+ * Write `dist/packs.json` — the catalogue the launcher reads to offer a choice.
+ *
+ * Built by scanning `dist/*&#47;pack.json` rather than from the packs this run
+ * happened to build. `node build.mjs ravenmc` builds one pack, and an index
+ * regenerated from that run alone would silently drop every other pack from the
+ * catalogue — publishing a one-entry list that looks correct.
+ *
+ * Carries no `mods[]`. The per-pack `pack.json` has the full list for anyone who
+ * wants it; a catalogue that grows by a hundred entries per pack added is a
+ * catalogue nobody can fetch to draw a menu.
+ */
+async function writeIndex() {
+  const baseUrl = (process.env.PACK_BASE_URL ?? '').replace(/\/$/, '');
+  const entries = [];
+
+  for (const dir of await fs.readdir(DIST_DIR, { withFileTypes: true })) {
+    if (!dir.isDirectory()) continue;
+    let meta;
+    try {
+      meta = JSON.parse(await fs.readFile(path.join(DIST_DIR, dir.name, 'pack.json'), 'utf-8'));
+    } catch {
+      continue; // Not a pack — `raven-forge/` holds the launcher's feeds.
+    }
+
+    const mrpack = (await fs.readdir(path.join(DIST_DIR, dir.name))).find((f) =>
+      f.endsWith('.mrpack'),
+    );
+    entries.push({
+      slug: meta.slug,
+      name: meta.name,
+      version: meta.version,
+      summary: meta.summary,
+      minecraft: meta.minecraft,
+      loader: meta.loader,
+      recommendedRamMb: meta.recommendedRamMb,
+      server: meta.server,
+      counts: meta.counts,
+      totalDownloadBytes: meta.totalDownloadBytes,
+      builtAt: meta.builtAt,
+      manifestUrl: baseUrl ? `${baseUrl}/${meta.slug}/manifest.json` : null,
+      mrpackUrl: baseUrl && mrpack ? `${baseUrl}/${meta.slug}/${mrpack}` : null,
+    });
+  }
+
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  // Null rather than a placeholder host: the launcher creates a profile from
+  // `manifestUrl`, so a made-up address would produce a profile that fails on
+  // its first sync. Absent is a state it can refuse; wrong is one it cannot.
+  if (!baseUrl) warn('PACK_BASE_URL is unset — packs.json carries no URLs (CI sets this)');
+
+  await fs.writeFile(
+    path.join(DIST_DIR, 'packs.json'),
+    JSON.stringify({ indexVersion: 1, generatedAt: new Date().toISOString(), packs: entries }, null, 2),
+  );
+  ok(`packs.json (${entries.length} pack(s))`);
+}
+
+/**
  * Copy `site/` into `dist/` verbatim.
  *
  * Not everything the Pages site serves is pack output. The launcher fetches its
@@ -564,6 +627,9 @@ async function main() {
 
   const built = [];
   for (const slug of slugs) built.push(await buildPack(slug, { withZip }));
+
+  step('Catalogue');
+  await writeIndex();
 
   step('Static site files');
   await copySite();
