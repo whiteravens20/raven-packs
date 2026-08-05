@@ -62,20 +62,49 @@ that is what players fetch from.
 **`reason`** is ignored by the build. Use it: in six months it is the only
 record of why a mod is in the list.
 
+## Client and server sides
+
+Each entry gets a `side` — `client`, `server` or `both` — which decides where it
+ships. Omit it and it is inferred from Modrinth's `client_side`/`server_side`:
+`unsupported` on one side pins it to the other, otherwise `both`.
+
+Set it explicitly when the inference is wrong, which is common — Modrinth marks
+plenty of client UI mods as server-*optional*:
+
+```jsonc
+{ "slug": "jade", "side": "client", "reason": "HUD overlay; nothing for a server to do" }
+{ "slug": "spark", "side": "server" }
+{ "slug": "lithium" }                  // inferred "both" — correct
+```
+
+`lock.mjs` prints the resolved side for every entry and a per-pack summary, so
+review it after locking.
+
+The split is enforced everywhere: the launcher manifest and `.mrpack` omit
+`server`-only entries, and the server zip omits `client`-only ones. A client
+never downloads `server.properties`, and a server never gets a minimap.
+
 ## Overrides
 
-Anything under `packs/<slug>/overrides/` is shipped with the pack, with paths
-relative to `.minecraft`:
+Three directories, mirroring the `.mrpack` layout. Paths are relative to the
+instance root.
+
+| Directory | Ships to |
+|---|---|
+| `overrides/` | both packs |
+| `client-overrides/` | client pack only |
+| `server-overrides/` | server pack only |
 
 ```
-packs/ravenmc/overrides/
-├── options.txt              → .minecraft/options.txt
-└── config/sodium.json       → .minecraft/config/sodium.json
+packs/ravenmc/
+├── overrides/config/sodium.json   → both
+├── client-overrides/options.txt   → client only
+└── server-overrides/server.properties → server only
 ```
 
-Each format carries them differently — the launcher manifest as
-`configFiles[]` (fetched from the published URL, hash-verified), the `.mrpack`
-under `overrides/`, and the client zip at the archive root.
+Each format carries them differently — the launcher manifest as `configFiles[]`
+(fetched from the published URL, hash-verified), the `.mrpack` under
+`overrides/`, and the zips at the archive root.
 
 > Overrides **overwrite** the player's file on every sync. Only ship files the
 > pack genuinely needs to own. Shipping `options.txt` resets a returning

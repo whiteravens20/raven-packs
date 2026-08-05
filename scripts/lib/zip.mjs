@@ -19,6 +19,21 @@ const METHOD_DEFLATE = 8;
 /** Bit 11 — file names are UTF-8. */
 const FLAG_UTF8 = 0x0800;
 
+/**
+ * "Version made by": high byte 3 = Unix, low byte = spec version.
+ *
+ * This has to say Unix, otherwise extractors treat the external-attributes
+ * field as DOS flags and drop the permission bits — which silently strips the
+ * executable bit off shipped start scripts. Windows ignores the Unix
+ * attributes either way, so declaring Unix costs nothing there.
+ */
+const VERSION_MADE_BY_UNIX = (3 << 8) | 20;
+
+/** Regular-file type bits (S_IFREG), required for the mode to be interpreted. */
+const S_IFREG = 0o100000;
+
+const DEFAULT_MODE = 0o644;
+
 // ── CRC-32 (IEEE 802.3, as ZIP requires) ───────────────────
 
 const CRC_TABLE = (() => {
@@ -63,9 +78,10 @@ export class ZipWriter {
    *
    * @param {string} name  Archive path, always forward-slash separated.
    * @param {Buffer|string} content
-   * @param {{ store?: boolean, mtime?: Date }} [options]
+   * @param {{ store?: boolean, mtime?: Date, mode?: number }} [options]
    *        `store` skips compression — use it for already-compressed payloads
    *        (jars, pngs, zips) where deflate only burns CPU.
+   *        `mode` is the Unix permission bits, e.g. 0o755 for a shell script.
    */
   add(name, content, options = {}) {
     const path = name.replace(/\\/g, '/');
@@ -106,6 +122,7 @@ export class ZipWriter {
       method,
       time,
       date,
+      mode: options.mode ?? DEFAULT_MODE,
       compressedSize: payload.length,
       size: raw.length,
       offset: this.#offset,
@@ -125,7 +142,7 @@ export class ZipWriter {
     for (const entry of this.#entries) {
       const header = Buffer.alloc(46);
       header.writeUInt32LE(CENTRAL_HEADER_SIG, 0);
-      header.writeUInt16LE(20, 4); // version made by
+      header.writeUInt16LE(VERSION_MADE_BY_UNIX, 4);
       header.writeUInt16LE(20, 6); // version needed
       header.writeUInt16LE(FLAG_UTF8, 8);
       header.writeUInt16LE(entry.method, 10);
@@ -139,7 +156,8 @@ export class ZipWriter {
       header.writeUInt16LE(0, 32); // comment
       header.writeUInt16LE(0, 34); // disk number start
       header.writeUInt16LE(0, 36); // internal attributes
-      header.writeUInt32LE(0o644 << 16, 38); // external attributes (unix mode)
+      // External attributes: Unix mode in the high 16 bits, DOS flags in the low.
+      header.writeUInt32LE(((S_IFREG | entry.mode) >>> 0) * 0x10000, 38);
       header.writeUInt32LE(entry.offset, 42);
 
       central.push(header, entry.nameBuf);

@@ -10,7 +10,12 @@ launcher, or with no launcher at all.
 |---|---|---|
 | `manifest.json` | Raven Forge | Mod list with direct URLs + SHA-512, optionally Ed25519-signed |
 | `<pack>-<version>.mrpack` | Prism, ATLauncher, MultiMC, Modrinth App | Download references (small, ~5 KB) |
-| `<pack>-<version>.zip` | Manual install, no launcher | The actual jars plus configs (~30 MB) |
+| `<pack>-<version>.zip` | Manual install, no launcher | Client jars plus configs |
+| `<pack>-<version>-server.zip` | Server operators | Server jars, `server.properties`, Fabric launcher, start scripts |
+
+Client and server come from the same definition, so they cannot drift apart. The
+client never receives server-only mods or `server.properties`; the server never
+receives a minimap. See [docs/SERVER.md](docs/SERVER.md).
 
 Mod jars are never committed — the repo stores references only, so a 100-mod pack
 costs about 70 KB of git history. See [the lockfile](#the-lockfile).
@@ -40,6 +45,9 @@ https://whiteravens20.github.io/raven-packs/ravenmc/manifest.json
 
 **No launcher** — install [Fabric](https://fabricmc.net/use/installer), download
 the `.zip`, unzip it into `.minecraft`.
+
+**Running a server** — download the `-server.zip`, unzip, run `start.sh`.
+Full guide: **[docs/SERVER.md](docs/SERVER.md)**.
 
 ---
 
@@ -120,9 +128,29 @@ Tag as `<slug>-v<version>`:
 git tag ravenmc-v1.0.0 && git push --tags
 ```
 
-CI validates, builds, signs the manifest if `PACK_SIGNING_KEY` is set, attaches
-the artifacts to a GitHub Release, and deploys `dist/` to GitHub Pages — which
+CI validates, builds, **signs every manifest** — the job fails without
+`PACK_SIGNING_KEY` rather than publishing an unsigned one — attaches the tagged
+pack's artifacts to a GitHub Release, and deploys `dist/` to GitHub Pages, which
 is what gives each pack its stable manifest URL.
+
+Every pack is rebuilt on release, not just the tagged one: `deploy-pages`
+replaces the whole site, so publishing one pack's `dist/` alone would take every
+other pack's manifest offline.
+
+## The launcher's feeds
+
+`site/` is copied into `dist/` verbatim and serves the JSON Raven Forge fetches
+that is not pack output:
+
+| URL | Set in the launcher under |
+|---|---|
+| `…/raven-forge/news.json` | Settings → News feed |
+| `…/raven-forge/announcements.json` | Settings → Announcement feed |
+
+Edit them by hand and push to `main` — that alone republishes the site, with no
+tag and no pack release. They are **not signed**, unlike manifests: whoever can
+write here controls the headlines and links shown inside the launcher, so this
+directory deserves the same review gate as a manifest.
 
 ### Signing
 

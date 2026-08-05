@@ -27,6 +27,74 @@ const ok = (msg) => console.log(`  \x1b[32m✓\x1b[0m ${msg}`);
 const keep = (msg) => console.log(`  \x1b[90m·\x1b[0m ${msg}`);
 const warn = (msg) => console.log(`  \x1b[33m!\x1b[0m ${msg}`);
 
+/**
+ * Decide which pack(s) a mod belongs in.
+ *
+ * Modrinth publishes `client_side`/`server_side` as required/optional/
+ * unsupported. "unsupported" on one side is a hard signal; anything else means
+ * the mod loads on both, so `both` is the safe default — an extra optional mod
+ * on a server wastes a little RAM, whereas a missing one that the client
+ * expects desynchronises the mod list and blocks login.
+ *
+ * Authors override with `"side"` in pack.json when they know better (a minimap
+ * marked server-optional has no business in a server pack).
+ */
+function inferSide(project, override) {
+  if (override) return override;
+  if (project.serverSide === 'unsupported') return 'client';
+  if (project.clientSide === 'unsupported') return 'server';
+  return 'both';
+}
+
+/**
+ * The Java major version Mojang ships this Minecraft release against.
+ *
+ * Worth recording rather than guessing: the requirement moves (26.2 needs 25,
+ * 1.20.x needed 17) and getting it wrong means server admins meet an
+ * UnsupportedClassVersionError stack trace instead of a sentence telling them
+ * which JDK to install.
+ */
+async function getRequiredJava(mcVersion) {
+  const ua = { 'User-Agent': 'whiteravens20/raven-packs' };
+  try {
+    const manifest = await (
+      await fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json', {
+        headers: ua,
+        signal: AbortSignal.timeout(15000),
+      })
+    ).json();
+
+    const entry = manifest.versions.find((v) => v.id === mcVersion);
+    if (!entry) return null;
+
+    const meta = await (await fetch(entry.url, { headers: ua, signal: AbortSignal.timeout(15000) })).json();
+    return meta.javaVersion?.majorVersion ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Resolve the Fabric server launcher so the server pack can be turnkey. */
+async function getServerLauncher(pack) {
+  if (pack.loader.type !== 'fabric') return null;
+
+  const installers = await (
+    await fetch('https://meta.fabricmc.net/v2/versions/installer', {
+      headers: { 'User-Agent': 'whiteravens20/raven-packs' },
+      signal: AbortSignal.timeout(15000),
+    })
+  ).json();
+
+  const installer = installers.find((i) => i.stable) ?? installers[0];
+  if (!installer) return null;
+
+  return {
+    installerVersion: installer.version,
+    url: `https://meta.fabricmc.net/v2/versions/loader/${pack.minecraft}/${pack.loader.version}/${installer.version}/server/jar`,
+    fileName: 'fabric-server-launch.jar',
+  };
+}
+
 async function readPack(slug) {
   const file = path.join(PACKS_DIR, slug, 'pack.json');
   const pack = JSON.parse(await fs.readFile(file, 'utf8'));
@@ -47,10 +115,13 @@ async function lockEntry(entry, kind, pack) {
     // Nothing to ask an API about — hash the bytes so integrity still holds.
     const file = await fetchFile(entry.url);
     const fileName = entry.filename ?? path.basename(new URL(entry.url).pathname);
-    ok(`${entry.name ?? fileName} (direct url)`);
+    // Nothing to infer from — a direct URL carries no side metadata.
+    const side = entry.side ?? (kind === 'mod' ? 'both' : 'client');
+    ok(`${entry.name ?? fileName} (direct url, ${side})`);
     return {
       requestKey: key,
       kind,
+      side,
       id: entry.id ?? fileName.replace(/\.(jar|zip)$/i, ''),
       name: entry.name ?? fileName,
       source: 'url',
@@ -74,19 +145,22 @@ async function lockEntry(entry, kind, pack) {
     allowPrerelease: entry.allowPrerelease ?? false,
   });
 
+  // Resource packs and shaders are client-side by definition.
+  const side = kind === 'mod' ? inferSide(project, entry.side) : (entry.side ?? 'client');
+
   const notes = [
     entry.version ? 'pinned' : null,
     version.usedPrerelease ? `\x1b[33m${version.versionType}\x1b[0m` : null,
+    entry.side ? `side: ${side} (forced)` : `side: ${side}`,
   ].filter(Boolean);
-  ok(`${project.title} ${version.versionNumber}${notes.length ? ` (${notes.join(', ')})` : ''}`);
-
-  if (kind === 'mod' && project.clientSide === 'unsupported') {
-    warn(`${project.title} is client-side: unsupported — it will do nothing for players`);
-  }
+  ok(`${project.title} ${version.versionNumber} (${notes.join(', ')})`);
 
   return {
     requestKey: key,
     kind,
+    side,
+    clientSide: project.clientSide,
+    serverSide: project.serverSide,
     id: project.slug,
     name: project.title,
     source: 'modrinth',
@@ -109,7 +183,8 @@ async function lockEntry(entry, kind, pack) {
 
 async function lockPack(slug, { update }) {
   const pack = await readPack(slug);
-  const existing = await readLockfile(PACKS_DIR, slug);
+  // An outdated lockfile is exactly what this script exists to replace.
+  const existing = await readLockfile(PACKS_DIR, slug, { outdatedIsNull: true });
 
   console.log(
     `\n\x1b[1m\x1b[36m${pack.name}\x1b[0m v${pack.version} — Minecraft ${pack.minecraft}, ` +
@@ -189,6 +264,11 @@ async function lockPack(slug, { update }) {
     );
   }
 
+  const serverLauncher = await getServerLauncher(pack);
+  const requiredJava = await getRequiredJava(pack.minecraft);
+  if (requiredJava) ok(`Minecraft ${pack.minecraft} requires Java ${requiredJava}`);
+  else warn(`could not determine the Java version for Minecraft ${pack.minecraft}`);
+
   const lock = {
     lockfileVersion: LOCKFILE_VERSION,
     pack: {
@@ -197,6 +277,8 @@ async function lockPack(slug, { update }) {
       version: pack.version,
       minecraft: pack.minecraft,
       loader: pack.loader,
+      requiredJava,
+      serverLauncher,
     },
     generatedAt: new Date().toISOString(),
     files,
@@ -204,11 +286,19 @@ async function lockPack(slug, { update }) {
 
   await writeLockfile(PACKS_DIR, slug, lock);
 
+  const clientCount = files.filter((f) => f.side === 'client' || f.side === 'both').length;
+  const serverCount = files.filter((f) => f.side === 'server' || f.side === 'both').length;
   const changed = files.filter((f) => !previous.has(f.requestKey)).length;
+
   console.log(
     `  \x1b[1m→ pack.lock.json: ${files.length} files` +
       `${changed ? `, ${changed} resolved` : ', no changes'}\x1b[0m`,
   );
+  console.log(`     client pack: ${clientCount} · server pack: ${serverCount}`);
+
+  if (serverCount === 0) {
+    warn('no server-side content — this pack runs against a plain server');
+  }
   return lock;
 }
 

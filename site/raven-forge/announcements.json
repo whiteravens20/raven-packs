@@ -1,0 +1,9 @@
+[
+  {
+    "id": "early-build-2026-08",
+    "message": "To jest wczesna wersja Raven Forge. Logowanie przez Microsoft czeka na zatwierdzenie aplikacji przez Mojang — na razie działa tylko tryb offline.",
+    "type": "info",
+    "url": "https://github.com/whiteravens20/raven-forge",
+    "dismissible": true
+  }
+]
