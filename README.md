@@ -147,10 +147,16 @@ that is not pack output:
 | `…/raven-forge/news.json` | Settings → News feed |
 | `…/raven-forge/announcements.json` | Settings → Announcement feed |
 
-Edit them by hand and push to `main` — that alone republishes the site, with no
-tag and no pack release. They are **not signed**, unlike manifests: whoever can
-write here controls the headlines and links shown inside the launcher, so this
-directory deserves the same review gate as a manifest.
+Both feeds carry a full `body`, so a card opens as a readable article **inside
+the launcher**: a feed needs no website behind it, and `url` is an optional
+"open in a browser" link rather than the way in. `body` accepts a small Markdown
+subset — `## headings`, `- lists`, `**bold**`, `*italic*`, `` `code` `` and
+`[links](https://…)` — which the launcher parses into elements, never into HTML.
+
+Edit them by hand and push to `dev`; the site republishes when `dev` is synced
+into `main`, with no tag and no pack release. They are **not signed**, unlike
+manifests: whoever can write here controls the headlines and links shown inside
+the launcher, so this directory deserves the same care as a manifest.
 
 ### Signing
 
@@ -164,6 +170,17 @@ gh secret set PACK_SIGNING_KEY < keys/ravenpacks.key
 
 Publish `keys/ravenpacks.pub` so players can add it under
 **Settings → Trusted Keys**.
+
+---
+
+## Contributing
+
+This is a first-party content repository — the packs here are the ones White
+Ravens runs, and a manifest published from it decides which jars land on a
+player's machine. **Pull requests are not accepted.** See
+[CONTRIBUTING.md](CONTRIBUTING.md) for what to open instead, and
+[SECURITY.md](SECURITY.md) for the trust model and how to report a
+vulnerability privately.
 
 ---
 
