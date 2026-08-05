@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "White Ravens Classic — teksty przewodnika",
+    "pack_format": 100,
+    "supported_formats": {
+      "min_inclusive": 45,
+      "max_inclusive": 9999
+    }
+  }
+}

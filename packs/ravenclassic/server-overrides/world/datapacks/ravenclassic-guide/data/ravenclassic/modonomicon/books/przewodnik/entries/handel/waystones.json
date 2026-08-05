@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "id": "ravenclassic:handel/waystones",
+  "category": "ravenclassic:handel",
+  "name": "book.ravenclassic.przewodnik.handel.waystones.name",
+  "description": "book.ravenclassic.przewodnik.handel.waystones.description",
+  "icon": {
+    "id": "minecraft:lodestone"
+  },
+  "background": {
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "width": 26,
+    "height": 26
+  },
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 1,
+  "x": 2,
+  "y": 0
+}

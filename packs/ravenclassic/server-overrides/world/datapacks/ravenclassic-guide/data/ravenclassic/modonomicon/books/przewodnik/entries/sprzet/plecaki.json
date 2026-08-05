@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "id": "ravenclassic:sprzet/plecaki",
+  "category": "ravenclassic:sprzet",
+  "name": "book.ravenclassic.przewodnik.sprzet.plecaki.name",
+  "description": "book.ravenclassic.przewodnik.sprzet.plecaki.description",
+  "icon": {
+    "id": "minecraft:leather"
+  },
+  "background": {
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "width": 26,
+    "height": 26
+  },
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 0,
+  "x": 0,
+  "y": 0
+}

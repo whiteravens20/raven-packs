@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "id": "p1",
+  "title": "book.ravenclassic.przewodnik.handel.sklepy.p1.title",
+  "text": "book.ravenclassic.przewodnik.handel.sklepy.p1.text",
+  "show_title_separator": true,
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 1
+}

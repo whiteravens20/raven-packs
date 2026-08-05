@@ -1,0 +1,14 @@
+{
+  "name": "book.ravenclassic.przewodnik.name",
+  "tooltip": "book.ravenclassic.przewodnik.tooltip",
+  "description": "",
+  "display_mode": "node",
+  "page_display_mode": "double_page",
+  "generate_book_item": true,
+  "model": "modonomicon:modonomicon_green",
+  "font": "modonomicon:default",
+  "creative_tab": "modonomicon:modonomicon",
+  "show_recently_unlocked": true,
+  "allow_open_book_with_invalid_links": true,
+  "turn_page_sound": "modonomicon:turn_page"
+}
