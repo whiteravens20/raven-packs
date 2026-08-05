@@ -2,29 +2,39 @@
   {
     "id": "forge-neoforge-support",
     "title": "Forge i NeoForge działają",
-    "excerpt": "Launcher obsługuje teraz wszystkie cztery loadery. Forge i NeoForge nie publikują gotowego profilu — od 1.13 zmodowany klient powstaje przez łatanie jara na twoim komputerze — więc launcher pobiera oficjalny instalator i uruchamia go, kierując go do własnego katalogu cache. Lista wersji jest filtrowana pod wybraną wersję Minecrafta.",
+    "excerpt": "Launcher obsługuje teraz wszystkie cztery loadery — a wersje do wyboru są filtrowane pod wybraną wersję Minecrafta.",
+    "body": "Launcher instaluje Fabric, Quilt, Forge i NeoForge z ekranu profilu.\n\n## Dlaczego Forge trwa dłużej\nOd Minecrafta 1.13 nie ma gotowego zmodowanego klienta do pobrania. Forge i NeoForge publikują instalator, który łata vanilla jara na twoim komputerze — więc launcher pobiera oficjalny instalator, uruchamia go raz na profil i odczytuje powstały plik wersji.\n\n## Wersje pasujące do gry\nLista wersji loadera pokazuje tylko te, które istnieją dla wybranej wersji Minecrafta. NeoForge koduje wersję inaczej niż Forge — `1.21.4` to `21.4.x`, a linia 1.20.1 leży pod zupełnie innym artefaktem Mavena — i launcher zna oba schematy.",
     "url": "https://github.com/whiteravens20/raven-forge",
     "publishedAt": "2026-08-04T12:00:00Z"
   },
   {
     "id": "ravenmc-pack-published",
     "title": "Raven MC 1.0.0 — pierwszy modpack",
-    "excerpt": "25 modów na Minecraft 26.2 z Fabric. Manifest jest podpisany kluczem Ed25519, a launcher weryfikuje go przed instalacją czegokolwiek. Serwer i klient budowane są z jednej definicji, więc nie mogą się rozjechać.",
+    "excerpt": "25 modów na Minecraft 26.2 z Fabric, z manifestem podpisanym kluczem Ed25519.",
+    "body": "Pierwszy modpack Raven MC jest opublikowany i gotowy do synchronizacji.\n\n- Minecraft **26.2**, loader **Fabric**\n- 25 modów, każdy ze skrótem SHA-512\n- Serwer i klient budowane z jednej definicji\n\n## Podpis\nManifest jest podpisany kluczem Ed25519. Launcher sprawdza podpis, zanim cokolwiek zainstaluje — dodaj klucz publiczny w **Ustawieniach → Zaufane klucze**, a manifest zmieniony po drodze zostanie odrzucony.\n\nJedna definicja paczki daje manifest dla launchera, `.mrpack` i zip klienta, więc strony serwera i klienta nie mogą się rozjechać.",
     "url": "https://github.com/whiteravens20/raven-packs",
     "publishedAt": "2026-08-04T00:00:00Z"
   },
   {
+    "id": "shaders-and-search",
+    "title": "Shadery, paczki zasobów i uczciwe wyszukiwanie",
+    "excerpt": "Filtry wyszukiwania są teraz widoczne i można je poluzować — a loader shaderów instaluje się przy pierwszym shaderze.",
+    "body": "## Wyszukiwanie pokazuje, co odsiewa\nWcześniej wyszukiwarka modów po cichu zawężała wyniki do wersji i loadera z profilu. Mekanism „nie istniał”, bo nie ma wydania na Minecraft 26.2 z Fabric — i nic tego nie tłumaczyło.\n\nTeraz wersja, loader i kategoria są zwykłymi listami nad wynikami. Startują tam, gdzie stoi profil, ale każdą można rozszerzyć. Modrinth łączy te filtry przez ORAZ, więc pusty wynik jest prawdziwą odpowiedzią — i teraz widać, która lista go zawęziła.\n\n## Loader shaderów\nPaczka shaderów sama się nie wczyta; potrzebuje moda, który ją odczyta. Przy pierwszej instalacji shadera launcher pyta, który loader zainstalować spośród zgodnych z profilem:\n\n- **Iris** — Fabric, Quilt i NeoForge (dociąga Sodium)\n- **Oculus** — Forge i starsze NeoForge (dociąga Embeddium)\n\nWybór należy do ciebie — launcher pokazuje też, co dojdzie razem z loaderem.",
+    "publishedAt": "2026-08-05T00:00:00Z"
+  },
+  {
     "id": "launcher-early-development",
     "title": "Raven Forge — launcher we wczesnym rozwoju",
-    "excerpt": "Fabric, Quilt, Forge i NeoForge działają; LiteLoader nie i nie będzie. Kod jest otwarty, a lista tego, czego jeszcze brakuje, jest spisana wprost w SECURITY.md i w planie — łącznie z tym, czego jeszcze nie sprawdziliśmy na żywo.",
+    "excerpt": "Fabric, Quilt, Forge i NeoForge działają. Lista tego, czego jeszcze brakuje, jest spisana wprost.",
+    "body": "Raven Forge jest w rozwoju i nie udaje, że jest gotowy.\n\n## Co działa\n- Uruchamianie gry, vanilla i zmodowanej\n- Fabric, Quilt, Forge i NeoForge\n- Synchronizacja modów z podpisanego manifestu\n- Mody, shadery i paczki zasobów z Modrinth\n\n## Czego brakuje\n- Logowanie przez Microsoft czeka na zatwierdzenie aplikacji przez Mojang — na razie działa tylko tryb offline\n- CurseForge wymaga twojego własnego klucza API\n- macOS nie jest jeszcze obsługiwany\n\nCzego jeszcze nie sprawdziliśmy na żywo, spisujemy wprost w `SECURITY.md` i w planie. Nie zgadujemy, że coś działa.",
     "url": "https://github.com/whiteravens20/raven-forge",
     "publishedAt": "2026-08-03T00:00:00Z"
   },
   {
     "id": "how-mod-sync-works",
     "title": "Jak działa synchronizacja modów",
-    "excerpt": "Wskazujesz profilowi adres manifestu. Launcher pobiera każdy plik, sprawdza jego skrót SHA-512 i instaluje tylko to, co się zgadza. Niezgodny plik jest kasowany, a synchronizacja przerywana — nigdy nie instalujemy „mimo wszystko”.",
-    "url": "https://github.com/whiteravens20/raven-forge/blob/main/docs/MANIFEST-SCHEMA.md",
+    "excerpt": "Wskazujesz profilowi adres manifestu, a launcher instaluje tylko to, czego skrót się zgadza.",
+    "body": "Manifest to plik JSON z listą modów, każdy ze swoim skrótem.\n\n1. Launcher pobiera manifest i sprawdza jego podpis\n2. Porównuje listę z tym, co już masz\n3. Pobiera brakujące pliki i weryfikuje każdy skrótem **SHA-512**\n4. Usuwa mody, które manifest przestał wymieniać\n\nNiezgodny plik jest kasowany, a synchronizacja przerywana — nigdy nie instalujemy „mimo wszystko”.\n\n## Twoje własne mody\nTo, co zainstalowałeś sam, nie jest ruszane. Usuwane są wyłącznie mody, które wcześniej przyszły z manifestu i zniknęły z niego.\n\nPełny opis formatu jest w [dokumentacji manifestu](https://github.com/whiteravens20/raven-forge/blob/main/docs/MANIFEST-SCHEMA.md).",
     "publishedAt": "2026-08-02T00:00:00Z"
   }
 ]

@@ -3,6 +3,8 @@
     "id": "early-build-2026-08",
     "message": "To jest wczesna wersja Raven Forge. Logowanie przez Microsoft czeka na zatwierdzenie aplikacji przez Mojang — na razie działa tylko tryb offline.",
     "type": "info",
+    "title": "Wczesna wersja Raven Forge",
+    "body": "Launcher jest w rozwoju. Uruchamia grę, instaluje loadery i synchronizuje mody z podpisanego manifestu, ale kilku rzeczy jeszcze nie ma.\n\n## Logowanie\nAplikacja Microsoft czeka na zatwierdzenie przez Mojang. Do tego czasu działa **tylko tryb offline** — singleplayer i LAN. Serwer w trybie online odrzuci połączenie i nie da się tego obejść po naszej stronie.\n\n## Co jeszcze czeka\n- CurseForge wymaga twojego własnego klucza API\n- macOS nie jest jeszcze obsługiwany\n- Launcher nie aktualizował się jeszcze z opublikowanego wydania\n\nBłędy i uwagi najlepiej zgłaszać przez [issues na GitHubie](https://github.com/whiteravens20/raven-forge/issues).",
     "url": "https://github.com/whiteravens20/raven-forge",
     "dismissible": true
   }
