@@ -1,11 +1,11 @@
 [
   {
     "id": "early-build-2026-08",
-    "message": "To jest wczesna wersja Raven Forge. Logowanie przez Microsoft czeka na zatwierdzenie aplikacji przez Mojang — na razie działa tylko tryb offline.",
+    "message": "Raven Forge jest w fazie rozwoju — logowanie przez Microsoft czeka na zatwierdzenie przez Mojang, więc na razie działa tylko tryb offline. Znalazłeś błąd? Zgłoś go na GitHubie.",
     "type": "info",
-    "title": "Wczesna wersja Raven Forge",
-    "body": "Launcher jest w rozwoju. Uruchamia grę, instaluje loadery i synchronizuje mody z podpisanego manifestu, ale kilku rzeczy jeszcze nie ma.\n\n## Logowanie\nAplikacja Microsoft czeka na zatwierdzenie przez Mojang. Do tego czasu działa **tylko tryb offline** — singleplayer i LAN. Serwer w trybie online odrzuci połączenie i nie da się tego obejść po naszej stronie.\n\n## Co jeszcze czeka\n- CurseForge wymaga twojego własnego klucza API\n- macOS nie jest jeszcze obsługiwany\n- Launcher nie aktualizował się jeszcze z opublikowanego wydania\n\nBłędy i uwagi najlepiej zgłaszać przez [issues na GitHubie](https://github.com/whiteravens20/raven-forge/issues).",
-    "url": "https://github.com/whiteravens20/raven-forge",
+    "title": "Wczesna wersja — i prośba o zgłoszenia",
+    "body": "Launcher uruchamia grę, instaluje loadery i synchronizuje mody z podpisanego manifestu, ale nie udaje, że jest skończony.\n\n## Logowanie\nAplikacja Microsoft czeka na zatwierdzenie przez Mojang. Do tego czasu działa **wyłącznie tryb offline** — singleplayer i LAN. Serwer w trybie online odrzuci połączenie i nie da się tego obejść po naszej stronie.\n\n## Co jeszcze przed nami\n- CurseForge wymaga twojego własnego klucza API\n- macOS nie jest jeszcze obsługiwany\n- Launcher nie aktualizuje się jeszcze sam z opublikowanego wydania\n\n## Zgłaszaj błędy\nNa tym etapie zgłoszenia są najbardziej wartościową rzeczą, jaką możesz dać projektowi. Jeśli coś się wywala, wygląda nie tak albo zwyczajnie nie da się przez to przejść — [otwórz zgłoszenie](https://github.com/whiteravens20/raven-forge/issues).\n\nPrzydaje się: wersja Minecrafta i loadera, co robiłeś krok po kroku i fragment logu. **Zanim wkleisz log, usuń z niego wpis --accessToken** — to działający token do twojego konta.",
+    "url": "https://github.com/whiteravens20/raven-forge/issues",
     "dismissible": true
   }
 ]
