@@ -3,3 +3,11 @@ dist/
 node_modules/
 keys/
 *.log
+
+# Internal planning — roadmaps, session notes, working docs. Published
+# documentation lives in README.md and docs/; the plan does not ship.
+PLAN.md
+ROADMAP.md
+TODO.md
+NOTES.md
+*.plan.md
