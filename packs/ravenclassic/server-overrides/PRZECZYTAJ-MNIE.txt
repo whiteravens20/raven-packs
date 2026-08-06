@@ -1,0 +1,104 @@
+White Ravens Classic — serwer
+=============================
+
+Paczka rozpakowała tu configi, które da się przygotować z góry. Reszta —
+grupy, uprawnienia, limity działek — siedzi w bazie LuckPermsa i w configach,
+które mody generują dopiero przy pierwszym starcie. Tego nie zapakuje się w
+zip, więc jest opisane w plikach obok.
+
+    dokumentacja/rangi.txt     drabinka rang i komplet komend LuckPermsa
+    dokumentacja/dzialki.txt   claimy, chunk loading, co jest chronione
+    dokumentacja/sklepy.txt    sklepy gracza i sklepy admina
+    dokumentacja/staff.txt     WorldEdit, moderacja, vanish, logi, backupy
+
+Czytaj rangi.txt pierwszy. Wszystko inne z niego wynika.
+
+
+Kolejność pierwszego uruchomienia
+---------------------------------
+
+1. Odpal serwer i pozwól mu dojść do "Done". Nie wpuszczaj jeszcze nikogo.
+   Mody generują teraz swoje configi — dopiero po tym kroku pliki, o których
+   mowa niżej, w ogóle istnieją.
+
+2. Zatrzymaj serwer (/stop). Nigdy nie edytuj configów przy działającym
+   serwerze — wyłączając się, nadpisze Twoje zmiany swoją wersją z pamięci.
+
+3. Sprawdź, czy to, co przyszło z paczką, przetrwało pierwszy start:
+
+       world/serverconfig/openpartiesandclaims-server.toml
+       config/luckperms/luckperms.conf
+       config/EssentialCommands.properties
+       world/config/playtime-rewards/config.json
+
+   Pliki urosną o brakujące klucze — to normalne. Ważne, żeby wartości, które
+   paczka ustawiła, nadal tam były.
+
+4. Odpal serwer i przejdź przez dokumentacja/rangi.txt od góry do dołu.
+   To jeden blok komend do wklejenia w konsolę.
+
+5. Pregeneracja świata. Bez niej pierwsze tygodnie to lagi przy każdym
+   wyjściu poza spawn:
+
+       /chunky radius 3000
+       /chunky start
+
+6. Sprawdź backupy zaraz po starcie, a nie po pierwszym griefie:
+
+       /backup
+
+7. Dopiero teraz whitelist i gracze.
+
+
+Logowanie
+---------
+
+Serwer chodzi w offline mode, bo logowanie przez Microsoft w Raven Forge czeka
+na zatwierdzenie przez Mojang. Trzyma to w ryzach EasyAuth: gracz rejestruje
+hasło i serwer wiąże je z nickiem.
+
+    /auth register <hasło> <hasło>
+    /auth login <hasło>
+
+Gdy logowanie MS ruszy: ustaw online-mode=true w server.properties i wyrzuć
+EasyAuth z paczki — w tej samej zmianie, nigdy osobno.
+
+
+Przewodnik w grze
+-----------------
+
+Książkę Modonomicon niesie datapack rozpakowany razem ze światem:
+
+    world/datapacks/ravenclassic-guide/
+
+Same teksty siedzą po stronie klienta, w resource packu `ravenclassic-guide`,
+który paczka włącza w options.txt. Jeśli po wejściu na serwer strony pokazują
+surowe klucze zamiast zdań, to znaczy, że resource pack nie jest włączony —
+nie że książka się nie wczytała.
+
+
+Zablokowane recepty
+-------------------
+
+    world/datapacks/ravenclassic-rules/
+
+Ten datapack nie dodaje niczego — wycina recepty na waystone'y, korzystając z
+sekcji "filter" w pack.mcmeta. Sharestone'y, portstone'y i zwoje nadal się
+craftuje; to one budują sieć wokół kamieni, które trzeba zdobyć.
+
+Skąd wtedy waystone. Trzy drogi: znaleźć w wiosce, dostać w nagrodę za rangę
+Obywatela (Playtime Rewards wydaje ją raz, patrz dokumentacja/rangi.txt) albo
+kupić w sklepie admina. Receptury nie da się uzależnić od rangi — na Fabricu
+26.2 nie ma moda, który by pytał LuckPermsa przy stole rzemieślniczym — więc
+bramką jest przedmiot, nie przepis. Wychodzi na to samo, a działa dziś.
+
+Chcesz zablokować coś jeszcze? Dopisz kolejny wpis do listy "block":
+namespace to mod, path to wyrażenie regularne na ścieżkę pliku w tym modzie.
+
+Po starcie sprawdź oba datapacki:
+
+    /datapack list
+
+Deklarują szeroki zakres `supported_formats`, bo numeru formatu dla 26.2 nie
+dało się ustalić bez uruchomionego serwera. Gdyby Minecraft odmówił je wczytać,
+w pack.mcmeta trzeba wpisać numer, który wypisze w logu.
