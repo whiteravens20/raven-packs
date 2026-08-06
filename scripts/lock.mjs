@@ -3,8 +3,8 @@
  * Resolve a pack definition into its lockfile.
  *
  *   node scripts/lock.mjs                # every pack
- *   node scripts/lock.mjs ravenmc        # one pack
- *   node scripts/lock.mjs ravenmc --update   # re-resolve unpinned entries too
+ *   node scripts/lock.mjs ravenclassic        # one pack
+ *   node scripts/lock.mjs ravenclassic --update   # re-resolve unpinned entries too
  *
  * This is the *only* script that talks to Modrinth. Everything downstream —
  * building, validating, publishing — reads `pack.lock.json` and stays offline.

@@ -65,7 +65,7 @@ jobs:
           if [ -n "$INPUT_SLUG" ]; then
             slug="$INPUT_SLUG"
           elif [ "$GITHUB_REF_TYPE" = tag ]; then
-            # ravenmc-v1.0.0 → ravenmc
+            # ravenclassic-v1.1.0 → ravenclassic
             slug="${GITHUB_REF_NAME%-v*}"
           else
             slug=""
@@ -79,7 +79,7 @@ jobs:
           # The tag says which version is being released; pack.json says which
           # version gets built, and it is the one that names the .mrpack. Left
           # unchecked they drift: a v1.0.0 release quietly containing
-          # ravenmc-1.0.1.mrpack. Only tags carry a version to compare —
+          # ravenclassic-1.1.1.mrpack. Only tags carry a version to compare —
           # workflow_dispatch names a pack, not a release.
           if [ "$GITHUB_REF_TYPE" = tag ]; then
             tag_version="${GITHUB_REF_NAME##*-v}"

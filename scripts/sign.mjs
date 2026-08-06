@@ -2,8 +2,8 @@
 /**
  * Sign a built manifest in place with an Ed25519 key.
  *
- *   node scripts/sign.mjs dist/ravenmc/manifest.json keys/ravenpacks.key
- *   PACK_SIGNING_KEY="<base64>" node scripts/sign.mjs dist/ravenmc/manifest.json
+ *   node scripts/sign.mjs dist/ravenclassic/manifest.json keys/ravenpacks.key
+ *   PACK_SIGNING_KEY="<base64>" node scripts/sign.mjs dist/ravenclassic/manifest.json
  *
  * Adds a `signature` field over the canonical form of everything else. The
  * launcher recomputes that same canonical form and checks it against the

@@ -3,8 +3,8 @@
  * Build packs from their lockfiles into every distribution format.
  *
  *   node scripts/build.mjs                    # all packs, metadata only
- *   node scripts/build.mjs ravenmc            # one pack
- *   node scripts/build.mjs ravenmc --with-zip # also bundle the jars
+ *   node scripts/build.mjs ravenclassic            # one pack
+ *   node scripts/build.mjs ravenclassic --with-zip # also bundle the jars
  *
  * This script is **offline by default**. It reads `packs/<slug>/pack.lock.json`
  * — which already holds every URL, size and hash — and touches no API. Adding a
@@ -529,7 +529,7 @@ function clientInstructions(pack, clientFiles) {
  * Write `dist/packs.json` — the catalogue the launcher reads to offer a choice.
  *
  * Built by scanning `dist/*&#47;pack.json` rather than from the packs this run
- * happened to build. `node build.mjs ravenmc` builds one pack, and an index
+ * happened to build. `node build.mjs ravenclassic` builds one pack, and an index
  * regenerated from that run alone would silently drop every other pack from the
  * catalogue — publishing a one-entry list that looks correct.
  *
