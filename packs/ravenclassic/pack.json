@@ -88,6 +88,11 @@
       "side": "server"
     },
     {
+      "slug": "metadatawildcard4fabric-permissions-api",
+      "reason": "Wildcards in LuckPerms meta keys — without it the selector weights that protect staff from each other need one key per command",
+      "side": "server"
+    },
+    {
       "slug": "playtime-ranks",
       "reason": "Moves a player up the LuckPerms ladder once they have played long enough",
       "side": "server"

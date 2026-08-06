@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-06T17:55:28.725Z",
+  "generatedAt": "2026-08-06T18:18:34.962Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1003,6 +1003,26 @@
       "sha1": "4de07ac050d7ba8c2faff0f6ac549d2052425282",
       "sha512": "f541fcb459e6b315c87b8de446a1c6bbb3ddf7b06317c5fe1e64a8bd26460dd7e206545beaeb565c5036fb321398c986462cd5913305068bdd9190ead367ce93",
       "license": "MIT",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"metadatawildcard4fabric-permissions-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "metadatawildcard4fabric-permissions-api",
+      "name": "Metadata Wildcard for fabric-permissions-api",
+      "source": "modrinth",
+      "projectId": "eCT6lHG4",
+      "versionId": "bgIKRB6h",
+      "version": "0.2.0",
+      "fileName": "unobfuscated.jar",
+      "url": "https://cdn.modrinth.com/data/eCT6lHG4/versions/bgIKRB6h/unobfuscated.jar",
+      "size": 5714,
+      "sha1": "e06bc30f14243e48e3cfbaf441d6bed546d7eaaf",
+      "sha512": "2b104ad91b256059013562a67f4d2bb42fd3d02a55b65058e866cd10b1f4aafe359d1d08f48fc34545975f9f8cfd0b26fa8f8b8e8273a29ab65428ed46a1f615",
+      "license": "Apache-2.0",
       "requiredDependencies": []
     },
     {
