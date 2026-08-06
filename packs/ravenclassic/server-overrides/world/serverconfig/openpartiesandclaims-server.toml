@@ -1,0 +1,45 @@
+# Open Parties and Claims — White Ravens Classic
+#
+# Only the options the pack actually changes are written here. Everything else
+# the mod fills in with its own defaults the first time the server starts, so
+# do not be surprised when this file grows.
+#
+# maxPlayerClaims and maxPlayerClaimForceloads are read at world load, so a
+# change here needs a server restart, not a /reload.
+
+[serverConfig]
+	# Where per-player claim and forceload limits come from. Without this the
+	# mod looks for Prometheus and every LuckPerms group meta value is ignored.
+	permissionSystem = "luck_perms"
+
+	[serverConfig.claims]
+		# The fallback for a player whose LuckPerms meta has not been read yet
+		# — which is every player until their first login after a restart.
+		# Keep these equal to the lowest rung of the ladder, never higher.
+		maxPlayerClaims = 4
+		maxPlayerClaimForceloads = 0
+
+		# A player must stand within 5 chunks of the chunk they are claiming.
+		# This is what stops someone claiming land they have never walked to.
+		maxClaimDistance = 5
+
+		# 90 days of not logging in and the claims are released. The default is
+		# a year, which on a small server means the map fills with ghost towns.
+		playerClaimsExpirationTime = 2160
+
+		[serverConfig.claims.protection]
+			# Everything inside a claim is closed to outsiders by default —
+			# blocks, chests, doors, animals. These are the deliberate holes.
+			#
+			# No prefix means "may be right-clicked, still may not be broken",
+			# which is exactly what a shop customer and a traveller need. The
+			# shop's own settings screen stays owner-only, so an open shop
+			# block is a till, not a back door.
+			#
+			# The crafting table is the mod's own default; keep it.
+			forcedBlockProtectionExceptionList = [
+				"minecraft:crafting_table",
+				"waystones:*",
+				"universal_shops:trade_block",
+				"universal_shops:admin_trade_block"
+			]

@@ -76,6 +76,21 @@ jobs:
             exit 1
           fi
 
+          # The tag says which version is being released; pack.json says which
+          # version gets built, and it is the one that names the .mrpack. Left
+          # unchecked they drift: a v1.0.0 release quietly containing
+          # ravenmc-1.0.1.mrpack. Only tags carry a version to compare —
+          # workflow_dispatch names a pack, not a release.
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            tag_version="${GITHUB_REF_NAME##*-v}"
+            pack_version="$(node -e 'process.stdout.write(require(`./packs/${process.argv[1]}/pack.json`).version ?? "")' "$slug")"
+            if [ "$tag_version" != "$pack_version" ]; then
+              echo "::error::Tag $GITHUB_REF_NAME says version $tag_version, but packs/$slug/pack.json says ${pack_version:-<none>}. Bump one to match the other, then retag."
+              exit 1
+            fi
+            echo "Version $tag_version matches packs/$slug/pack.json."
+          fi
+
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
           if [ -n "$slug" ]; then
             echo "Releasing pack: $slug"

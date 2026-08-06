@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "id": "ravenclassic:sprzet/shadery",
+  "category": "ravenclassic:sprzet",
+  "name": "book.ravenclassic.przewodnik.sprzet.shadery.name",
+  "description": "book.ravenclassic.przewodnik.sprzet.shadery.description",
+  "icon": {
+    "id": "minecraft:glowstone"
+  },
+  "background": {
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "width": 26,
+    "height": 26
+  },
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 3,
+  "x": 6,
+  "y": 0
+}

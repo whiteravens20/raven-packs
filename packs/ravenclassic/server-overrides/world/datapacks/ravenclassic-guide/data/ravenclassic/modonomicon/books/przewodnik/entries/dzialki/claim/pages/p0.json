@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "id": "p0",
+  "title": "book.ravenclassic.przewodnik.dzialki.claim.p0.title",
+  "text": "book.ravenclassic.przewodnik.dzialki.claim.p0.text",
+  "show_title_separator": true,
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 0
+}

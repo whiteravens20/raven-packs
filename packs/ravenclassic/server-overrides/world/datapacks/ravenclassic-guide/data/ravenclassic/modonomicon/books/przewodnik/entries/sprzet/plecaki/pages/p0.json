@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "id": "p0",
+  "title": "book.ravenclassic.przewodnik.sprzet.plecaki.p0.title",
+  "text": "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text",
+  "show_title_separator": true,
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 0
+}

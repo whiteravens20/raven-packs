@@ -1,0 +1,8 @@
+fov:80.0
+guiScale:0
+maxFps:120
+renderDistance:12
+simulationDistance:8
+entityShadows:false
+graphicsMode:1
+resourcePacks:["vanilla","file/ravenclassic-guide"]

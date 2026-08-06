@@ -13,6 +13,10 @@ launcher, or with no launcher at all.
 | `<pack>-<version>.zip` | Manual install, no launcher | Client jars plus configs |
 | `<pack>-<version>-server.zip` | Server operators | Server jars, `server.properties`, Fabric launcher, start scripts |
 
+Plus one file for the site as a whole: `packs.json`, a catalogue of every
+published pack with its manifest URL. Raven Forge fetches it to offer the packs
+as a choice, so a player picks a pack by name instead of pasting an address.
+
 Client and server come from the same definition, so they cannot drift apart. The
 client never receives server-only mods or `server.properties`; the server never
 receives a minimap. See [docs/SERVER.md](docs/SERVER.md).
@@ -34,7 +38,9 @@ costs about 70 KB of git history. See [the lockfile](#the-lockfile).
 
 See **[docs/INSTALL.md](docs/INSTALL.md)** for the player-facing guide. Short version:
 
-**Raven Forge** — create a profile, paste the manifest URL, hit sync:
+**Raven Forge** — new profile → *Play on the White Ravens servers*, and pick the
+pack. The launcher reads the catalogue and does the rest. Pasting the manifest URL
+by hand still works and comes to the same thing:
 
 ```
 https://whiteravens20.github.io/raven-packs/ravenmc/manifest.json
@@ -120,22 +126,50 @@ is down.
 
 ---
 
-## Releasing
+## Publishing
 
-Tag as `<slug>-v<version>`:
+Two triggers, because the site holds two kinds of content.
+
+**Any push to `main` republishes the site.** That is the whole path for the
+launcher's feeds: `site/` is hand-edited prose, and making a news correction or
+an announcement wait for a pack release would be absurd. Nothing needs tagging.
+
+```bash
+git switch main && git merge dev && git push   # feeds live within a minute or two
+```
+
+**A tag additionally cuts a GitHub Release for one pack:**
 
 ```bash
 git tag ravenmc-v1.0.0 && git push --tags
 ```
 
-CI validates, builds, **signs every manifest** — the job fails without
-`PACK_SIGNING_KEY` rather than publishing an unsigned one — attaches the tagged
-pack's artifacts to a GitHub Release, and deploys `dist/` to GitHub Pages, which
-is what gives each pack its stable manifest URL.
+The slug in the tag picks the pack, and the version must match that pack's
+`pack.json` — CI refuses the tag otherwise, because `pack.json` is what names
+the built `.mrpack` and a `v1.0.0` release containing `ravenmc-1.0.1.mrpack`
+helps nobody. Tag a commit on `main` that is current: the build runs on the
+tagged tree and `deploy-pages` replaces the whole site, so tagging an old commit
+republishes the feeds and every other pack's manifest as they were then.
 
-Every pack is rebuilt on release, not just the tagged one: `deploy-pages`
-replaces the whole site, so publishing one pack's `dist/` alone would take every
-other pack's manifest offline.
+Either way CI validates, builds and **signs every manifest** — the job fails
+without `PACK_SIGNING_KEY` rather than publishing an unsigned one — then deploys
+`dist/` to GitHub Pages, which is what gives each pack its stable manifest URL.
+The tag path adds the `.mrpack`, the client zip and the server zip as release
+assets, for the tagged pack only.
+
+The two outputs differ in scope on purpose:
+
+| | Contents |
+|---|---|
+| **GitHub Pages** | Every pack, plus `site/` |
+| **GitHub Release** | The tagged pack's artifacts |
+
+Pages gets everything because `deploy-pages` replaces the whole site: publishing
+one pack's `dist/` alone would take every other pack's manifest offline and
+break the launcher for players who are not on the pack being released. That is
+also why a pack's manifest goes live from `main`, not from its tag — the tag
+decides which pack gets downloadable artifacts, never which packs stay
+reachable.
 
 ## The launcher's feeds
 

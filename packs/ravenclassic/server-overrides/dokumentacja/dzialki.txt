@@ -1,0 +1,129 @@
+Działki i chunk loading
+=======================
+
+Open Parties and Claims. Jedna rzecz na start, bo od niej zależy wszystko
+poniżej: ten mod nie ma cuboidów. Nie zaznacza się rogów, nie ma prostokątów o
+dowolnym rozmiarze. Jednostką jest chunk — 16×16 bloków od bedrocka po limit
+świata. Zajmuje się je po jednym, stojąc w środku.
+
+Limit rangi to łączna liczba chunków, nie liczba działek. Cztery chunki mogą
+być kwadratem 32×32 albo czterema osobnymi kawałkami po drugiej stronie mapy.
+F3+G rysuje siatkę chunków — warto pokazać ją graczowi, zanim zacznie budować,
+bo dom postawiony w poprzek czterech chunków zjada cały limit Nowego.
+
+
+1. Zwykły gracz
+---------------
+
+    /openpac-claims claim          zajmij chunk, w którym stoisz
+    /openpac-claims unclaim        zwolnij go
+    /openpac-claims forceload      trzymaj ten chunk załadowany
+    /openpac-claims unforceload    przestań
+    /openpac-claims about          ile zajętych z ilu, ile forceloadu
+
+Można też podać współrzędne bloku zamiast stać w chunku — tab podpowie
+składnię. Zajmować da się tylko w promieniu 5 chunków od siebie
+(maxClaimDistance w toml-u), więc nikt nie zaklepie sobie terenu z drugiego
+końca świata.
+
+Wszystko to ma odpowiednik w interfejsie moda i na mapach Xaero — swoje
+działki na zielono, cudze w kolorze właściciela, bez konfigurowania czegokolwiek.
+To dlatego w paczce jest Xaero, a nie JourneyMap.
+
+Drużyny:
+
+    /openpac-parties create <nazwa>
+    /openpac-parties invite <nick>
+    /opm <wiadomość>               czat drużyny
+
+Drużynie można dać dostęp do swoich działek. Uwaga: w paczce
+partyOwnedClaims zostaje wyłączone, czyli działki należą do konkretnego
+gracza, a nie do drużyny. Drużyna daje dostęp, nie własność — dzięki temu
+rozpad ekipy nie zabiera nikomu terenu i nie mnoży limitów.
+
+
+2. Staff
+--------
+
+Tryb admina — wchodzisz w cudzą działkę tak, jakby była Twoja. Do gaszenia
+pożarów, nie do zwiedzania:
+
+    /openpac-claims admin-mode
+
+Uprawnienie: xaero.pac_claims_admin_mode (ma je Administrator).
+
+Claimy serwerowe — spawn, market, arena. Nie liczą się do niczyjego limitu i
+nie wygasają:
+
+    /openpac-claims server-claim-mode
+
+Uprawnienie: xaero.pac_server_claims. Po włączeniu trybu zwykłe `claim`
+zajmuje na serwer, nie na Ciebie. Pamiętaj wyłączyć.
+
+Tryby przełącza się wzorem `<tryb>-claim-mode`, gdzie tryb to `default`,
+`player`, `party` albo `server`. Tab po `/openpac-claims` wypisze komplet.
+
+Podgląd cudzych limitów:
+
+    /openpac-claims about <nick>
+
+
+3. Co jest chronione
+--------------------
+
+Wszystko. Domyślnie obcy w Twojej działce nie postawi ani nie zniszczy bloku,
+nie otworzy skrzyni, beczki, enderskrzyni ani shulkera, nie użyje pieca,
+kowadła, warsztatu, stołu enchantującego, nie przekręci dźwigni, nie otworzy
+drzwi ani furtki, nie zabije Twoich zwierząt i nie zdepcze pola. Tak — skrzynie
+i drzwi też, to nie jest osobna opcja do włączenia.
+
+Jedyny wyjątek, który zostaje z domyślnych ustawień moda, to stół rzemieślniczy.
+
+Paczka dokłada trzy własne, w
+world/serverconfig/openpartiesandclaims-server.toml:
+
+    waystones:*                       wszystkie kamienie podróży
+    universal_shops:trade_block       sklep gracza
+    universal_shops:admin_trade_block sklep admina
+
+Chodzi o to, żeby dało się kupić w sklepie stojącym na czyjejś działce i
+skoczyć z waystone'a stojącego w cudzej wiosce. Wyjątek dotyczy wyłącznie
+kliknięcia — rozbić tych bloków obcy dalej nie może, a ustawienia sklepu
+otwiera tylko właściciel. Otwarty sklep to kasa, nie tylne drzwi.
+
+Gracz może otworzyć więcej sam. Mod ma gotowe grupy do przełączania w
+ustawieniach działki: Controls, Doors, Chests, Barrels, Ender_Chests,
+Shulker_Boxes, Furnaces, Hoppers, Anvils, Stonecutters, Grindstones, Lecterns,
+Beds, Beacons, Enchanting_Tables, Crops i kilka innych. Ustawia się je per
+gracz albo per pojedyncza działka, przez interfejs moda lub `/openpac-config`.
+To wygodne przy wspólnej farmie albo publicznej kuźni.
+
+Można też włączać wyjątki dla wybranych osób i grup — `/openpac-config` ma
+podkomendy do dodawania i usuwania graczy z listy zaufanych.
+
+
+4. Chunk loading
+----------------
+
+Forceload trzyma chunk załadowanym, gdy nikogo tam nie ma. To jedyny sposób,
+żeby farma chodziła pod nieobecność właściciela, i jedyny chunk loading na tym
+serwerze — nie ma tu craftowalnych bloków ładujących chunki. Dzięki temu
+obciążenie jest ograniczone liczbą, którą ustawiasz Ty, a nie tym, ile kto
+naklepie bloków.
+
+Forceloadować można wyłącznie własny, już zajęty chunk. Limity: 0 / 2 / 4 / 8
+w górę drabinki (dokumentacja/rangi.txt).
+
+Ile to kosztuje. Chunk trzymany na siłę to pełny tick entities, redstone i
+maszyn, non stop, także gdy na serwerze nie ma nikogo. Dziesięciu Mistrzów
+korzystających z całego przydziału to 80 chunków mielonych dwadzieścia razy na
+sekundę. Zanim podniesiesz limity, zajrzyj w /spark — profiler pokaże, ile z
+ticku zjadają załadowane chunki, i to jest jedyna liczba, która powinna o tym
+decydować.
+
+Podnosi się je jedną komendą, np.:
+
+    lp group mistrz         meta set xaero.pac_max_forceloads 12
+
+Limit z uprawnień wchodzi dopiero po pierwszym zalogowaniu gracza od restartu
+serwera. Nie panikuj, że komenda nie zadziałała — każ się przelogować.

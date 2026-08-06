@@ -1,0 +1,196 @@
+Narzędzia staffu
+================
+
+1. WorldEdit
+------------
+
+Chodzi po stronie serwera, więc gracz nie musi nic instalować, żeby ktoś obok
+niego stawiał ściany komendą. W paczce klienckiej jest za to WorldEdit CUI —
+rysuje ramkę zaznaczenia, bez którego praca po omacku jest udręką.
+
+WorldEdit ma Administrator i Architekt. Budowniczy go nie ma — powód niżej,
+w akapicie oznaczonym WAŻNE. Budowniczy buduje w trybie kreatywnym.
+
+Podstawy:
+
+    //wand                drewniana siekiera do zaznaczania
+    lewy / prawy klik     pierwszy i drugi róg
+    //set <blok>          wypełnij zaznaczenie
+    //replace <a> <b>     zamień jeden blok na drugi
+    //copy  //paste       schowek
+    //undo  //redo        cofnij, ponów
+    //expand //contract   popraw zaznaczenie bez klikania od nowa
+    //sel                 wyczyść zaznaczenie
+
+Uprawnienia. Najprostsza wersja to hurt:
+
+    lp group administrator  permission set worldedit.* true
+
+Chcesz ciaśniej — nadaj tylko to, co potrzebne, i zostaw resztę:
+
+    worldedit.wand
+    worldedit.selection.*
+    worldedit.region.*
+    worldedit.clipboard.*
+    worldedit.history.*
+    worldedit.navigation.*
+    worldedit.brush.*
+
+Świadomie NIE nadawaj `worldedit.limit.unrestricted` nikomu poza Architektem.
+Limit bloków na operację to jedyna rzecz, która stoi między
+literówką w promieniu a piętnastominutowym zawieszeniem serwera. Domyślny
+limit zmienia się w config/worldedit/worldedit.properties (klucz
+`max-blocks-changed`, wpisz konkretną liczbę zamiast -1) — plik powstaje przy
+pierwszym starcie.
+
+WAŻNE. WorldEdit nie widzi działek. Nie pyta OPAC-a o zgodę i nie zapyta:
+`//set air` w promieniu 50 zrówna z ziemią wszystko, także cudze domy. Nie ma
+moda, który by to na Fabricu 26.2 spinał. Co za tym idzie:
+
+  * WorldEdit siedzi przy Administratorze, a nie przy Budowniczym. Budowniczy
+    to ranga od stawiania ładnych rzeczy; kasowanie terenu jednym poleceniem
+    to inna odpowiedzialność i inne konto,
+  * Ledger loguje każdą zmianę bloku razem z tym, kto ją zrobił, więc `//undo`
+    ma awaryjną kopię zapasową w postaci `/lg rollback`,
+  * przy dużych operacjach warto najpierw `/backup`.
+
+
+2. Moderacja
+------------
+
+Kick i ban to komendy vanilla. Widzi je LuckPerms dzięki modowi Vanilla
+Permissions (węzły `minecraft.command.*`), więc Moderator nie musi mieć opa.
+
+    /kick <nick> <powód>
+    /ban <nick> <powód>
+    /pardon <nick>
+    /banlist
+
+Reszta z moda StaffSee (węzeł `staffsee.moderate`):
+
+    /mute <nick> <30m|2h|1d|perm> <powód>
+    /unmute <nick>
+    /warn <nick> <powód>
+    /warns <nick>
+    /freeze <nick>      unieruchamia — do rozmowy, nie do kary
+    /unfreeze <nick>
+    /reports            zgłoszenia od graczy
+
+Gracze zgłaszają przez `/report <nick> <powód>` — uprawnienie `staffsee.report`
+mają wszyscy, siedzi w grupie `nowy`.
+
+Wszystko, co zrobi StaffSee, ląduje w plikach tekstowych w jego katalogu
+configu, w podziale na graczy i rodzaje akcji. Żadnej bazy, żadnego panelu —
+grep wystarczy.
+
+Uczciwa uwaga o StaffSee: to najmłodszy mod w tej paczce, wydany w lipcu 2026,
+z kilkuset pobraniami. Jest tu, bo `/mute` na Fabricu 26.2 nie ma alternatywy,
+której dałoby się użyć — jedyna inna to mod bez publicznych źródeł, na licencji
+zamkniętej, dublujący pół Essential Commands. StaffSee chodzi wyłącznie po
+stronie serwera, więc jeśli sprawi kłopot, wypada go z paczki bez ruszania
+klientów. Zostaje wtedy kick i ban.
+
+Moderator nie zbanuje ani nie kicknie Administratora — pilnują tego wagi
+selektora (dokumentacja/rangi.txt, sekcja 5). Blokada siedzi w parsowaniu
+argumentu, więc obejmuje każdą komendę vanilla wskazującą gracza. Jedyna
+znana furtka to /execute, którego Moderator nie dostaje.
+
+Do sprawdzenia na żywym serwerze: czy komendy StaffSee też są objęte. Zależy
+to od tego, czy mod wskazuje gracza argumentem vanilla, a źródeł nie ma jak
+przejrzeć. Test trwa minutę — spróbuj `/mute` na Administratorze z konta
+Moderatora.
+
+
+3. Vanish
+---------
+
+    /vanish
+
+Znika z listy graczy i z widoku. Do sprawdzania, czy ktoś naprawdę robi to, o
+co go podejrzewasz.
+
+    lp group moderator      permission set vanish.command.vanish true
+    lp group moderator      permission set vanish.feature.view true
+
+Drugi węzeł to prawo do widzenia innych ukrytych — bez niego staff nie widzi
+siebie nawzajem i wpada na siebie w ciemności.
+
+
+4. Ledger — logi i cofanie
+--------------------------
+
+    /lg inspect              tryb inspekcji: klik w blok pokazuje historię
+    /lg inspect <x> <y> <z>  historia konkretnego miejsca
+    /lg search <parametry>   szukanie po graczu, czasie, bloku
+    /lg preview <parametry>  zobacz, co cofnięcie by zrobiło
+    /lg rollback <parametry> cofnij
+    /lg restore <parametry>  cofnij cofnięcie
+
+Zawsze `preview` przed `rollback`. Parametry Ledgera są potężne i łatwo objąć
+nimi pół świata zamiast jednego domu.
+
+
+5. Wyprawka
+-----------
+
+Kit `Start` to kamienne narzędzia (miecz, kilof, siekiera, łopata, motyka),
+cztery chlebki i **przewodnik po serwerze** w pierwszym slocie. Ta ostatnia
+pozycja jest tu najważniejsza: Modonomicon nie ma komendy otwierającej książkę,
+więc gdyby nikt jej graczowi nie dał, cały przewodnik byłby napisany do szuflady.
+
+Plik: config/starterkit/kits/Start.txt, opis w config/starterkit/descriptions/.
+Format to jedna linijka na slot, a wartość idzie prosto przez kodek ItemStacka,
+więc przedmioty z komponentami działają — tak właśnie zapisana jest książka:
+
+    {count:1,id:"modonomicon:modonomicon",components:{"modonomicon:book_id":"ravenclassic:przewodnik"}}
+
+Najprościej zmienić zawartość bez dotykania pliku: wejdź w kreatywie, ułóż
+ekwipunek, zrób `/sk set Start`.
+
+Kiedy wpada:
+
+  * **przy pierwszym wejściu** — sam mod, nic nie trzeba,
+  * **po każdej śmierci** — datapack ravenclassic-rules, funkcja `kit_smierc`.
+    Ekwipunek jest wtedy pusty, bo rzeczy leżą w grobie, więc wyprawka
+    niczego nie nadpisuje,
+  * **na życzenie, raz na 30 minut** — gracz woła `/trigger rc_kit`.
+
+Komendy staffu:
+
+    /sk give <nick> <kit>  wręcz komuś kit poza kolejnością
+    /sk set <nazwa>        zapisz swój obecny ekwipunek jako kit
+    /sk list               co jest aktywne
+    /sk reload             po ręcznej edycji plików
+
+Jak działa cooldown. `/trigger` to jedyny wbudowany w Minecrafta sposób, żeby
+gracz bez uprawnień odpalił funkcję datapacka — nie ma na Fabricu 26.2 żadnego
+moda z kitami na czas, więc odliczanie robi datapack: cel `rc_cd` traci
+sekundę na sekundę, a przy zerze funkcja `tick` znów włącza triggera. Zmiana
+czasu to jedna liczba w `kit_komenda.mcfunction` (1800 sekund).
+
+UWAGA na `/trigger rc_kit` z pełnym ekwipunkiem. Starter Kit czyści ekwipunek,
+wstawia kit i dopiero potem oddaje to, co gracz miał — a co się nie zmieści,
+ląduje pod nogami. Po śmierci to nie ma znaczenia, w środku gry owszem.
+
+Powtarzalne kity na dłuższy cykl (dzienne, tygodniowe) tym się nie da zrobić.
+Zastępnik jest gdzie indziej: Playtime Rewards ma pole `rewards` przy każdej
+randze i wydaje przedmioty przy awansie, raz, z kontrolą duplikatów:
+
+    "rewards": [ { "item": "minecraft:diamond", "count": 4 } ]
+
+Plik: world/config/playtime-rewards/config.json, potem `/playtime reload`.
+
+
+6. Kopie zapasowe i wydajność
+-----------------------------
+
+    /backup                 kopia na już (Fastback, przyrostowo, na gicie)
+    /spark profiler start   profiler, gdy serwer zaczyna zamulać
+    /spark tps
+
+Fastback trzyma historię jako repozytorium gita, więc kolejne kopie kosztują
+tyle, ile się zmieniło. Sprawdź `/backup` zaraz po pierwszym starcie, a nie po
+pierwszym griefie.
+
+BlueMap renderuje mapę świata do przeglądarki. Pierwsze renderowanie zjada
+sporo CPU — puść je po pregeneracji Chunky'ego, nie równolegle z nią.
