@@ -16,8 +16,8 @@ downloads only what actually changed and verifies every file's hash.
 3. Fill in:
    - **Minecraft version** — `26.2`
    - **Mod loader** — Fabric, version `0.19.3`
-   - **Manifest URL** — `https://whiteravens20.github.io/raven-packs/ravenmc/manifest.json`
-   - **RAM** — 4096 MB or more
+   - **Manifest URL** — `https://whiteravens20.github.io/raven-packs/ravenclassic/manifest.json`
+   - **RAM** — 6144 MB, the pack's recommendation
 4. **Sync** — the launcher downloads the loader, the mods and the configs.
 5. **GRAJ.**
 
@@ -35,7 +35,7 @@ If the pack is signed, add the publisher's public key under
 
 Use the `.mrpack` — the standard Modrinth pack format.
 
-1. Download `ravenmc-<version>.mrpack` from
+1. Download `ravenclassic-<version>.mrpack` from
    [Releases](https://github.com/whiteravens20/raven-packs/releases).
 2. Import it:
    - **Prism Launcher** — *Add Instance → Import →* pick the file
@@ -62,7 +62,7 @@ vanilla Minecraft launcher.
    Pick **Client**, choose the right Minecraft version, install.
 2. Open the vanilla Minecraft launcher, select the new **fabric-loader** profile,
    press Play once so the game creates its folders, then quit.
-3. Download `ravenmc-<version>.zip` from
+3. Download `ravenclassic-<version>.zip` from
    [Releases](https://github.com/whiteravens20/raven-packs/releases).
 4. Unzip it into your `.minecraft` folder, merging with what is there:
 
@@ -73,8 +73,8 @@ vanilla Minecraft launcher.
    | macOS | `~/Library/Application Support/minecraft` |
 
    You should end up with `.minecraft/mods/` full of `.jar` files.
-5. In the launcher, edit the Fabric profile and give it at least **4 GB** of RAM
-   (*More Options → JVM arguments →* change `-Xmx2G` to `-Xmx4G`).
+5. In the launcher, edit the Fabric profile and give it **6 GB** of RAM
+   (*More Options → JVM arguments →* change `-Xmx2G` to `-Xmx6G`).
 6. Play.
 
 To update, delete everything in `.minecraft/mods/` first, then unzip the new
@@ -91,16 +91,17 @@ game will refuse to start.
 
 **The game crashes immediately on launch.**
 Almost always duplicate or mismatched mods. Empty `mods/` and re-extract. Confirm
-the Fabric loader version matches the pack (`0.19.3` for Raven MC).
+the Fabric loader version matches the pack (`0.19.3` for White Ravens Classic).
 
 **"Incompatible mod set" / a mod names a missing dependency.**
 You have a partial install. Every dependency ships with the pack, so a complete
 extraction cannot produce this.
 
 **The game runs out of memory or stutters badly.**
-Raise the RAM allocation to 4–6 GB. More than 8 GB usually makes things *worse* —
-longer garbage-collection pauses.
+Raise the RAM allocation to 6 GB, which is what the pack asks for. More than
+8 GB usually makes things *worse* — longer garbage-collection pauses.
 
 **Shaders do nothing.**
-The pack ships Iris but no shader packs. Drop a `.zip` shader into
-`.minecraft/shaderpacks/` and pick it under *Options → Video Settings → Shaders*.
+The pack ships Iris and two Complementary shader packs, but none is switched on
+by default. Pick one under *Options → Video Settings → Shaders*. Any other
+`.zip` shader dropped into `.minecraft/shaderpacks/` shows up in the same list.

@@ -96,7 +96,7 @@ instance root.
 | `server-overrides/` | server pack only |
 
 ```
-packs/ravenmc/
+packs/ravenclassic/
 ├── overrides/config/sodium.json   → both
 ├── client-overrides/options.txt   → client only
 └── server-overrides/server.properties → server only
@@ -117,9 +117,9 @@ Each format carries them differently — the launcher manifest as `configFiles[]
 exact versions, filenames, CDN URLs, sizes and hashes. `pack.json` says what you
 want; the lockfile says what you got.
 
-This is what keeps big packs cheap. Mod jars are never committed — an 81-mod pack
-is 68 KB of git — and because every URL and hash is already recorded, `build.mjs`
-runs entirely offline in well under a second.
+This is what keeps big packs cheap. Mod jars are never committed — the 67-file
+White Ravens Classic is 68 KB of git — and because every URL and hash is already
+recorded, `build.mjs` runs entirely offline in a fifth of a second.
 
 Only `lock.mjs` talks to Modrinth. Always commit `pack.json` and `pack.lock.json`
 together.
@@ -127,23 +127,23 @@ together.
 ## Workflow
 
 ```bash
-# 1. edit packs/ravenmc/pack.json
+# 1. edit packs/ravenclassic/pack.json
 # 2. resolve — the only step that needs network
-node scripts/lock.mjs ravenmc
+node scripts/lock.mjs ravenclassic
 
 # 3. build — offline, milliseconds
-node scripts/build.mjs ravenmc
+node scripts/build.mjs ravenclassic
 
 # 4. commit both files together
-git add packs/ravenmc/
+git add packs/ravenclassic/
 ```
 
 Inspect what you built before tagging:
 
 ```bash
-head -40 dist/ravenmc/pack.json              # resolved versions and licenses
-node scripts/build.mjs ravenmc --with-zip    # bundle jars, then:
-unzip -l dist/ravenmc/ravenmc-1.0.0.zip      # what manual installers get
+head -40 dist/ravenclassic/pack.json                    # resolved versions and licenses
+node scripts/build.mjs ravenclassic --with-zip          # bundle jars, then:
+unzip -l dist/ravenclassic/ravenclassic-1.1.0.zip       # what manual installers get
 ```
 
 `--with-zip` is the only thing that downloads jars. CI passes it for releases;
@@ -155,9 +155,9 @@ Locking is **conservative**: entries already in the lockfile are kept as they
 are, so adding one mod never bumps the other ninety-nine.
 
 ```bash
-node scripts/lock.mjs ravenmc            # resolve only new/changed entries
-node scripts/lock.mjs ravenmc --update   # re-resolve everything unpinned
-git diff packs/ravenmc/pack.lock.json    # review exactly what moved
+node scripts/lock.mjs ravenclassic            # resolve only new/changed entries
+node scripts/lock.mjs ravenclassic --update   # re-resolve everything unpinned
+git diff packs/ravenclassic/pack.lock.json    # review exactly what moved
 ```
 
 Changing `minecraft` or `loader.type` re-resolves everything automatically —
@@ -166,7 +166,7 @@ versions from the old target are meaningless.
 Bump the pack's own `version` whenever the resolved set changes, then tag:
 
 ```bash
-git tag ravenmc-v1.1.0 && git push --tags
+git tag ravenclassic-v1.1.0 && git push --tags
 ```
 
 ### When locking fails
@@ -199,8 +199,8 @@ re-locking. Run `node scripts/lock.mjs <slug>` and commit both.
 
 ```bash
 node scripts/keygen.mjs ravenpacks      # once; keys/ is gitignored
-node scripts/build.mjs ravenmc
-node scripts/sign.mjs dist/ravenmc/manifest.json keys/ravenpacks.key
+node scripts/build.mjs ravenclassic
+node scripts/sign.mjs dist/ravenclassic/manifest.json keys/ravenpacks.key
 ```
 
 The signature covers the canonical form of the manifest — object keys sorted at
