@@ -136,7 +136,14 @@ an announcement wait for a pack release would be absurd. Nothing needs tagging.
 
 ```bash
 git switch main && git merge dev && git push   # feeds live within a minute or two
+git switch dev  && git merge --ff-only main && git push
 ```
+
+The second line is not decoration. `git merge` on `main` writes a merge commit
+that `dev` has never seen, so a sync that stops after the first line leaves
+`dev` reporting itself behind `main` — and the branches drift a little further
+apart with every release, until the next sync is a real merge with a real
+chance of conflict over files neither branch actually changed.
 
 **A tag additionally cuts a GitHub Release for one pack:**
 
