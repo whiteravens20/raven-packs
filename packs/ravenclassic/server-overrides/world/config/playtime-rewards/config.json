@@ -1,0 +1,33 @@
+{
+  "unrankedName": "Bez rangi",
+  "rankUpBroadcast": "&e{player} awansuje na &f{rank}&e! ({playtime})",
+  "ranks": [
+    {
+      "name": "Nowy",
+      "seconds": 0,
+      "displayItem": "minecraft:feather",
+      "luckPermsGroup": "nowy",
+      "luckPermsPrefix": "&7[Nowy] &r",
+      "luckPermsPrefixPriority": 10,
+      "rewards": []
+    },
+    {
+      "name": "Gracz",
+      "seconds": 36000,
+      "displayItem": "minecraft:spyglass",
+      "luckPermsGroup": "gracz",
+      "luckPermsPrefix": "&a[Gracz] &r",
+      "luckPermsPrefixPriority": 20,
+      "rewards": []
+    },
+    {
+      "name": "Obywatel",
+      "seconds": 144000,
+      "displayItem": "minecraft:oak_door",
+      "luckPermsGroup": "obywatel",
+      "luckPermsPrefix": "&b[Obywatel] &r",
+      "luckPermsPrefixPriority": 30,
+      "rewards": [{ "item": "waystones:andesite_waystone", "count": 1 }]
+    }
+  ]
+}
