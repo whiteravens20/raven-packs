@@ -82,8 +82,10 @@ Zablokowane recepty
 
     world/datapacks/ravenclassic-rules/
 
-Ten datapack nie dodaje niczego — wycina recepty na waystone'y, korzystając z
-sekcji "filter" w pack.mcmeta. Sharestone'y, portstone'y i zwoje nadal się
+Ten datapack robi dwie rzeczy. Wycina recepty na waystone'y sekcją "filter" w
+pack.mcmeta oraz wydaje wyprawkę po śmierci i na `/trigger rc_kit`
+(dokumentacja/staff.txt, sekcja 5). Wymaga `function-permission-level=4` w
+server.properties — bez tego funkcje nie mają prawa wołać `/starterkit give`. Sharestone'y, portstone'y i zwoje nadal się
 craftuje; to one budują sieć wokół kamieni, które trzeba zdobyć.
 
 Skąd wtedy waystone. Trzy drogi: znaleźć w wiosce, dostać w nagrodę za rangę

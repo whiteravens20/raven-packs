@@ -130,28 +130,51 @@ Zawsze `preview` przed `rollback`. Parametry Ledgera są potężne i łatwo obj�
 nimi pół świata zamiast jednego domu.
 
 
-5. Kity
--------
+5. Wyprawka
+-----------
 
-Kity daje Starter Kit. Nowy gracz dostaje wyprawkę przy pierwszym wejściu,
-automatycznie.
+Kit `Start` to kamienne narzędzia (miecz, kilof, siekiera, łopata, motyka),
+cztery chlebki i **przewodnik po serwerze** w pierwszym slocie. Ta ostatnia
+pozycja jest tu najważniejsza: Modonomicon nie ma komendy otwierającej książkę,
+więc gdyby nikt jej graczowi nie dał, cały przewodnik byłby napisany do szuflady.
 
-    /sk set <nazwa>        zapisz swój obecny ekwipunek jako jedyny kit
-    /sk add <nazwa>        dołóż kolejny kit do listy
+Plik: config/starterkit/kits/Start.txt, opis w config/starterkit/descriptions/.
+Format to jedna linijka na slot, a wartość idzie prosto przez kodek ItemStacka,
+więc przedmioty z komponentami działają — tak właśnie zapisana jest książka:
+
+    {count:1,id:"modonomicon:modonomicon",components:{"modonomicon:book_id":"ravenclassic:przewodnik"}}
+
+Najprościej zmienić zawartość bez dotykania pliku: wejdź w kreatywie, ułóż
+ekwipunek, zrób `/sk set Start`.
+
+Kiedy wpada:
+
+  * **przy pierwszym wejściu** — sam mod, nic nie trzeba,
+  * **po każdej śmierci** — datapack ravenclassic-rules, funkcja `kit_smierc`.
+    Ekwipunek jest wtedy pusty, bo rzeczy leżą w grobie, więc wyprawka
+    niczego nie nadpisuje,
+  * **na życzenie, raz na 30 minut** — gracz woła `/trigger rc_kit`.
+
+Komendy staffu:
+
+    /sk give <nick> <kit>  wręcz komuś kit poza kolejnością
+    /sk set <nazwa>        zapisz swój obecny ekwipunek jako kit
     /sk list               co jest aktywne
-    /sk give <nick> <kit>  wręcz komuś kit
-    /sk choose <kit>       gracz wybiera sobie zestaw startowy
     /sk reload             po ręcznej edycji plików
 
-Kity to pliki tekstowe w config/starterkit/kits/, opisy w config/descriptions/.
-Najprościej: wejdź w kreatywie, ułóż ekwipunek jaki ma dostać nowy gracz,
-zrób `/sk set start`.
+Jak działa cooldown. `/trigger` to jedyny wbudowany w Minecrafta sposób, żeby
+gracz bez uprawnień odpalił funkcję datapacka — nie ma na Fabricu 26.2 żadnego
+moda z kitami na czas, więc odliczanie robi datapack: cel `rc_cd` traci
+sekundę na sekundę, a przy zerze funkcja `tick` znów włącza triggera. Zmiana
+czasu to jedna liczba w `kit_komenda.mcfunction` (1800 sekund).
 
-Czego nie ma: powtarzalnego `/kit daily` z odliczaniem. Na Fabricu 26.2 nie
-istnieje mod, który by to robił. Zastępnik jest wbudowany gdzie indziej —
-Playtime Rewards ma pole `rewards` przy każdej randze i wydaje przedmioty przy
-awansie, z zabezpieczeniem przed odebraniem dwa razy. Nagroda za rangę zamiast
-kitu na kliknięcie:
+UWAGA na `/trigger rc_kit` z pełnym ekwipunkiem. Starter Kit czyści ekwipunek,
+wstawia kit i dopiero potem oddaje to, co gracz miał — a co się nie zmieści,
+ląduje pod nogami. Po śmierci to nie ma znaczenia, w środku gry owszem.
+
+Powtarzalne kity na dłuższy cykl (dzienne, tygodniowe) tym się nie da zrobić.
+Zastępnik jest gdzie indziej: Playtime Rewards ma pole `rewards` przy każdej
+randze i wydaje przedmioty przy awansie, raz, z kontrolą duplikatów:
 
     "rewards": [ { "item": "minecraft:diamond", "count": 4 } ]
 
