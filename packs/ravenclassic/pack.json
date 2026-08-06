@@ -2,7 +2,7 @@
   "$schema": "../../docs/pack.schema.json",
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "summary": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
   "author": "White Ravens",
   "minecraft": "26.2",
@@ -60,7 +60,6 @@
     { "slug": "inventory-profiles-next", "reason": "Inventory sorting", "side": "client" },
     { "slug": "controlling", "reason": "Searchable, conflict-aware key bindings", "side": "client" },
     { "slug": "zoomify", "reason": "Zoom key — the one thing OptiFine users miss first", "side": "client" },
-    { "slug": "chat-heads", "reason": "Faces next to chat lines; helps on a busy server", "side": "client" },
     { "slug": "no-chat-reports", "reason": "Keeps chat off Mojang's reporting pipeline" },
     { "slug": "not-enough-animations", "reason": "Third-person animations for what your hands are doing", "side": "client" },
     { "slug": "lambdynamiclights", "reason": "Held torches light the world", "side": "client" },
@@ -76,7 +75,6 @@
     { "slug": "waystones", "reason": "Discoverable fast-travel points, found rather than granted" },
     { "slug": "fallingtree", "reason": "Fell a tree with one cut. Server-side, so nothing to install to use it", "side": "server" },
     { "slug": "universal-graves", "reason": "Death drops go into a grave. Server-side via Polymer", "side": "server" },
-    { "slug": "simple-voice-chat", "reason": "Proximity voice chat — needs both sides" },
     {
       "slug": "open-parties-and-claims",
       "allowPrerelease": true,
@@ -84,6 +82,27 @@
     },
 
     { "slug": "luckperms", "reason": "Permissions and the rank ladder that sets claim and forceload limits", "side": "server" },
+    {
+      "slug": "vanilla-permissions",
+      "reason": "Puts the vanilla commands behind LuckPerms nodes, so staff need no operator status",
+      "side": "server"
+    },
+    {
+      "slug": "playtime-ranks",
+      "reason": "Moves a player up the LuckPerms ladder once they have played long enough",
+      "side": "server"
+    },
+    {
+      "slug": "staffsee-moderation",
+      "reason": "Mute, warn and freeze — vanilla offers only kick and ban",
+      "side": "server"
+    },
+    {
+      "slug": "worldedit",
+      "reason": "Map editing for builders and staff. Server-side, so vanilla clients still connect",
+      "side": "server"
+    },
+    { "slug": "worldedit-cui", "reason": "Draws the WorldEdit selection box", "side": "client" },
     { "slug": "universal-shops", "reason": "Player and admin trade shops, item for item", "side": "server" },
     { "slug": "essential-commands", "reason": "/home, /tpa, /rtp, /back", "side": "server" },
     { "slug": "ledger", "reason": "Logs every block change and rolls grief back", "side": "server" },
@@ -96,7 +115,12 @@
     { "slug": "vanish", "reason": "Staff can look without being seen", "side": "server" },
     { "slug": "bluemap", "reason": "Web map of the world", "side": "server" },
     { "slug": "fastback", "reason": "Incremental world backups", "side": "server" },
-    { "slug": "discord-mc-chat", "reason": "Bridges server chat to Discord", "side": "server" }
+    { "slug": "collective", "reason": "Required by Starter Kit", "side": "server" },
+    {
+      "slug": "starter-kit",
+      "reason": "Kits. Fabric 26.2 has no repeatable /kit mod, so this covers the join kit and staff handouts",
+      "side": "server"
+    }
   ],
   "shaders": [
     {
