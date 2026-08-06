@@ -12,6 +12,8 @@
   "book.ravenclassic.przewodnik.start.komendy.description": "Getting around",
   "book.ravenclassic.przewodnik.start.komendy.p0.title": "Home and teleports",
   "book.ravenclassic.przewodnik.start.komendy.p0.text": "$(li)/sethome name — set a home$(br)$(li)/home name — return to it$(br)$(li)/spawn — back to spawn$(br)$(li)/back — return where you were$(br)$(li)/rtp — a random spot in the wild$(br2)There is no teleport to another player. The rest of the world you reach by waystone.",
+  "book.ravenclassic.przewodnik.start.komendy.p1.title": "The starter kit",
+  "book.ravenclassic.przewodnik.start.komendy.p1.text": "Stone tools, bread and this book arrive on their own: on your first join and after every death.$(br2)Need them sooner — $(l)/trigger rc_kit$(/l), once every half hour. Do it with room in your inventory: the kit rebuilds it, and whatever does not fit drops at your feet.",
   "book.ravenclassic.przewodnik.start.czat.name": "Chat",
   "book.ravenclassic.przewodnik.start.czat.description": "Talking to everyone else",
   "book.ravenclassic.przewodnik.start.czat.p0.title": "Chat",

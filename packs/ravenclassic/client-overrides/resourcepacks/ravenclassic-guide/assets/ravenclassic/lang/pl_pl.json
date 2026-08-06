@@ -12,6 +12,8 @@
   "book.ravenclassic.przewodnik.start.komendy.description": "Poruszanie się po świecie",
   "book.ravenclassic.przewodnik.start.komendy.p0.title": "Dom i teleporty",
   "book.ravenclassic.przewodnik.start.komendy.p0.text": "$(li)/sethome nazwa — ustaw dom$(br)$(li)/home nazwa — wróć do niego$(br)$(li)/spawn — na spawn$(br)$(li)/back — wróć tam, gdzie byłeś$(br)$(li)/rtp — losowe miejsce w dziczy$(br2)Teleportu do innego gracza nie ma. Do reszty świata jeździ się waystone'ami.",
+  "book.ravenclassic.przewodnik.start.komendy.p1.title": "Wyprawka",
+  "book.ravenclassic.przewodnik.start.komendy.p1.text": "Kamienne narzędzia, chleb i ta książka wpadają same: przy pierwszym wejściu i po każdej śmierci.$(br2)Jeśli potrzebujesz ich wcześniej — $(l)/trigger rc_kit$(/l), raz na pół godziny. Rób to z miejscem w ekwipunku: wyprawka układa go od nowa, a co się nie zmieści, wypadnie pod nogi.",
   "book.ravenclassic.przewodnik.start.czat.name": "Czat",
   "book.ravenclassic.przewodnik.start.czat.description": "Rozmowa z resztą serwera",
   "book.ravenclassic.przewodnik.start.czat.p0.title": "Czat",
