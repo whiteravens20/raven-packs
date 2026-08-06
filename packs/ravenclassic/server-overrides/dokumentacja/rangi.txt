@@ -151,7 +151,56 @@ szczebel. Gdyby stała tam wyższa liczba, każdy restart dawałby wszystkim
 chwilę limitu Gospodarza.
 
 
-5. Uprawnienia zwykłego gracza
+5. Kto kogo może dotknąć
+------------------------
+
+Uprawnienie mówi „wolno Ci użyć /ban". Nie mówi „wolno Ci zbanować akurat
+tego". Od drugiej połowy jest osobny mechanizm: waga selektora, z moda Vanilla
+Permissions. Zasada jest jednozdaniowa — **można wskazać tylko gracza o wadze
+mniejszej lub równej własnej**.
+
+    lp group nowy           meta set minecraft.selector.weight.* 10
+    lp group gracz          meta set minecraft.selector.weight.* 20
+    lp group obywatel       meta set minecraft.selector.weight.* 30
+    lp group gospodarz      meta set minecraft.selector.weight.* 40
+    lp group budowniczy     meta set minecraft.selector.weight.* 50
+    lp group moderator      meta set minecraft.selector.weight.* 60
+    lp group administrator  meta set minecraft.selector.weight.* 90
+    lp group architekt      meta set minecraft.selector.weight.* 100
+
+Te same liczby co wagi grup z sekcji 3, celowo — jedna liczba na rangę,
+o jedną rzecz mniej do zapamiętania.
+
+Od tej chwili Moderator (60) banuje, kicka i teleportuje graczy oraz
+Budowniczego, a na Administratorze (90) i Architekcie (100) komenda odbija się
+z błędem. Działa to dla każdej komendy vanilla przyjmującej gracza w
+argumencie: /ban, /kick, /tp, /gamemode, /op i reszta — bo blokada siedzi w
+samym parsowaniu argumentu, nie w komendzie.
+
+Gwiazdka w kluczu meta działa dzięki modowi Metadata Wildcard. Bez niego
+LuckPerms nie zna wildcardów w meta i trzeba by wypisać osobny klucz dla
+każdego wariantu każdej komendy — a wariantów jest kilka na komendę, bo w
+kluczu siedzi cała ścieżka argumentów (`ban.targets.targets` i osobno
+`ban.targets.targets.reason`). Nie usuwaj tego moda z paczki.
+
+Trzy rzeczy, które trzeba wiedzieć, żeby to nie było iluzją:
+
+  * **Wagę musi mieć obie strony.** Gracz bez wagi jest wskazywalny przez
+    każdego. Dlatego wagę ma już `nowy`, a `default` dziedziczy po nim — nikt
+    nie zostaje bez liczby.
+  * **`/execute` omija tę kontrolę.** Tak to jest napisane w Vanilla
+    Permissions i nie da się tego obejść configiem. Dlatego Moderator nie
+    dostaje `minecraft.command.execute` i nie powinien dostać nigdy.
+  * **Moderator o wadze 60 może dotknąć innego Moderatora** (60 ≤ 60). Jeśli
+    to przeszkadza, daj każdemu inną liczbę.
+
+Komendy StaffSee (`/mute`, `/warn`, `/freeze`) są objęte tylko wtedy, gdy mod
+używa argumentów vanilla do wskazania gracza. Nie ma publicznych źródeł, żeby
+to sprawdzić bez uruchomienia — zweryfikuj to na żywym serwerze, próbując
+zmutować Administratora z konta Moderatora.
+
+
+6. Uprawnienia zwykłego gracza
 ------------------------------
 
     lp group nowy           permission set essentialcommands.home.set true
@@ -191,7 +240,7 @@ jak wildcard i gracz dostaje wszystkie węzły poniżej — łącznie z limit.5.
 drabinka domów przestaje wtedy istnieć, a wygląda, jakby działała.
 
 
-6. Budowniczy
+7. Budowniczy
 -------------
 
     lp group budowniczy     permission set minecraft.command.gamemode true
@@ -212,7 +261,7 @@ i nie nadawaj `essentialcommands.invuln.self` — to jest dokładnie ta różnic
 między „lata" a „nie da się go zabić".
 
 
-7. Moderator
+8. Moderator
 ------------
 
 Moderacja — kick i ban są vanilla, resztę daje StaffSee:
@@ -270,8 +319,44 @@ Nie nadawaj `luckperms.user.promote.rangi` bez ostatniego członu w nadziei, że
 zadziała jak wildcard. Zadziała — i obejmie każdą grupę, jaką kiedykolwiek
 dołożysz do toru.
 
+Czego Moderator nie może i dlaczego. Ta lista nie wynika z żadnych zakazów,
+tylko z tego, że powyższe to **wszystko**, co dostaje. Węzła, którego nie
+nadałeś, po prostu nie ma:
 
-8. Administrator i Architekt
+  * **awansować samego siebie** — `promote` sprawdza osobne uprawnienie, gdy
+    celem jest nadawca (`luckperms.user.promote.modify.self`). Moderator ma
+    tylko `.modify.others`, więc `/lp user <swój nick> promote rangi` odbija
+    się o brak uprawnień.
+  * **dać komukolwiek cokolwiek ponad Gospodarza** — `promote` chodzi wyłącznie
+    po torze `rangi`, a na torze stoją cztery grupy graczy i ani jedna grupa
+    staffu. Cztery są dodatkowo wypisane z nazwy, więc dopisanie kiedyś nowej
+    grupy do toru nie otworzy jej Moderatorowi samo z siebie.
+  * **nadać grupę z ręki** — nie ma `luckperms.user.parent.add` ani
+    `.parent.set`, więc droga na skróty obok toru nie istnieje.
+  * **zmienić uprawnienia, grupy, meta ani wag** — nie ma `luckperms.group.*`,
+    `luckperms.user.permission.*`, `luckperms.user.meta.*`, `creategroup` ani
+    `deletegroup`.
+  * **otworzyć edytora webowego** — nie ma `luckperms.editor`.
+  * **obejść wagi selektora przez /execute** — nie ma
+    `minecraft.command.execute`.
+
+Sprawdź to, zamiast wierzyć na słowo. Na koncie Moderatora:
+
+    lp user <nick> permission check luckperms.user.parent.add
+    lp user <nick> permission check luckperms.editor
+    lp user <nick> permission check minecraft.command.execute
+    lp user <nick> permission check luckperms.user.promote.modify.self
+
+Wszystkie cztery mają odpowiedzieć `undefined`.
+
+Świadomie NIE stawiamy tu jawnych `false`. Administrator dziedziczy po
+Moderatorze, a jawny `false` na węźle bardziej szczegółowym potrafi wygrać z
+wildcardem `luckperms.*` w grupie dziecka — zablokowałbyś Administratorowi
+edytor i /execute, nie wiedząc kiedy. Brak węzła jest tu bezpieczniejszy od
+zakazu.
+
+
+9. Administrator i Architekt
 ----------------------------
 
     lp group administrator  permission set luckperms.* true
@@ -296,28 +381,27 @@ powinna mieć — op omija LuckPermsa w komendach vanilla i cała ta drabinka
 przestaje cokolwiek znaczyć.
 
 Uczciwie o granicach tego układu. Trzy negacje wyżej to zamek w drzwiach, nie
-mur:
+mur — i dotyczą wyłącznie Administratora, bo Moderator nie ma czego obejść
+(sekcja 8):
 
   * `/lp editor` otwiera edytor webowy, który zapisuje zmiany hurtem. Kontrola
     per argument tam nie sięga. Jeśli Administrator ma być naprawdę ograniczony,
     dołóż `lp group administrator  permission set luckperms.editor false` —
     kosztem wygody, bo edytor jest najlepszą częścią LuckPermsa.
   * Kto ma dostęp do konsoli albo do plików serwera, ten ma wszystko. Żadne
-    uprawnienie tego nie zmieni.
-  * Ban i kick nie znają rang. Moderator technicznie może zbanować
-    Administratora. Nie da się tego zablokować modem, którego na Fabricu 26.2
-    nie ma. Co działa: każda taka akcja jest zapisana z nazwiskiem sprawcy w
-    logach StaffSee, a `/pardon` ma każdy Moderator, więc pomyłka kosztuje
-    minutę. Jeśli i to za dużo — nie dawaj Moderatorowi
-    `minecraft.command.ban` i zostaw bany Administratorowi.
+    uprawnienie tego nie zmieni. Architekt to nie ranga, to właściciel.
+
+Bany i kicki w drugą stronę są już zamknięte: Administrator (waga 90) jest poza
+zasięgiem Moderatora (60) dzięki wagom selektora z sekcji 5. To działa dla
+każdej komendy vanilla wskazującej gracza, nie tylko dla /ban.
 
 Administrator ma rangi zwykłego gracza w spadku po Moderatorze i Budowniczym,
 więc jego limity działek to limity Obywatela. Do pracy na cudzym terenie służy
 tryb admina (dokumentacja/dzialki.txt), nie własny limit.
 
 
-9. Codzienna obsługa
---------------------
+10. Codzienna obsługa
+---------------------
 
     lp user <nick> promote rangi      awans o jeden szczebel
     lp user <nick> demote rangi       w dół o jeden szczebel
@@ -333,7 +417,7 @@ nowy, gracz i obywatel. Gospodarza i wszystkie rangi staffu zostawia w
 spokoju, więc awans za surowce nie zostanie w nocy cofnięty przez automat.
 
 
-10. Prefiksy na czacie
+11. Prefiksy na czacie
 ----------------------
 
 Prefiksy dla trzech automatycznych rang ustawia Playtime Rewards przy awansie,

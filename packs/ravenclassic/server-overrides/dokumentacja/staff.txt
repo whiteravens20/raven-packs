@@ -90,9 +90,15 @@ zamkniętej, dublujący pół Essential Commands. StaffSee chodzi wyłącznie po
 stronie serwera, więc jeśli sprawi kłopot, wypada go z paczki bez ruszania
 klientów. Zostaje wtedy kick i ban.
 
-Czego nie da się zrobić: ani ban, ani kick nie znają rang. Moderator
-technicznie może zbanować Administratora. Wnioski i co z tym robić —
-dokumentacja/rangi.txt, sekcja 8.
+Moderator nie zbanuje ani nie kicknie Administratora — pilnują tego wagi
+selektora (dokumentacja/rangi.txt, sekcja 5). Blokada siedzi w parsowaniu
+argumentu, więc obejmuje każdą komendę vanilla wskazującą gracza. Jedyna
+znana furtka to /execute, którego Moderator nie dostaje.
+
+Do sprawdzenia na żywym serwerze: czy komendy StaffSee też są objęte. Zależy
+to od tego, czy mod wskazuje gracza argumentem vanilla, a źródeł nie ma jak
+przejrzeć. Test trwa minutę — spróbuj `/mute` na Administratorze z konta
+Moderatora.
 
 
 3. Vanish
