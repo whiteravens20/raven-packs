@@ -2,9 +2,9 @@
 
 Minecraft modpacks maintained by [White Ravens](https://github.com/whiteravens20).
 
-One pack definition, published three ways — so a pack works in
+One pack definition, published four ways — so a pack works in
 [Raven Forge](https://github.com/whiteravens20/raven-forge), in any third-party
-launcher, or with no launcher at all.
+launcher, with no launcher at all, or on a server.
 
 | Output | For | Contains |
 |---|---|---|
@@ -28,9 +28,16 @@ costs about 70 KB of git history. See [the lockfile](#the-lockfile).
 
 ## Packs
 
-| Pack | Minecraft | Loader | Mods |
+| Pack | Minecraft | Loader | Contents |
 |---|---|---|---|
-| [Raven MC](packs/ravenmc/) | 26.2 | Fabric 0.19.3 | 25 — performance and quality-of-life, no gameplay changes |
+| [White Ravens Classic](packs/ravenclassic/) | 26.2 | Fabric 0.19.3 | 65 mods and 2 shader packs — 44 files reach the client, 41 the server |
+
+White Ravens Classic is **alpha**: it has never been run on a live server, and
+Minecraft 26.2 is new enough that a few of its mods are pinned to beta builds.
+Its server half is a whole server setup rather than a mod list — a LuckPerms
+rank ladder wired to playtime, land claims with per-rank chunk limits, shops,
+moderation tooling and an in-game guide book. The operator handbook rides in
+the server zip under `dokumentacja/`.
 
 ---
 
@@ -43,7 +50,7 @@ pack. The launcher reads the catalogue and does the rest. Pasting the manifest U
 by hand still works and comes to the same thing:
 
 ```
-https://whiteravens20.github.io/raven-packs/ravenmc/manifest.json
+https://whiteravens20.github.io/raven-packs/ravenclassic/manifest.json
 ```
 
 **Any other launcher** — download the `.mrpack` from
@@ -63,14 +70,16 @@ Everything about a pack lives in one hand-edited file, `packs/<slug>/pack.json`:
 
 ```jsonc
 {
-  "slug": "ravenmc",
-  "name": "Raven MC",
-  "version": "1.0.0",
+  "slug": "ravenclassic",
+  "name": "White Ravens Classic",
+  "version": "1.1.0",
   "minecraft": "26.2",
   "loader": { "type": "fabric", "version": "0.19.3" },
   "mods": [
     { "slug": "sodium" },                        // newest stable release
     { "slug": "iris", "version": "1.11.2+26.2-fabric" },  // pinned
+    { "slug": "luckperms", "side": "server" },   // server zip only
+    { "slug": "jei", "allowPrerelease": true },  // no stable 26.2 build yet
     { "url": "https://example.com/private.jar", "name": "Private Mod", "version": "1.0" }
   ]
 }
@@ -79,9 +88,9 @@ Everything about a pack lives in one hand-edited file, `packs/<slug>/pack.json`:
 Then:
 
 ```bash
-node scripts/lock.mjs ravenmc      # resolve → pack.lock.json (the only online step)
-node scripts/build.mjs ravenmc     # offline: manifest + .mrpack in milliseconds
-git add packs/ravenmc/            # commit the definition and the lockfile
+node scripts/lock.mjs ravenclassic    # resolve → pack.lock.json (the only online step)
+node scripts/build.mjs ravenclassic   # offline: manifest + .mrpack in milliseconds
+git add packs/ravenclassic/           # commit the definition and the lockfile
 ```
 
 No `npm install` needed — the toolchain is dependency-free and runs on stock
@@ -95,13 +104,15 @@ Full authoring guide: **[docs/AUTHORING.md](docs/AUTHORING.md)**.
 versions, filenames, CDN URLs, sizes and hashes. It is this repo's equivalent of
 packwiz's `index.toml`, and it is what keeps large packs cheap:
 
-| | 25-mod pack | 81-mod pack |
-|---|---|---|
-| Committed to git | 24 KB | 68 KB |
-| `build.mjs`, cold | 0.11 s | 0.06 s |
-| Network calls at build | 0 | 0 |
-| Published `.mrpack` | 4.7 KB | 12 KB |
-| Mod bytes stored in the repo | 0 | 0 |
+White Ravens Classic, 67 locked files:
+
+| | |
+|---|---|
+| Committed to git | 68 KB — 7.5 KB of definition, 60 KB of lockfile |
+| `build.mjs`, cold | 0.2 s, Node startup included |
+| Network calls at build | 0 |
+| Published `.mrpack` | 17 KB |
+| Jars it resolves to | 48.5 MiB, none of them in this repo |
 
 **No mod jars are ever committed.** They live on Modrinth's CDN; the repo stores
 only references. Builds are offline because the lockfile already records every
@@ -148,12 +159,12 @@ chance of conflict over files neither branch actually changed.
 **A tag additionally cuts a GitHub Release for one pack:**
 
 ```bash
-git tag ravenmc-v1.0.0 && git push --tags
+git tag ravenclassic-v1.1.0 && git push --tags
 ```
 
 The slug in the tag picks the pack, and the version must match that pack's
 `pack.json` — CI refuses the tag otherwise, because `pack.json` is what names
-the built `.mrpack` and a `v1.0.0` release containing `ravenmc-1.0.1.mrpack`
+the built `.mrpack` and a `v1.1.0` release containing `ravenclassic-1.1.1.mrpack`
 helps nobody. Tag a commit on `main` that is current: the build runs on the
 tagged tree and `deploy-pages` replaces the whole site, so tagging an old commit
 republishes the feeds and every other pack's manifest as they were then.
