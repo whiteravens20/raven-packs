@@ -78,7 +78,7 @@ można wpuścić każdą inną rzecz „od rangi X w górę".
 Reszta chodzi przez człowieka: obsługa trzyma towar dla wyższych rang poza
 sklepem i wydaje go na miejscu (`/sk give <nick> <kit>`), po sprawdzeniu rangi
 w `/lp user <nick> info`. Mniej eleganckie, ale przewidywalne — i tak samo
-działa awans na Gospodarza.
+działa awans na Mistrza.
 
 
 4. Sklepy a działki
@@ -100,7 +100,7 @@ dokumentacja/dzialki.txt, sekcja 3.
 5. Rangi za surowce
 -------------------
 
-Gospodarz to jedyna ranga kupowana. Gracz płaci obsłudze umówioną cenę w
+Mistrz to jedyna ranga kupowana. Gracz płaci obsłudze umówioną cenę w
 sklepie admina, obsługa robi:
 
     lp user <nick> promote rangi

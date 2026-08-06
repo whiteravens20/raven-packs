@@ -109,8 +109,8 @@ Moderatora.
 Znika z listy graczy i z widoku. Do sprawdzania, czy ktoś naprawdę robi to, o
 co go podejrzewasz.
 
-    lp group moderator permission set vanish.command.vanish true
-    lp group moderator permission set vanish.feature.view true
+    lp group moderator      permission set vanish.command.vanish true
+    lp group moderator      permission set vanish.feature.view true
 
 Drugi węzeł to prawo do widzenia innych ukrytych — bez niego staff nie widzi
 siebie nawzajem i wpada na siebie w ciemności.

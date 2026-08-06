@@ -36,7 +36,7 @@
   "book.ravenclassic.przewodnik.dzialki.rangi.name": "Rangi",
   "book.ravenclassic.przewodnik.dzialki.rangi.description": "Za obecność, nie za pieniądze",
   "book.ravenclassic.przewodnik.dzialki.rangi.p0.title": "Drabinka",
-  "book.ravenclassic.przewodnik.dzialki.rangi.p0.text": "Ranga mówi, ile chunków możesz zająć i ile z nich trzymać załadowanych:$(br2)$(li)Nowy — 4 chunki$(br)$(li)Gracz — 6 chunków, 2 forceload$(br)$(li)Obywatel — 8 chunków, 4 forceload$(br)$(li)Gospodarz — 12 chunków, 8 forceload",
+  "book.ravenclassic.przewodnik.dzialki.rangi.p0.text": "Ranga mówi, ile chunków możesz zająć i ile z nich trzymać załadowanych:$(br2)$(li)Nowy — 4 chunki$(br)$(li)Gracz — 6 chunków, 2 forceload$(br)$(li)Obywatel — 8 chunków, 4 forceload$(br)$(li)Mistrz — 12 chunków, 8 forceload",
   "book.ravenclassic.przewodnik.dzialki.rangi.p1.title": "Skąd się bierze awans",
   "book.ravenclassic.przewodnik.dzialki.rangi.p1.text": "Rangi nie sprzedajemy za prawdziwe pieniądze i nigdy nie będziemy — wytyczne Mojanga tego zabraniają, a i tak byłby to zły serwer.$(br2)Awans dostajesz za granie i za to, co po sobie zostawiasz. O rangę można też zapłacić w grze u obsługi; nadaje ją wtedy człowiek, nie automat.",
   "book.ravenclassic.przewodnik.handel.name": "Handel i podróż",

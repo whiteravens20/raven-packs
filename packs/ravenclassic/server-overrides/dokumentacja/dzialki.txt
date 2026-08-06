@@ -115,7 +115,7 @@ Forceloadować można wyłącznie własny, już zajęty chunk. Limity: 0 / 2 / 4
 w górę drabinki (dokumentacja/rangi.txt).
 
 Ile to kosztuje. Chunk trzymany na siłę to pełny tick entities, redstone i
-maszyn, non stop, także gdy na serwerze nie ma nikogo. Dziesięciu Gospodarzy
+maszyn, non stop, także gdy na serwerze nie ma nikogo. Dziesięciu Mistrzów
 korzystających z całego przydziału to 80 chunków mielonych dwadzieścia razy na
 sekundę. Zanim podniesiesz limity, zajrzyj w /spark — profiler pokaże, ile z
 ticku zjadają załadowane chunki, i to jest jedyna liczba, która powinna o tym
@@ -123,7 +123,7 @@ decydować.
 
 Podnosi się je jedną komendą, np.:
 
-    lp group gospodarz meta set xaero.pac_max_forceloads 12
+    lp group mistrz         meta set xaero.pac_max_forceloads 12
 
 Limit z uprawnień wchodzi dopiero po pierwszym zalogowaniu gracza od restartu
 serwera. Nie panikuj, że komenda nie zadziałała — każ się przelogować.

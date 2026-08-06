@@ -14,7 +14,7 @@ nim, więc nikt nie „doawansuje się" do moderatora.
     Nowy        od wejścia         4           0      1
     Gracz       10 h gry           6           2      2
     Obywatel    40 h gry           8           4      3
-    Gospodarz   za surowce        12           8      5
+    Mistrz      za surowce        12           8      5
 
 Chunk to 16×16 bloków na całą wysokość świata — F3+G rysuje siatkę. Cztery
 chunki ułożone w kwadrat to działka 32×32. OPAC nie wymaga, żeby chunki się
@@ -23,12 +23,12 @@ miejscach świata. To gracz decyduje.
 
 Forceload to chunk trzymany załadowanym, gdy nikogo nie ma w pobliżu — jedyny
 chunk loading na tym serwerze, bo nie ma tu craftowalnych bloków ładujących.
-Liczby wyżej są celowo niższe od liczby chunków: dziesięciu Gospodarzy to już
+Liczby wyżej są celowo niższe od liczby chunków: dziesięciu Mistrzów to już
 80 chunków mielonych non stop. Chcesz dać forceload na każdy chunk działki?
 Jedna komenda niżej, ale najpierw zobacz w /spark, co serwer robi teraz.
 
 Awans na Gracza i Obywatela robi automat (mod Playtime Rewards) — liczy czas
-w grze i sam przestawia grupę w LuckPermsie. Gospodarz jest ręczny: gracz
+w grze i sam przestawia grupę w LuckPermsie. Mistrz jest ręczny: gracz
 płaci obsłudze w sklepie admina umówioną cenę, obsługa robi `promote`. Na
 Fabricu 26.2 nie ma moda, który przyjąłby przedmioty i nadał grupę, więc ten
 jeden szczebel przechodzi przez człowieka z wyboru, nie z niedoróbki.
@@ -73,7 +73,7 @@ zanim je sobie nadasz.
     lp creategroup nowy
     lp creategroup gracz
     lp creategroup obywatel
-    lp creategroup gospodarz
+    lp creategroup mistrz
     lp creategroup budowniczy
     lp creategroup moderator
     lp creategroup administrator
@@ -86,7 +86,7 @@ się losowo przełączać.
     lp group nowy           setweight 10
     lp group gracz          setweight 20
     lp group obywatel       setweight 30
-    lp group gospodarz      setweight 40
+    lp group mistrz         setweight 40
     lp group budowniczy     setweight 50
     lp group moderator      setweight 60
     lp group administrator  setweight 90
@@ -97,7 +97,7 @@ zwykłego gracza wpisuje się raz, w nowy.
 
     lp group gracz          parent add nowy
     lp group obywatel       parent add gracz
-    lp group gospodarz      parent add obywatel
+    lp group mistrz         parent add obywatel
     lp group budowniczy     parent add obywatel
     lp group moderator      parent add obywatel
     lp group administrator  parent add moderator
@@ -116,10 +116,10 @@ Tor awansu:
     lp track rangi append nowy
     lp track rangi append gracz
     lp track rangi append obywatel
-    lp track rangi append gospodarz
+    lp track rangi append mistrz
 
 Staff celowo nie jest na torze. Dzięki temu `promote` nigdy nie wyprowadzi
-gracza poza Gospodarza, choćby ktoś klikał w kółko.
+gracza poza Mistrza, choćby ktoś klikał w kółko.
 
 
 4. Limity działek
@@ -134,8 +134,8 @@ Nazwy kluczy są ustalone przez mod i nie da się ich zmienić.
     lp group gracz          meta set xaero.pac_max_forceloads 2
     lp group obywatel       meta set xaero.pac_max_claims 8
     lp group obywatel       meta set xaero.pac_max_forceloads 4
-    lp group gospodarz      meta set xaero.pac_max_claims 12
-    lp group gospodarz      meta set xaero.pac_max_forceloads 8
+    lp group mistrz         meta set xaero.pac_max_claims 12
+    lp group mistrz         meta set xaero.pac_max_forceloads 8
     lp group architekt      meta set xaero.pac_max_claims 500
     lp group architekt      meta set xaero.pac_max_forceloads 32
 
@@ -148,7 +148,7 @@ Drugi haczyk, tym razem z dokumentacji moda: limit z uprawnień wchodzi w życie
 dopiero po pierwszym zalogowaniu gracza od restartu serwera. Do tego czasu
 obowiązuje maxPlayerClaims z toml-a — dlatego stoi tam 4 i 0, czyli najniższy
 szczebel. Gdyby stała tam wyższa liczba, każdy restart dawałby wszystkim
-chwilę limitu Gospodarza.
+chwilę limitu Mistrza.
 
 
 5. Kto kogo może dotknąć
@@ -162,7 +162,7 @@ mniejszej lub równej własnej**.
     lp group nowy           meta set minecraft.selector.weight.* 10
     lp group gracz          meta set minecraft.selector.weight.* 20
     lp group obywatel       meta set minecraft.selector.weight.* 30
-    lp group gospodarz      meta set minecraft.selector.weight.* 40
+    lp group mistrz         meta set minecraft.selector.weight.* 40
     lp group budowniczy     meta set minecraft.selector.weight.* 50
     lp group moderator      meta set minecraft.selector.weight.* 60
     lp group administrator  meta set minecraft.selector.weight.* 90
@@ -233,7 +233,7 @@ config/EssentialCommands.properties (tam stoi 1,2,3,5):
     lp group nowy           permission set essentialcommands.home.limit.1 true
     lp group gracz          permission set essentialcommands.home.limit.2 true
     lp group obywatel       permission set essentialcommands.home.limit.3 true
-    lp group gospodarz      permission set essentialcommands.home.limit.5 true
+    lp group mistrz         permission set essentialcommands.home.limit.5 true
 
 PUŁAPKA. Nigdy nie nadawaj gołego `essentialcommands.home`. LuckPerms czyta go
 jak wildcard i gracz dostaje wszystkie węzły poniżej — łącznie z limit.5. Cała
@@ -300,14 +300,14 @@ jednego kończy się komunikatem „no permission", który nie mówi którego:
     lp group moderator      permission set luckperms.user.promote.rangi.nowy true
     lp group moderator      permission set luckperms.user.promote.rangi.gracz true
     lp group moderator      permission set luckperms.user.promote.rangi.obywatel true
-    lp group moderator      permission set luckperms.user.promote.rangi.gospodarz true
+    lp group moderator      permission set luckperms.user.promote.rangi.mistrz true
 
     lp group moderator      permission set luckperms.user.demote true
     lp group moderator      permission set luckperms.user.demote.modify.others true
     lp group moderator      permission set luckperms.user.demote.rangi.nowy true
     lp group moderator      permission set luckperms.user.demote.rangi.gracz true
     lp group moderator      permission set luckperms.user.demote.rangi.obywatel true
-    lp group moderator      permission set luckperms.user.demote.rangi.gospodarz true
+    lp group moderator      permission set luckperms.user.demote.rangi.mistrz true
 
 Skąd te dziwne nazwy: w config/luckperms/luckperms.conf stoi
 argument-based-command-permissions = true, więc argumenty komendy stają się
@@ -327,7 +327,7 @@ nadałeś, po prostu nie ma:
     celem jest nadawca (`luckperms.user.promote.modify.self`). Moderator ma
     tylko `.modify.others`, więc `/lp user <swój nick> promote rangi` odbija
     się o brak uprawnień.
-  * **dać komukolwiek cokolwiek ponad Gospodarza** — `promote` chodzi wyłącznie
+  * **dać komukolwiek cokolwiek ponad Mistrza** — `promote` chodzi wyłącznie
     po torze `rangi`, a na torze stoją cztery grupy graczy i ani jedna grupa
     staffu. Cztery są dodatkowo wypisane z nazwy, więc dopisanie kiedyś nowej
     grupy do toru nie otworzy jej Moderatorowi samo z siebie.
@@ -413,7 +413,7 @@ tryb admina (dokumentacja/dzialki.txt), nie własny limit.
     playtime reload                   po zmianie progów w configu
 
 Playtime Rewards zarządza tylko grupami, które ma w swoim configu — czyli
-nowy, gracz i obywatel. Gospodarza i wszystkie rangi staffu zostawia w
+nowy, gracz i obywatel. Mistrza i wszystkie rangi staffu zostawia w
 spokoju, więc awans za surowce nie zostanie w nocy cofnięty przez automat.
 
 
@@ -423,7 +423,7 @@ spokoju, więc awans za surowce nie zostanie w nocy cofnięty przez automat.
 Prefiksy dla trzech automatycznych rang ustawia Playtime Rewards przy awansie,
 z pola `luckPermsPrefix` w swoim configu. Ręczne trzeba dopisać samemu:
 
-    lp group gospodarz      meta setprefix 40 "&6[Gospodarz] "
+    lp group mistrz         meta setprefix 40 "&6[Mistrz] "
     lp group budowniczy     meta setprefix 50 "&2[Budowniczy] "
     lp group moderator      meta setprefix 60 "&9[Moderator] "
     lp group administrator  meta setprefix 90 "&c[Administrator] "

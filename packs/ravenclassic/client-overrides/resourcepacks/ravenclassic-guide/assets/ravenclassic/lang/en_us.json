@@ -36,7 +36,7 @@
   "book.ravenclassic.przewodnik.dzialki.rangi.name": "Ranks",
   "book.ravenclassic.przewodnik.dzialki.rangi.description": "Earned by playing, not bought",
   "book.ravenclassic.przewodnik.dzialki.rangi.p0.title": "The ladder",
-  "book.ravenclassic.przewodnik.dzialki.rangi.p0.text": "Your rank sets how many chunks you may claim and how many of them stay loaded:$(br2)$(li)Nowy — 4 chunks$(br)$(li)Gracz — 6 chunks, 2 forceload$(br)$(li)Obywatel — 8 chunks, 4 forceload$(br)$(li)Gospodarz — 12 chunks, 8 forceload",
+  "book.ravenclassic.przewodnik.dzialki.rangi.p0.text": "Your rank sets how many chunks you may claim and how many of them stay loaded:$(br2)$(li)Nowy — 4 chunks$(br)$(li)Gracz — 6 chunks, 2 forceload$(br)$(li)Obywatel — 8 chunks, 4 forceload$(br)$(li)Mistrz — 12 chunks, 8 forceload",
   "book.ravenclassic.przewodnik.dzialki.rangi.p1.title": "How you move up",
   "book.ravenclassic.przewodnik.dzialki.rangi.p1.text": "Ranks are not sold for real money and never will be — Mojang forbids it, and it would make for a worse server anyway.$(br2)You move up by playing and by what you leave behind. A rank can also be paid for in game with staff; a person grants it, not a machine.",
   "book.ravenclassic.przewodnik.handel.name": "Trade and travel",
