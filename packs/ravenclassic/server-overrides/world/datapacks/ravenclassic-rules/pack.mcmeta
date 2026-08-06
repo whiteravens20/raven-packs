@@ -1,0 +1,18 @@
+{
+  "pack": {
+    "description": "White Ravens Classic — zasady serwera",
+    "pack_format": 100,
+    "supported_formats": {
+      "min_inclusive": 45,
+      "max_inclusive": 9999
+    }
+  },
+  "filter": {
+    "block": [
+      {
+        "namespace": "waystones",
+        "path": "recipe/.*waystone.*\\.json"
+      }
+    ]
+  }
+}
