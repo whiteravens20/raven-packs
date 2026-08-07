@@ -108,6 +108,11 @@ function buildRavenForgeManifest(pack, lock, configFiles) {
     minecraftVersion: pack.minecraft,
     modLoader: pack.loader.type,
     modLoaderVersion: pack.loader.version,
+    // Carried in the manifest and not only in packs.json, so a player who pastes
+    // the manifest URL gets the same RAM the catalogue would have given them.
+    // Omitted rather than defaulted: a pack with no opinion should leave the
+    // launcher's own default alone.
+    ...(pack.recommendedRamMb ? { recommendedRamMb: pack.recommendedRamMb } : {}),
     mods: byKind('mod').map((file) => ({
       ...entry(file),
       required: true,
