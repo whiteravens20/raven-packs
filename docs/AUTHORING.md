@@ -111,6 +111,29 @@ Each format carries them differently — the launcher manifest as `configFiles[]
 > player's video settings — consider a mod like YOSBR that applies defaults only
 > on first run.
 
+### pack.mcmeta
+
+A resource pack or data pack shipped in the overrides declares which game it is
+for, and current Minecraft wants `min_format`/`max_format` — not the older
+`pack_format`/`supported_formats`, which it refuses to read once a pack claims
+support past resource format 64 or data format 81:
+
+```json
+{ "pack": { "description": "…", "min_format": 88, "max_format": 88 } }
+```
+
+A bare integer is `<major>.0` in `min_format` and `<major>.*` in `max_format`,
+so one major number covers every point release of that Minecraft version.
+
+The numbers are not guessable and differ between the two pack kinds. Read them
+from `version.json` inside the client jar for the version you target —
+`pack_version.resource_major` for resource packs, `pack_version.data_major` for
+data packs. Minecraft 26.2 is 88 and 107.
+
+Getting this wrong fails quietly in the worst place: the build passes, the sync
+passes, and the player finds the pack listed as incompatible and switched off.
+`validate.mjs` checks the shape, but only you can check the numbers.
+
 ## The lockfile
 
 `packs/<slug>/pack.lock.json` is committed and records the *resolved* state:
