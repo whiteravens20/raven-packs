@@ -14,6 +14,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
+import { listFiles } from './lib/download.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -23,6 +24,57 @@ const SEMVER = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 
 const problems = [];
 const fail = (slug, msg) => problems.push(`${slug}: ${msg}`);
+
+/**
+ * Check every resource pack and data pack we ship in the overrides.
+ *
+ * Minecraft gave pack formats a minor version and, at the same time, replaced
+ * `pack_format`/`supported_formats` with `min_format`/`max_format`. A pack that
+ * still uses the old keys *and* claims support past the changeover — resource
+ * format 64, data format 81, both readable from
+ * `PackFormat.lastPreMinorVersion` — fails to parse outright:
+ *
+ *   Pack declares support for version newer than 81, but is missing
+ *   mandatory fields min_format and max_format
+ *
+ * Nothing downstream notices. The build succeeds, the sync succeeds, and the
+ * player finds the pack greyed out as incompatible and dropped from the enabled
+ * list — which is exactly how the guide book shipped broken once already.
+ *
+ * The right numbers for a given Minecraft version are not guessable; read them
+ * from `version.json` in that version's client jar (`pack_version.resource_major`
+ * for resource packs, `pack_version.data_major` for data packs).
+ */
+async function validatePackMeta(slug) {
+  const metas = (await listFiles(path.join(PACKS_DIR, slug))).filter((f) =>
+    f.relative.endsWith('pack.mcmeta'),
+  );
+  const before = problems.length;
+
+  for (const file of metas) {
+    let meta;
+    try {
+      meta = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (err) {
+      fail(slug, `${file.relative} is not valid JSON — ${err.message}`);
+      continue;
+    }
+
+    const section = meta.pack ?? {};
+    const legacy = ['pack_format', 'supported_formats'].filter((k) => k in section);
+    if (legacy.length > 0) {
+      fail(slug, `${file.relative} still uses ${legacy.join(' and ')} — replace with min_format/max_format`);
+    }
+    const missing = ['min_format', 'max_format'].filter((k) => !(k in section));
+    if (missing.length > 0) {
+      fail(slug, `${file.relative} is missing ${missing.join(' and ')} — the game cannot read its metadata`);
+    }
+  }
+
+  if (metas.length > 0 && problems.length === before) {
+    console.log(`  \x1b[32m✓\x1b[0m ${metas.length} pack.mcmeta declare min_format/max_format`);
+  }
+}
 
 async function validatePack(slug) {
   console.log(`\n\x1b[1m${slug}\x1b[0m`);
@@ -69,6 +121,8 @@ async function validatePack(slug) {
   }
 
   console.log(`  ${entries.length} entries, Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}`);
+
+  await validatePackMeta(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
