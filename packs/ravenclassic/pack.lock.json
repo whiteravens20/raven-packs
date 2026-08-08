@@ -3,7 +3,7 @@
   "pack": {
     "slug": "ravenclassic",
     "name": "White Ravens Classic",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "minecraft": "26.2",
     "loader": {
       "type": "fabric",
@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-06T18:18:34.962Z",
+  "generatedAt": "2026-08-08T12:00:54.923Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1335,28 +1335,6 @@
       "sha1": "df1947ae2b0ec6de78ed2c70223294d493031641",
       "sha512": "ec597df7e974f1f28baa15325373442968c9643a157a6d2627cd5c36f8841c3023f2c08023d203bcfa7e0e51bce69d4623ba712babb84da73bd40f0e0c7f4dbd",
       "license": "MIT",
-      "requiredDependencies": [
-        "P7dR8mSH"
-      ]
-    },
-    {
-      "requestKey": "{\"slug\":\"fastback\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
-      "kind": "mod",
-      "side": "server",
-      "clientSide": "unsupported",
-      "serverSide": "required",
-      "id": "fastback",
-      "name": "Fast Backups",
-      "source": "modrinth",
-      "projectId": "ZHKrK8Rp",
-      "versionId": "EVNH1CA6",
-      "version": "0.34.0+26.2.0",
-      "fileName": "fastback-fabric-0.34.0+26.2.0.jar",
-      "url": "https://cdn.modrinth.com/data/ZHKrK8Rp/versions/EVNH1CA6/fastback-fabric-0.34.0%2B26.2.0.jar",
-      "size": 5597760,
-      "sha1": "01e6df1c661d531e7ac1e40de5a8bc5897c3ae3e",
-      "sha512": "70f5ad680e16e24b4c0130200a71a1301a288ae79672a9243388c1a843ad1215b0701a4fc5038aebb6c8cf744b4f6f61246f969b5f1ecd3cdb7a98bd0ab12b25",
-      "license": "GPL-2.0-only",
       "requiredDependencies": [
         "P7dR8mSH"
       ]

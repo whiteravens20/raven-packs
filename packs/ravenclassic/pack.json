@@ -2,7 +2,7 @@
   "$schema": "../../docs/pack.schema.json",
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "summary": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
   "author": "White Ravens",
   "minecraft": "26.2",
@@ -119,7 +119,6 @@
     { "slug": "styled-nicknames", "reason": "Player-set nicknames, permission-gated", "side": "server" },
     { "slug": "vanish", "reason": "Staff can look without being seen", "side": "server" },
     { "slug": "bluemap", "reason": "Web map of the world", "side": "server" },
-    { "slug": "fastback", "reason": "Incremental world backups", "side": "server" },
     { "slug": "collective", "reason": "Required by Starter Kit", "side": "server" },
     {
       "slug": "starter-kit",

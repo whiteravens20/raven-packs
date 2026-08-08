@@ -52,7 +52,8 @@ moda, który by to na Fabricu 26.2 spinał. Co za tym idzie:
     to inna odpowiedzialność i inne konto,
   * Ledger loguje każdą zmianę bloku razem z tym, kto ją zrobił, więc `//undo`
     ma awaryjną kopię zapasową w postaci `/lg rollback`,
-  * przy dużych operacjach warto najpierw `/backup`.
+  * przy dużych operacjach uprzedź admina hostingu, żeby zrobił kopię świata.
+    Z gry się jej nie zamówi — paczka nie ma moda od backupów.
 
 
 2. Moderacja
@@ -184,13 +185,13 @@ Plik: world/config/playtime-rewards/config.json, potem `/playtime reload`.
 6. Kopie zapasowe i wydajność
 -----------------------------
 
-    /backup                 kopia na już (Fastback, przyrostowo, na gicie)
     /spark profiler start   profiler, gdy serwer zaczyna zamulać
     /spark tps
 
-Fastback trzyma historię jako repozytorium gita, więc kolejne kopie kosztują
-tyle, ile się zmieniło. Sprawdź `/backup` zaraz po pierwszym starcie, a nie po
-pierwszym griefie.
+Kopii zapasowych paczka nie robi i nie ma komendy, która by je zamówiła —
+backupy są po stronie hostingu. Z gry masz tylko Ledgera: `/lg rollback`
+cofa zmiany bloków, ale nie ekwipunki, nie enderchesty i nie uszkodzony
+świat. To narzędzie od griefu, nie kopia zapasowa.
 
 BlueMap renderuje mapę świata do przeglądarki. Pierwsze renderowanie zjada
 sporo CPU — puść je po pregeneracji Chunky'ego, nie równolegle z nią.

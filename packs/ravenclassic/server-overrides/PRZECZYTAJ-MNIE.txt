@@ -9,7 +9,7 @@ zip, więc jest opisane w plikach obok.
     dokumentacja/rangi.txt     drabinka rang i komplet komend LuckPermsa
     dokumentacja/dzialki.txt   claimy, chunk loading, co jest chronione
     dokumentacja/sklepy.txt    sklepy gracza i sklepy admina
-    dokumentacja/staff.txt     WorldEdit, moderacja, vanish, logi, backupy
+    dokumentacja/staff.txt     WorldEdit, moderacja, vanish, logi
 
 Czytaj rangi.txt pierwszy. Wszystko inne z niego wynika.
 
@@ -43,9 +43,9 @@ Kolejność pierwszego uruchomienia
        /chunky radius 3000
        /chunky start
 
-6. Sprawdź backupy zaraz po starcie, a nie po pierwszym griefie:
-
-       /backup
+6. Podepnij kopie zapasowe. Paczka nie niesie żadnego moda od backupów —
+   robi je hosting. Sprawdź, że kopia faktycznie powstaje i że da się ją
+   odtworzyć, zanim wpuścisz graczy, a nie po pierwszym griefie.
 
 7. Dopiero teraz whitelist i gracze.
 
