@@ -30,7 +30,7 @@ costs about 70 KB of git history. See [the lockfile](#the-lockfile).
 
 | Pack | Minecraft | Loader | Contents |
 |---|---|---|---|
-| [White Ravens Classic](packs/ravenclassic/) | 26.2 | Fabric 0.19.3 | 65 mods and 2 shader packs — 44 files reach the client, 41 the server |
+| [White Ravens Classic](packs/ravenclassic/) | 26.2 | Fabric 0.19.3 | 64 mods and 2 shader packs — 44 files reach the client, 40 the server |
 
 White Ravens Classic is **alpha**: it has never been run on a live server, and
 Minecraft 26.2 is new enough that a few of its mods are pinned to beta builds.
@@ -72,7 +72,7 @@ Everything about a pack lives in one hand-edited file, `packs/<slug>/pack.json`:
 {
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "minecraft": "26.2",
   "loader": { "type": "fabric", "version": "0.19.3" },
   "mods": [
@@ -104,11 +104,11 @@ Full authoring guide: **[docs/AUTHORING.md](docs/AUTHORING.md)**.
 versions, filenames, CDN URLs, sizes and hashes. It is this repo's equivalent of
 packwiz's `index.toml`, and it is what keeps large packs cheap:
 
-White Ravens Classic, 67 locked files:
+White Ravens Classic, 66 locked files:
 
 | | |
 |---|---|
-| Committed to git | 68 KB — 7.5 KB of definition, 60 KB of lockfile |
+| Committed to git | 66 KB — 7.4 KB of definition, 59 KB of lockfile |
 | `build.mjs`, cold | 0.2 s, Node startup included |
 | Network calls at build | 0 |
 | Published `.mrpack` | 17 KB |
@@ -156,31 +156,41 @@ that `dev` has never seen, so a sync that stops after the first line leaves
 apart with every release, until the next sync is a real merge with a real
 chance of conflict over files neither branch actually changed.
 
-**A tag additionally cuts a GitHub Release for one pack:**
+**A tag then cuts a GitHub Release for one pack** — after the sync above, never
+instead of it:
 
 ```bash
-git tag ravenclassic-v1.1.0 && git push --tags
+git tag ravenclassic-v1.2.0 && git push --tags
 ```
 
 The slug in the tag picks the pack, and the version must match that pack's
 `pack.json` — CI refuses the tag otherwise, because `pack.json` is what names
-the built `.mrpack` and a `v1.1.0` release containing `ravenclassic-1.1.1.mrpack`
-helps nobody. Tag a commit on `main` that is current: the build runs on the
-tagged tree and `deploy-pages` replaces the whole site, so tagging an old commit
-republishes the feeds and every other pack's manifest as they were then.
+the built `.mrpack` and a `v1.2.0` release containing `ravenclassic-1.2.1.mrpack`
+helps nobody.
+
+**The tag publishes nothing to the site.** GitHub's `github-pages` environment
+accepts deployments from `main` alone, so a tag run that tried to deploy was
+rejected and turned the whole run red *after* the release had already been
+created. It no longer tries: `deploy-pages` is skipped unless the ref is `main`.
+Nothing is lost by that, because the commit being tagged is already on `main`
+and its own push republished the site seconds earlier.
+
+The consequence is the ordering. **Push to `main` first, tag second.** A tag on
+a commit `main` has not seen produces a Release nobody can install through the
+launcher, which reads the manifest from Pages and never from a release asset.
 
 Either way CI validates, builds and **signs every manifest** — the job fails
-without `PACK_SIGNING_KEY` rather than publishing an unsigned one — then deploys
-`dist/` to GitHub Pages, which is what gives each pack its stable manifest URL.
-The tag path adds the `.mrpack`, the client zip and the server zip as release
-assets, for the tagged pack only.
+without `PACK_SIGNING_KEY` rather than publishing an unsigned one. The `main`
+path deploys `dist/` to GitHub Pages, which is what gives each pack its stable
+manifest URL; the tag path adds the `.mrpack`, the client zip and the server zip
+as release assets, for the tagged pack only.
 
 The two outputs differ in scope on purpose:
 
-| | Contents |
-|---|---|
-| **GitHub Pages** | Every pack, plus `site/` |
-| **GitHub Release** | The tagged pack's artifacts |
+| | Trigger | Contents |
+|---|---|---|
+| **GitHub Pages** | push to `main` | Every pack, plus `site/` |
+| **GitHub Release** | tag `<slug>-v<version>` | The tagged pack's artifacts |
 
 Pages gets everything because `deploy-pages` replaces the whole site: publishing
 one pack's `dist/` alone would take every other pack's manifest offline and
