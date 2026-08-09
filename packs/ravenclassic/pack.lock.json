@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-08T12:00:54.923Z",
+  "generatedAt": "2026-08-09T21:13:02.138Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -90,17 +90,17 @@
       "name": "libIPN",
       "source": "modrinth",
       "projectId": "onSQdWhM",
-      "versionId": "uRP0v1wY",
-      "version": "fabric-26.2-6.8.2",
-      "fileName": "libIPN-fabric-26.2-6.8.2.jar",
-      "url": "https://cdn.modrinth.com/data/onSQdWhM/versions/uRP0v1wY/libIPN-fabric-26.2-6.8.2.jar",
-      "size": 630245,
-      "sha1": "0915dc94c81044025f43a1ab2118b2c6c8a97710",
-      "sha512": "cf1ad33ea398bab7d44e0c61168cd4866d207d0ffca2a742583cf1943a4a8447f2609143b2a30326654699763094c196edae505cd7ab87b26c7b69c575fa2ebc",
+      "versionId": "SkvWSBFK",
+      "version": "fabric-26.2-6.8.3",
+      "fileName": "libIPN-fabric-26.2-6.8.3.jar",
+      "url": "https://cdn.modrinth.com/data/onSQdWhM/versions/SkvWSBFK/libIPN-fabric-26.2-6.8.3.jar",
+      "size": 637800,
+      "sha1": "356e9327929c8559f48cd151bbe7ece38d83d82a",
+      "sha512": "bd4bd3c3c3c4d98932fa526dc42cc7071bab3717849a3a1de808e6ef1ad3b2f3f24f201854c2485bec3b31dece24d190441d0f7db32e81216cddf005ec474fb6",
       "license": "AGPL-3.0-or-later",
       "requiredDependencies": [
-        "P7dR8mSH",
-        "Ha28R6CL"
+        "Ha28R6CL",
+        "P7dR8mSH"
       ]
     },
     {
@@ -555,13 +555,13 @@
       "name": "Just Enough Items (JEI)",
       "source": "modrinth",
       "projectId": "u6dRKJwZ",
-      "versionId": "5eBL9Xtr",
-      "version": "30.16.0.125",
-      "fileName": "jei-26.2-fabric-30.16.0.125.jar",
-      "url": "https://cdn.modrinth.com/data/u6dRKJwZ/versions/5eBL9Xtr/jei-26.2-fabric-30.16.0.125.jar",
-      "size": 1682040,
-      "sha1": "5e843952a4dbf3f6cb4ccbf98044bb7ee691c826",
-      "sha512": "b2626f44f4c3afd312d66ba9052352d3efdbee1543f5042c74c8723fa897881141713a8fa3bdcf5d07732f820672a351bda2f5958537f0553e43a7f2cd41dcbd",
+      "versionId": "zVFZv3yA",
+      "version": "30.17.0.135",
+      "fileName": "jei-26.2-fabric-30.17.0.135.jar",
+      "url": "https://cdn.modrinth.com/data/u6dRKJwZ/versions/zVFZv3yA/jei-26.2-fabric-30.17.0.135.jar",
+      "size": 1687459,
+      "sha1": "b727a83cb06bd10020c82c89a31865821d94a1c8",
+      "sha512": "3ed2730d0574f8c793d84d9ee1e1b2c75a4ae04bf52b67ce531ce1d1e00878fd13a104cdb372957217e167067cd8f22afeda60c95b618ec2a552cd1ab76fd51b",
       "license": "MIT",
       "requiredDependencies": []
     },
@@ -641,18 +641,18 @@
       "name": "Inventory Profiles Next",
       "source": "modrinth",
       "projectId": "O7RBXm3n",
-      "versionId": "Eg2NTcSJ",
-      "version": "fabric-26.2-2.3.5",
-      "fileName": "InventoryProfilesNext-fabric-26.2-2.3.5.jar",
-      "url": "https://cdn.modrinth.com/data/O7RBXm3n/versions/Eg2NTcSJ/InventoryProfilesNext-fabric-26.2-2.3.5.jar",
-      "size": 1461780,
-      "sha1": "c1278ddd631b3aa05480028585420f13eb7b4623",
-      "sha512": "199ece4f299caba0a4cc22001ef1a05e59df8e6d9fbaae921920a85d967284e5cd89eeffe6cf9be8b32ee02d8b7e18bd3d95082a402e756d5980beb88aad8e45",
+      "versionId": "Dj7UGR23",
+      "version": "fabric-26.2-2.3.6",
+      "fileName": "InventoryProfilesNext-fabric-26.2-2.3.6.jar",
+      "url": "https://cdn.modrinth.com/data/O7RBXm3n/versions/Dj7UGR23/InventoryProfilesNext-fabric-26.2-2.3.6.jar",
+      "size": 1456049,
+      "sha1": "a86acd8abb264316595738cdc19d23abdc54022f",
+      "sha512": "cce66c87fd08bf80f22fea8e1d28b4162a681bf0c0c1eb1cf4ecd4bd4cb4a18e8d3fa4c6c3c575f5377335e4354fdaee76ccc9ce29fa384a32c29b1d9eddfedf",
       "license": "AGPL-3.0-or-later",
       "requiredDependencies": [
+        "onSQdWhM",
         "P7dR8mSH",
-        "Ha28R6CL",
-        "onSQdWhM"
+        "Ha28R6CL"
       ]
     },
     {
@@ -674,8 +674,8 @@
       "sha512": "705a98e5d05c15854c5a711fb6f1a9fbe5eaae354bdaf8b5c1641b09f89457c98ed41b819c9221b380c1faf0a342df93debc19a3ceeadf4cd4b1bdc1219ed606",
       "license": "MIT",
       "requiredDependencies": [
-        "fuuu3xnx",
-        "P7dR8mSH"
+        "P7dR8mSH",
+        "fuuu3xnx"
       ]
     },
     {
@@ -697,9 +697,9 @@
       "sha512": "0212fc1ded72d027df0d346546f45903b9c6cc37c521379724cf2d28eb8a9867a52f26391e690dcadeedcd32899d22b00b7405b2e6bbefd949fb9df383e3c5b4",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
-        "1eAoo2KR",
+        "Ha28R6CL",
         "P7dR8mSH",
-        "Ha28R6CL"
+        "1eAoo2KR"
       ]
     },
     {
@@ -843,13 +843,13 @@
       "name": "Modonomicon",
       "source": "modrinth",
       "projectId": "692GClaE",
-      "versionId": "NF0U7dcs",
-      "version": "26.2-2.2.0",
-      "fileName": "modonomicon-26.2-fabric-2.2.0.jar",
-      "url": "https://cdn.modrinth.com/data/692GClaE/versions/NF0U7dcs/modonomicon-26.2-fabric-2.2.0.jar",
-      "size": 3050564,
-      "sha1": "e858544d69884d1242a2e9456929a19a46d9e6b1",
-      "sha512": "8337ac72c7e77dc351806f255a64e780b9dfabaafc3cc45890cb239843cba1d89dd7573aa5d752b0df4af918585db93cd3aa628a712f123d6d15f7d37e8c1118",
+      "versionId": "VI4rtcu3",
+      "version": "26.2-2.4.0",
+      "fileName": "modonomicon-26.2-fabric-2.4.0.jar",
+      "url": "https://cdn.modrinth.com/data/692GClaE/versions/VI4rtcu3/modonomicon-26.2-fabric-2.4.0.jar",
+      "size": 3050593,
+      "sha1": "15c3dbcd2d41786675a3a44c85c3b373fb7bb5ca",
+      "sha512": "537fcffa6533b39b7856c0df98ffce558037e5fb05ddf7b71180c4faa15a04a267d329cbabbe5ac7cd3c7ab4d8561534364de9e514fe4480414fd34c73e7ea35",
       "license": "MIT AND CC-BY-4.0",
       "requiredDependencies": []
     },
@@ -872,8 +872,8 @@
       "sha512": "5e064ed50ae303f982466a4ac0a1198355adc65005723dfea403acc01fd2aa0b307867c7d5511394e83c515d413c834890b51e3c71e40cea97f7c747be635be7",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
-        "ohNO6lps",
-        "P7dR8mSH"
+        "P7dR8mSH",
+        "ohNO6lps"
       ]
     },
     {
@@ -1079,13 +1079,13 @@
       "name": "WorldEdit",
       "source": "modrinth",
       "projectId": "1u6JkXh5",
-      "versionId": "j2w3GmPv",
-      "version": "7.4.4",
-      "fileName": "worldedit-mod-7.4.4.jar",
-      "url": "https://cdn.modrinth.com/data/1u6JkXh5/versions/j2w3GmPv/worldedit-mod-7.4.4.jar",
-      "size": 5107529,
-      "sha1": "40f943ddabba673251edf468e65314851be240be",
-      "sha512": "48e408fbf3e24521f2a66155e9a85a71f5bf89657a9888aac9525e250c5dd9541d8326afbbc24eae4241dba83506a2438ebff60f0e763e37ecef8e070fa86e57",
+      "versionId": "6YnCYPwc",
+      "version": "7.4.5",
+      "fileName": "worldedit-mod-7.4.5.jar",
+      "url": "https://cdn.modrinth.com/data/1u6JkXh5/versions/6YnCYPwc/worldedit-mod-7.4.5.jar",
+      "size": 5154613,
+      "sha1": "7d909b53f5fb76756bca1db08113151304cc173a",
+      "sha512": "611ff7cc00d78c63a284ef26b6fbc806af295c469375e5e71e4d7e993aa6ea3fa90945e46511c99b6157a01ed5c3868a2a6419b47a38114cc1e67b32c20f7ca3",
       "license": "GPL-3.0-only",
       "requiredDependencies": []
     },
@@ -1327,13 +1327,13 @@
       "name": "BlueMap",
       "source": "modrinth",
       "projectId": "swbUV1cr",
-      "versionId": "VTvifNPN",
-      "version": "5.22-fabric",
-      "fileName": "bluemap-5.22-fabric.jar",
-      "url": "https://cdn.modrinth.com/data/swbUV1cr/versions/VTvifNPN/bluemap-5.22-fabric.jar",
-      "size": 6494225,
-      "sha1": "df1947ae2b0ec6de78ed2c70223294d493031641",
-      "sha512": "ec597df7e974f1f28baa15325373442968c9643a157a6d2627cd5c36f8841c3023f2c08023d203bcfa7e0e51bce69d4623ba712babb84da73bd40f0e0c7f4dbd",
+      "versionId": "bR8uae8S",
+      "version": "5.23-fabric",
+      "fileName": "bluemap-5.23-fabric.jar",
+      "url": "https://cdn.modrinth.com/data/swbUV1cr/versions/bR8uae8S/bluemap-5.23-fabric.jar",
+      "size": 6507617,
+      "sha1": "0a36c4e7cffcfaff28d23a17ccf7286101293c9b",
+      "sha512": "7997e47e89ddf69ccea187f8b2e52a278c9d4d3e77636f06b581e7166b7549f7c900d0867a827b81eb54823d804d4d422d040788a530559f27410a539450a91e",
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
