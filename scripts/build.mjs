@@ -30,8 +30,9 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { fetchFile, sha256, listFiles } from './lib/download.mjs';
+import { fetchFile, sha1, sha256, listFiles } from './lib/download.mjs';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { ZipWriter } from './lib/zip.mjs';
 
@@ -76,6 +77,144 @@ async function readOverrides(slug, side) {
     }
   }
   return files;
+}
+
+// ── Output: the resource pack the server pushes ────────────
+
+const SERVER_RESOURCE_PACK_DIR = 'server-resourcepack';
+
+/**
+ * A fixed timestamp for the server resource pack's zip entries.
+ *
+ * The archive is hashed and the hash is written into `server.properties`, so
+ * two builds of the same commit have to produce the same bytes — otherwise the
+ * pack published with one release and the hash shipped in another disagree.
+ * Local date parts (not UTC) because `dosDateTime` reads local ones, which is
+ * what keeps the result identical in every timezone.
+ */
+const ZIP_EPOCH = new Date(1980, 0, 1, 0, 0, 0);
+
+/**
+ * Zip `packs/<slug>/server-resourcepack/` — the client-side text that belongs
+ * to the server, delivered by the server.
+ *
+ * The guide book is a datapack: the server owns it and syncs it to whoever
+ * joins. Its *text* is a resource pack, and a resource pack can only come from
+ * the client side — so shipping it as a launcher override meant it existed only
+ * for players who arrived through Raven Forge, and only until something
+ * rewrote `options.txt`. Everyone else read the book as raw translation keys.
+ *
+ * Handing it to the server closes both holes at once. `require-resource-pack`
+ * makes it a condition of joining, so there is no client on the server without
+ * the text, whichever launcher it came from; and the pack ships from the same
+ * build as the book it describes, so the two cannot drift.
+ *
+ * Entries are stored rather than deflated. The payload is a few kilobytes of
+ * JSON, and deflate output is only stable for a given zlib build — which is a
+ * silly thing to make the hash depend on.
+ */
+async function buildServerResourcePack(slug, pack) {
+  const dir = path.join(PACKS_DIR, slug, SERVER_RESOURCE_PACK_DIR);
+  const files = await listFiles(dir);
+  if (files.length === 0) return null;
+
+  if (!files.some((file) => file.relative === 'pack.mcmeta')) {
+    throw new Error(
+      `${slug}: ${SERVER_RESOURCE_PACK_DIR}/ has no pack.mcmeta — Minecraft would reject the pack and every player with it.`,
+    );
+  }
+
+  const zip = new ZipWriter();
+  for (const file of files) {
+    zip.add(file.relative, await fs.readFile(file.absolute), { store: true, mtime: ZIP_EPOCH });
+  }
+  const data = zip.toBuffer();
+
+  // Release asset, not the Pages copy, and that is the point: release assets
+  // are immutable, so a server still running an older pack keeps serving the
+  // exact file its own server.properties was built against. A Pages URL would
+  // have the next release rewrite the bytes under every running server, and a
+  // hash that no longer matches locks every player out of one that requires it.
+  const fileName = `${slug}-resources-${pack.version}.zip`;
+  const releaseBase = (process.env.PACK_RELEASE_BASE_URL ?? '').replace(/\/$/, '');
+  if (!releaseBase) {
+    warn(
+      'PACK_RELEASE_BASE_URL is unset — server.properties gets a placeholder resource-pack URL (CI sets this). ' +
+        'A server started from this build would reject every player.',
+    );
+  }
+  const base = releaseBase || 'https://example.invalid/releases/download';
+
+  return {
+    fileName,
+    data,
+    url: `${base}/${slug}-v${pack.version}/${fileName}`,
+    sha1: sha1(data),
+    // Derived from the slug, so it is the pack's identity rather than this
+    // version's: the client sees an update to a pack it knows instead of an
+    // unrelated one, every time the URL changes.
+    id: uuidFromName(`raven-packs:${slug}:${SERVER_RESOURCE_PACK_DIR}`),
+    prompt: `${pack.name} — teksty przewodnika po serwerze.`,
+  };
+}
+
+/** RFC 4122 name-based UUID (version 5), which is what Minecraft expects here. */
+function uuidFromName(name) {
+  const bytes = createHash('sha1').update(name, 'utf8').digest().subarray(0, 16);
+  bytes[6] = (bytes[6] & 0x0f) | 0x50;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = bytes.toString('hex');
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    hex.slice(12, 16),
+    hex.slice(16, 20),
+    hex.slice(20, 32),
+  ].join('-');
+}
+
+/**
+ * Keys in `server.properties` that the build owns.
+ *
+ * Anything an author wrote for these is dropped rather than merged. The URL,
+ * the hash and the pack's id all describe the archive that was just built, and
+ * a hand-written hash that disagrees with it does not fail a build — it fails
+ * every player's login, on a server that by then is already live.
+ */
+const GENERATED_SERVER_PROPERTIES = [
+  'resource-pack',
+  'resource-pack-sha1',
+  'resource-pack-hash',
+  'resource-pack-id',
+  'resource-pack-prompt',
+  'require-resource-pack',
+];
+
+function serverPropertiesWith(authored, resourcePack) {
+  const lines = authored
+    .split(/\r?\n/)
+    .filter((line) => !GENERATED_SERVER_PROPERTIES.includes(line.split('=')[0].trim()));
+
+  while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  return [
+    ...lines,
+    '',
+    '# Written by scripts/build.mjs. Edits below are replaced on every build.',
+    '#',
+    '# The pack carries the guide book text. The server hands it out instead of',
+    '# the launcher installing it, so that it reaches every client whatever',
+    '# launcher it arrived from, and so it can never fall out of step with the',
+    '# book the datapack defines. Requiring it is what makes that a guarantee.',
+    `resource-pack=${resourcePack.url}`,
+    `resource-pack-sha1=${resourcePack.sha1}`,
+    `resource-pack-id=${resourcePack.id}`,
+    // A chat component, parsed as JSON. Read back through java.util.Properties,
+    // so the text must carry no backslash and no quote of its own.
+    `resource-pack-prompt=${JSON.stringify({ text: resourcePack.prompt })}`,
+    'require-resource-pack=true',
+    '',
+  ].join('\n');
 }
 
 // ── Output: Raven Forge manifest (schema v2) ───────────────
@@ -217,6 +356,8 @@ async function buildPack(slug, { withZip }) {
   if (overrideContents.length > 0) ok(`${overrideContents.length} client override files`);
   if (serverOverrides.length > 0) ok(`${serverOverrides.length} server override files`);
 
+  const serverResourcePack = await buildServerResourcePack(slug, pack);
+
   const outDir = path.join(DIST_DIR, slug);
   await fs.rm(outDir, { recursive: true, force: true });
   await fs.mkdir(outDir, { recursive: true });
@@ -240,6 +381,15 @@ async function buildPack(slug, { withZip }) {
   const manifest = buildRavenForgeManifest(pack, lock, configFiles);
   await fs.writeFile(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
   ok(`manifest.json (${manifest.mods.length} mods, ${configFiles.length} config files)`);
+
+  // 1b. The server's resource pack. It goes into dist/ so the release picks it
+  //     up as an asset — that URL is what server.properties points at.
+  if (serverResourcePack) {
+    await fs.writeFile(path.join(outDir, serverResourcePack.fileName), serverResourcePack.data);
+    ok(
+      `${serverResourcePack.fileName} (${(serverResourcePack.data.length / 1024).toFixed(1)} KiB, sha1 ${serverResourcePack.sha1.slice(0, 12)}…)`,
+    );
+  }
 
   for (const file of overrideContents) {
     const dest = path.join(outDir, 'overrides', file.relative);
@@ -292,7 +442,25 @@ async function buildPack(slug, { withZip }) {
         if (file.kind !== 'mod') continue; // shaders/resource packs are client-only
         serverZip.add(`mods/${file.fileName}`, payloads.get(file.id).data, { store: true });
       }
-      for (const file of serverOverrides) serverZip.add(file.relative, file.data);
+      // server.properties is authored by hand but finished here: the pack's
+      // URL and hash only exist once it has been built.
+      const authoredProperties = serverOverrides.find((f) => f.relative === 'server.properties');
+      if (serverResourcePack && !authoredProperties) {
+        throw new Error(
+          `${slug}: ${SERVER_RESOURCE_PACK_DIR}/ exists but server-overrides/server.properties does not — nothing would tell the server to hand the pack out.`,
+        );
+      }
+
+      for (const file of serverOverrides) {
+        const data =
+          serverResourcePack && file === authoredProperties
+            ? serverPropertiesWith(file.data.toString('utf8'), serverResourcePack)
+            : file.data;
+        serverZip.add(file.relative, data);
+      }
+      if (serverResourcePack) {
+        ok(`server.properties requires ${serverResourcePack.fileName} from the release`);
+      }
 
       const launcher = lock.pack.serverLauncher;
       if (launcher) {

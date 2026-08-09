@@ -79,5 +79,10 @@ remembered:
   Tagging a commit `main` has not seen builds a release out of content nobody
   can download.
 
+  Step 2 is also what publishes the server's resource pack, and the
+  `server.properties` in the server zip requires it by release URL. **Never
+  delete a release a server is running.** Doing so does not break a download
+  page — it turns away every player at login.
+
   The tag's version and `packs/<slug>/pack.json` must agree; the job stops if
   they do not. It also fails rather than ship an unsigned manifest.

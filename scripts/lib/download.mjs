@@ -65,6 +65,10 @@ export async function fetchFile(url, expected = {}) {
   };
 }
 
+export function sha1(buf) {
+  return hash(buf, 'sha1');
+}
+
 export function sha256(buf) {
   return hash(buf, 'sha256');
 }

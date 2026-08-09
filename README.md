@@ -12,6 +12,7 @@ launcher, with no launcher at all, or on a server.
 | `<pack>-<version>.mrpack` | Prism, ATLauncher, MultiMC, Modrinth App | Download references (small, ~5 KB) |
 | `<pack>-<version>.zip` | Manual install, no launcher | Client jars plus configs |
 | `<pack>-<version>-server.zip` | Server operators | Server jars, `server.properties`, Fabric launcher, start scripts |
+| `<pack>-resources-<version>.zip` | Every client that joins the server | The guide book's text, pushed by the server rather than installed by a launcher |
 
 Plus one file for the site as a whole: `packs.json`, a catalogue of every
 published pack with its manifest URL. Raven Forge fetches it to offer the packs
@@ -182,8 +183,13 @@ launcher, which reads the manifest from Pages and never from a release asset.
 Either way CI validates, builds and **signs every manifest** — the job fails
 without `PACK_SIGNING_KEY` rather than publishing an unsigned one. The `main`
 path deploys `dist/` to GitHub Pages, which is what gives each pack its stable
-manifest URL; the tag path adds the `.mrpack`, the client zip and the server zip
-as release assets, for the tagged pack only.
+manifest URL; the tag path adds the `.mrpack`, the client zip, the server zip
+and the server's resource pack as release assets, for the tagged pack only.
+
+That last asset is load-bearing rather than convenient. The `server.properties`
+inside the server zip points at it by release URL and requires it, so a server
+built from a tag that was never pushed serves a 404 and turns away every player.
+It is the one output where deleting a release breaks something already running.
 
 The two outputs differ in scope on purpose:
 

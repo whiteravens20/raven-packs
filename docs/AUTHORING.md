@@ -111,6 +111,43 @@ Each format carries them differently — the launcher manifest as `configFiles[]
 > player's video settings — consider a mod like YOSBR that applies defaults only
 > on first run.
 
+### server-resourcepack/
+
+A fourth directory, and not an override at all: it is a resource pack the
+**server** hands to every client that joins.
+
+```
+packs/ravenclassic/server-resourcepack/
+├── pack.mcmeta
+└── assets/ravenclassic/lang/pl_pl.json
+```
+
+`build.mjs` zips it, hashes it, publishes it as a release asset and writes the
+URL, the sha1 and `require-resource-pack=true` into the `server.properties`
+that goes out in the server zip. Nothing else has to be configured, and
+anything already written for those keys is replaced — a hand-edited hash that
+disagrees with the shipped archive does not fail a build, it fails every
+player's login on a server that is by then already live.
+
+Use it for client-side content the **server** owns, and the guide book is the
+example that forced it into existence. Modonomicon books are data-driven, so
+the book itself is a datapack the server syncs to whoever joins — but the text
+it renders is a translation file, and translation files only exist client-side.
+Shipped as a client override it reached players who arrived through Raven Forge
+and nobody else, so anyone on Prism read the guide as raw translation keys. Sent
+by the server it reaches everyone, and it ships from the same build as the book,
+so the two cannot drift.
+
+The URL points at the release asset rather than the copy on Pages, deliberately.
+Release assets never change, so a server still running last month's pack keeps
+serving the exact file its own `server.properties` was hashed against. A Pages
+URL would have every new release rewrite the bytes underneath it, and a hash
+that no longer matches locks out every player on a server that requires the pack.
+
+The consequence is that the release has to exist. A server zip built by hand,
+outside CI, carries a placeholder URL and the build says so — start a server
+from one and nobody can join.
+
 ### pack.mcmeta
 
 A resource pack or data pack shipped in the overrides declares which game it is

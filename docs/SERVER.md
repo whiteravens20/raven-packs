@@ -47,7 +47,7 @@ Open **25565/tcp** for players to connect.
 ```
 mods/                    server-side mods only
 config/                  shared config from overrides/
-server.properties        from server-overrides/
+server.properties        from server-overrides/, finished by the build
 fabric-server-launch.jar bundled — no separate Fabric install needed
 start.sh / start.bat     with Java and EULA checks
 SERVER-INSTALL.txt
@@ -55,6 +55,32 @@ SERVER-INSTALL.txt
 
 Client-only mods are **absent by design**. Shipping Sodium or a minimap to a
 server wastes memory at best and fails to load at worst.
+
+---
+
+## The resource pack the server hands out
+
+`server.properties` arrives with `resource-pack` already pointing at a release
+asset, its sha1 filled in, and `require-resource-pack=true`. **Leave those five
+lines alone.** The build writes them from the archive it just produced, so a
+hand-edited hash does not fail a build — it fails every player's login, on a
+server that is by then already live. Every other line in the file is yours.
+
+The pack carries the guide book's text. The book itself is a datapack the
+server syncs to whoever joins, but the words it renders live in a translation
+file, and translation files only exist client-side. Requiring the pack is what
+makes the guide readable for everyone rather than only for players who arrived
+through Raven Forge.
+
+Two consequences worth knowing before you go live:
+
+- **Players need to reach github.com.** The pack is fetched over HTTPS from the
+  release. A player who cannot download it cannot join — that is what requiring
+  it means.
+- **Keep the server zip and the release together.** The URL names the release
+  the zip was built in, and release assets never change, so an older server
+  keeps working indefinitely. Hand-editing the URL to point somewhere else
+  breaks the hash with it.
 
 ---
 

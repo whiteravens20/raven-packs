@@ -5,4 +5,3 @@ renderDistance:12
 simulationDistance:8
 entityShadows:false
 graphicsMode:1
-resourcePacks:["vanilla","file/ravenclassic-guide"]
