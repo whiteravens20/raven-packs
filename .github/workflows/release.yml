@@ -4,19 +4,24 @@ name: publish
 #
 # Two triggers, because the site has two kinds of content:
 #
-#   push to main   — republish the site only. `site/` holds the launcher's news
-#                    and announcement feeds, which are edited by hand; making a
-#                    news correction wait for a pack release would be absurd.
-#   tag <slug>-v*  — the above, plus a GitHub Release for that one pack.
+#   push to main   — republish the site. `site/` holds the launcher's news and
+#                    announcement feeds, which are edited by hand; making a news
+#                    correction wait for a pack release would be absurd.
+#   tag <slug>-v*  — cut a GitHub Release for that one pack. Nothing else: the
+#                    `github-pages` environment takes deployments from main
+#                    only, and the commit being tagged is already on main, so
+#                    its own push published the site moments earlier.
+#
+# Releasing is therefore two steps in this order: push to main, then tag.
 #
 # Two outputs, deliberately different in scope:
 #
 #   GitHub Release — the tagged pack only: .mrpack, client zip, server zip,
 #                    manifest.json.
 #   GitHub Pages   — *every* pack plus site/, because deploy-pages replaces the
-#                    whole site. Publishing only the tagged pack's dist/ would
-#                    take every other pack's manifest offline, breaking the
-#                    launcher for players who are not on the pack being released.
+#                    whole site. Publishing only one pack's dist/ would take
+#                    every other pack's manifest offline, breaking the launcher
+#                    for players who are not on the pack being released.
 #
 # Required secret:
 #   PACK_SIGNING_KEY   base64 Ed25519 private key from `npm run keygen`.
@@ -157,11 +162,25 @@ jobs:
           fail_on_unmatched_files: true
           generate_release_notes: true
 
+      # Only main can deploy to Pages, so only main uploads the artifact — see
+      # `deploy-pages` below for why the tag run does not.
       - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           path: dist/
 
   deploy-pages:
+    # The `github-pages` environment only accepts deployments from main, so a
+    # tag run reached this job solely to be rejected — the release was already
+    # published and the run went red anyway. Skipping is not a workaround for
+    # that rule but agreement with it: a tag names a commit that is already on
+    # main, whose own push published the site seconds earlier, so the tag's
+    # deployment was redundant even when it was allowed.
+    #
+    # The consequence for releasing: push to main first, tag second. A tag on a
+    # commit main has not seen builds a release out of content the site is not
+    # serving.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: build
     permissions:
