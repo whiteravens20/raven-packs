@@ -65,5 +65,19 @@ remembered:
 - `scripts/lib/canonical.mjs` is half of a cross-repo contract with Raven
   Forge's `src/core/updater/canonical.ts`. The two must produce **byte-identical**
   output; change one and you have silently invalidated every signature.
-- A release is a tag, `<slug>-v<version>`. The publish job fails rather than
-  ship an unsigned manifest.
+- A release is a tag, `<slug>-v<version>`, and it goes out **after** the commit
+  it names is on `main` — in that order:
+
+  1. Merge the work into `main` and push. That run rebuilds every pack, signs
+     every manifest and republishes the site, so the new version is live for the
+     launcher.
+  2. Tag the same commit and push the tag. That run only cuts the GitHub Release
+     — the `.mrpack`, both zips and `manifest.json`.
+
+  The tag deliberately does not touch GitHub Pages: the environment accepts
+  deployments from `main` only, and step 1 has already published the site.
+  Tagging a commit `main` has not seen builds a release out of content nobody
+  can download.
+
+  The tag's version and `packs/<slug>/pack.json` must agree; the job stops if
+  they do not. It also fails rather than ship an unsigned manifest.
