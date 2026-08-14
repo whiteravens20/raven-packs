@@ -296,6 +296,21 @@ Dwie rzeczy, o które łatwo się potknąć:
   * **Styled Chat przepisuje ten plik przy każdym starcie**, uzupełniając
     brakujące pola swoimi domyślnymi. Po pierwszym uruchomieniu plik jest więc
     dłuższy niż ten z paczki i tak ma być — zmienione jest w nim tylko `chat`.
+  * **`legacy_formatting` w `text_formatting` nie ma tu nic do roboty.** Kody
+    `&` zamienia LuckPerms po swojej stronie i oddaje Styled Chatowi gotowy
+    kolor. Jeśli na czacie widać dosłowne „&5", winny jest prefiks, a nie ten
+    przełącznik.
+
+Dlaczego nie tak, jak radzi mod. Dokumentacja Styled Chata pokazuje inną drogę:
+listę `styles`, w której każdy wpis ma warunek `{"type": "permission",
+"permission": "group.<ranga>"}` i własny format czatu z prefiksem wpisanym na
+sztywno. To działa, ale przenosi prefiksy z LuckPermsa do configu czatu — a
+Playtime Rewards nadaje je sam przy awansie, z pola `luckPermsPrefix` (rangi.txt,
+sekcja 11). Trzy automatyczne rangi ustawiałyby wtedy prefiks, którego nikt nie
+czyta, i nikt by tego nie zauważył. Placeholder zostawia jedno źródło prawdy:
+prefiks leży tam, gdzie reszta opisu rangi. Jeśli kiedyś któraś ranga ma dostać
+coś więcej niż prefiks — inny separator, własny `display_name` — dopiero wtedy
+warto dopisać jej wpis w `styles`.
 
 Lista emotek (`:shrug:`, `:table:` i reszta) stoi w tym pliku celowo, choć nic
 w niej nie zmieniamy. Uzupełnianie brakujących pól obejmuje wszystko oprócz
