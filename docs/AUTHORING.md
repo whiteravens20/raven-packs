@@ -22,7 +22,8 @@ continue otherwise, since the slug becomes part of the published manifest URL.
 | `loader.type` | yes | `fabric`, `quilt`, `forge` or `neoforge`. |
 | `loader.version` | yes | Pin it — an unpinned loader makes builds irreproducible. |
 | `recommendedRamMb` | no | Shown to players. Defaults to 4096. |
-| `server` | no | `{ ip, port }` for the launcher's Quick-Connect button. |
+| `server` | no | `{ ip, port }` for the launcher's Quick-Connect button, and the entry written into `servers.dat`. |
+| `serverListName` | no | Name shown in Minecraft's multiplayer list. Takes `§` formatting codes. Defaults to `name`. |
 | `mods` | no | See below. |
 | `resourcePacks` | no | Same shape as `mods`. |
 | `shaders` | no | Same shape as `mods`. |
@@ -116,6 +117,31 @@ Each format carries them differently — the launcher manifest as `configFiles[]
 > Older launcher builds re-applied every override on every sync, and other
 > launchers apply them once at import and never again. Neither reads a file back
 > to see what the player did with it, so ship only what the pack needs to own.
+
+### servers.dat, which you do not write
+
+Set `server` and the build generates `servers.dat` into the client overrides, so
+a fresh install opens Multiplayer with the server already listed instead of
+asking the player to type an address.
+
+It is generated rather than committed on purpose: the address then lives in
+`pack.json` and nowhere else. A checked-in binary would be free to drift from
+it, and nothing in the build could tell.
+
+`serverListName` decorates the entry — Minecraft renders `§` formatting codes in
+that name, so `§d§lWhite Ravens §7§lClassic` shows coloured and bold. Keep it
+separate from `name`, which is what the launcher displays and should stay plain.
+
+The list **icon** is not in this file. Put a 64×64 `server-icon.png` in
+`server-overrides/` and the server hands it to every client on the first ping;
+baking a copy into each install only creates something that goes stale the day
+the icon changes.
+
+> `servers.dat` is an override, so the usual rule applies: Raven Forge writes it
+> when the profile has none or when the pack changed it, and otherwise leaves it
+> alone. Changing the address later therefore replaces the player's whole server
+> list, that one included. Worth doing when the server moves; not worth churning
+> for a cosmetic tweak.
 
 ### server-resourcepack/
 

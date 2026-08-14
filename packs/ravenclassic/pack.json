@@ -2,7 +2,7 @@
   "$schema": "../../docs/pack.schema.json",
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "summary": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
   "author": "White Ravens",
   "minecraft": "26.2",
@@ -15,6 +15,7 @@
     "ip": "209.25.141.16",
     "port": 32909
   },
+  "serverListName": "\u00a7d\u00a7lWhite Ravens \u00a77\u00a7lClassic",
   "mods": [
     { "slug": "fabric-api", "reason": "Required by most of the list" },
     {

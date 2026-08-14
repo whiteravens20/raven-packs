@@ -47,6 +47,11 @@
         "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
       }
     },
+    "serverListName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name shown in Minecraft's multiplayer list; takes section-sign formatting codes. Defaults to `name`."
+    },
     "mods": { "$ref": "#/$defs/entryList" },
     "resourcePacks": { "$ref": "#/$defs/entryList" },
     "shaders": { "$ref": "#/$defs/entryList" }
