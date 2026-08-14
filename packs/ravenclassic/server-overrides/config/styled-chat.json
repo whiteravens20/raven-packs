@@ -1,0 +1,23 @@
+{
+  "CONFIG_VERSION_DONT_TOUCH_THIS": 3,
+  "default": {
+    "message_formats": {
+      "chat": "%luckperms:prefix%${player}<gray>:</gray> ${message}"
+    },
+    "emoticons": {
+      "$emojibase:builtin:joypixels": "${emoji}",
+      "shrug": "¯\\_(ツ)_/¯",
+      "table": "(╯°□°）╯︵ ┻━┻",
+      "sword": "🗡",
+      "bow": "🏹",
+      "trident": "🔱",
+      "rod": "🎣",
+      "potion": "🧪",
+      "shears": "✂",
+      "bucket": "🪣",
+      "bell": "🔔",
+      "item": "[%player:equipment_slot mainhand%]",
+      "pos": "%player:pos_x% %player:pos_y% %player:pos_z%"
+    }
+  }
+}

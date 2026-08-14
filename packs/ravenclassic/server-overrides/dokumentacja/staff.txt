@@ -271,3 +271,33 @@ UWAGA przy zmianie adresu serwera. `servers.dat` jest overridem, więc launcher
 nadpisze go u wszystkich, gdy paczka go zmieni — razem z serwerami, które gracz
 dodał sobie sam. Przy przeprowadzce serwera to cena do zapłacenia, ale nie
 ruszaj tego pliku dla kosmetyki.
+
+
+10. Prefiksy na czacie
+----------------------
+
+Ranga w LuckPermsie sama z siebie nie zmienia czatu. Styled Chat ma domyślny
+format `<${player}> ${message}` i o prefiks w ogóle nie pyta — dlatego Architekt
+z poprawnie ustawionym `meta setprefix` i tak pisze na biało. Format zmienia
+config/styled-chat.json z paczki:
+
+    %luckperms:prefix%${player}<gray>:</gray> ${message}
+
+`%luckperms:prefix%` rejestruje sam LuckPerms (przez Placeholder API) i on też
+parsuje kody `&`, więc `&5[Architekt] ` z rangi.txt daje fioletowy napis. Nie
+trzeba przepisywać prefiksów na żadną inną składnię. Gracz bez prefiksu wypada
+z tego łagodnie — zostaje samo `Nick: wiadomość`.
+
+Dwie rzeczy, o które łatwo się potknąć:
+
+  * **Prefiks trzeba było nadać.** `parent add architekt` go nie nadaje; robi to
+    dopiero `meta setprefix` z sekcji 11 w rangi.txt. Co gracz faktycznie ma,
+    pokazuje `lp user <nick> info`.
+  * **Styled Chat przepisuje ten plik przy każdym starcie**, uzupełniając
+    brakujące pola swoimi domyślnymi. Po pierwszym uruchomieniu plik jest więc
+    dłuższy niż ten z paczki i tak ma być — zmienione jest w nim tylko `chat`.
+
+Lista emotek (`:shrug:`, `:table:` i reszta) stoi w tym pliku celowo, choć nic
+w niej nie zmieniamy. Uzupełnianie brakujących pól obejmuje wszystko oprócz
+niej, więc blok `default` bez emotek skasowałby je po cichu.
+

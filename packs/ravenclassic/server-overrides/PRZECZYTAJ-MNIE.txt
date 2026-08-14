@@ -29,6 +29,7 @@ Kolejność pierwszego uruchomienia
        world/serverconfig/openpartiesandclaims-server.toml
        config/luckperms/luckperms.conf
        config/EssentialCommands.properties
+       config/styled-chat.json
        world/config/playtime-rewards/config.json
 
    Pliki urosną o brakujące klucze — to normalne. Ważne, żeby wartości, które

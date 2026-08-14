@@ -429,7 +429,11 @@ z pola `luckPermsPrefix` w swoim configu. Ręczne trzeba dopisać samemu:
     lp group administrator  meta setprefix 90 "&c[Administrator] "
     lp group architekt      meta setprefix 100 "&5[Architekt] "
 
-Jeśli na czacie zobaczysz dosłowne „&6" zamiast koloru, to Styled Chat nie
-parsuje starych kodów — włącz obsługę legacy w jego configu albo przepisz
-prefiksy na składnię, której Styled Chat używa. Kolor jest kosmetyką; nie
-blokuj na tym uruchomienia serwera.
+Kody `&` są tu w porządku: prefiks trafia na czat placeholderem
+`%luckperms:prefix%`, który obsługuje sam LuckPerms i sam je zamienia na kolor.
+Nic nie trzeba przepisywać na inną składnię.
+
+Prefiks nie pojawi się jednak na czacie bez config/styled-chat.json z paczki —
+Styled Chat domyślnie pisze `<Nick> wiadomość` i o rangę nie pyta. Jeśli
+ustawiłeś prefiks, a czat dalej jest biały, zacznij od sprawdzenia, czy ten
+plik leży w config/. Szczegóły w dokumentacja/staff.txt, sekcja 10.
