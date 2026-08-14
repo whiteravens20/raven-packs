@@ -17,7 +17,8 @@
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
     "keygen": "node scripts/keygen.mjs",
-    "sign": "node scripts/sign.mjs"
+    "sign": "node scripts/sign.mjs",
+    "check-deps": "node scripts/check-deps.mjs"
   },
   "engines": {
     "node": ">=22.0.0"

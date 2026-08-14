@@ -3,7 +3,7 @@
   "pack": {
     "slug": "ravenclassic",
     "name": "White Ravens Classic",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "minecraft": "26.2",
     "loader": {
       "type": "fabric",
@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-14T14:21:06.486Z",
+  "generatedAt": "2026-08-14T14:51:25.090Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -217,13 +217,13 @@
       "name": "Balm",
       "source": "modrinth",
       "projectId": "MBAkmtvl",
-      "versionId": "ln6vafmE",
-      "version": "26.2.0.5+fabric-26.2",
-      "fileName": "balm-fabric-26.2-26.2.0.5.jar",
-      "url": "https://cdn.modrinth.com/data/MBAkmtvl/versions/ln6vafmE/balm-fabric-26.2-26.2.0.5.jar",
-      "size": 1196569,
-      "sha1": "4a4a1098d9d9b056f7097b14a964e8a12f461591",
-      "sha512": "6b40e8bb2b43ccbde61232d045615100e17fee4b7fdcf124e013f4bece75a09b4fae7df74b09571df1b7b9324b2eccc7c1216458b9dc45810f226906b579b28e",
+      "versionId": "hT8Zt2uD",
+      "version": "26.2.0.6+fabric-26.2",
+      "fileName": "balm-fabric-26.2-26.2.0.6.jar",
+      "url": "https://cdn.modrinth.com/data/MBAkmtvl/versions/hT8Zt2uD/balm-fabric-26.2-26.2.0.6.jar",
+      "size": 1196608,
+      "sha1": "c8775c29bb29631dc25fa84a5a12bb6c8a3f83aa",
+      "sha512": "0a0b4b71f2877abd234cf85302165bb05b2cb0e3c0b7c543fa0c12e5ae271dc879f300ecb6f1dbb00c6a8bf5e42e454d4f168a970a0f4a64c4a82122bf2a8fc6",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "P7dR8mSH"
@@ -239,13 +239,13 @@
       "name": "Shogi",
       "source": "modrinth",
       "projectId": "bi4iCmsw",
-      "versionId": "7yhRS6kX",
-      "version": "26.2.0.4+fabric-26.2",
-      "fileName": "shogi-fabric-26.2-26.2.0.4.jar",
-      "url": "https://cdn.modrinth.com/data/bi4iCmsw/versions/7yhRS6kX/shogi-fabric-26.2-26.2.0.4.jar",
-      "size": 452375,
-      "sha1": "556bfe405c891de7b1a36cdf5ffcc40d3cbfa925",
-      "sha512": "a7c239cb03a647ab0868d24e7ef7d10f63583fea922f67f99a2b93cd6df385940a8829c75720ffb52dc67aaa39af7a731ccac25de23bdbd9fb0ca1f5c7335806",
+      "versionId": "EgXnCQjN",
+      "version": "26.2.0.5+fabric-26.2",
+      "fileName": "shogi-fabric-26.2-26.2.0.5.jar",
+      "url": "https://cdn.modrinth.com/data/bi4iCmsw/versions/EgXnCQjN/shogi-fabric-26.2-26.2.0.5.jar",
+      "size": 452758,
+      "sha1": "8b19190c089f8c5ccba5c26d45df996ea1d3fbd4",
+      "sha512": "8f2201cc2163f2682a5d92b71d38ecffb16dbfd98d2c8c7aae98838fb441aea98b033222b7beb03284f7a2b6d3cfa0b6ffe53d5e8cee426f20a6399e5bdb1d3a",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "P7dR8mSH"
