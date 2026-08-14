@@ -115,6 +115,11 @@
     { "slug": "universal-shops", "reason": "Player and admin trade shops, item for item", "side": "server" },
     { "slug": "essential-commands", "reason": "/home, /tpa, /rtp, /back", "side": "server" },
     { "slug": "ledger", "reason": "Logs every block change and rolls grief back", "side": "server" },
+    {
+      "slug": "meowanti-xray",
+      "reason": "Paper-style ore obfuscation — the server sends fake block data underground, so an x-ray client sees noise instead of veins",
+      "side": "server"
+    },
     { "slug": "easyauth", "reason": "Password login. Without it an offline-mode server lets anyone take any name", "side": "server" },
     { "slug": "chunky", "reason": "World pregeneration — keeps first exploration from lagging", "side": "server" },
     { "slug": "spark", "reason": "Profiler for when the server does lag", "side": "server" },

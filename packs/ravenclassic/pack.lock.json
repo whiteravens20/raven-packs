@@ -1174,6 +1174,28 @@
       "requiredDependencies": []
     },
     {
+      "requestKey": "{\"slug\":\"meowanti-xray\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "meowanti-xray",
+      "name": "Meow Anti-Xray",
+      "source": "modrinth",
+      "projectId": "8pl8obwY",
+      "versionId": "gnp1C7GA",
+      "version": "1.5.0+mc26.2.fabric",
+      "fileName": "meowantixray-fabric-1.5.0.jar",
+      "url": "https://cdn.modrinth.com/data/8pl8obwY/versions/gnp1C7GA/meowantixray-fabric-1.5.0.jar",
+      "size": 183944,
+      "sha1": "cc870e1f0773b8425ec2b0ae198833c21fe9c83a",
+      "sha512": "3d604831603aaff2a671502d82175b0765c7824479ada735f357c7e6317bdc7ccb7bf3521f447e77575ca00868fd3c1138937070f8a53859106572f2264283bd",
+      "license": "MIT",
+      "requiredDependencies": [
+        "P7dR8mSH"
+      ]
+    },
+    {
       "requestKey": "{\"slug\":\"easyauth\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
       "kind": "mod",
       "side": "server",

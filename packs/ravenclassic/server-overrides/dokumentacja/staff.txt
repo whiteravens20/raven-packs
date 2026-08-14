@@ -225,3 +225,30 @@ Zablokowany jest wyłącznie craft. Sam przedmiot działa, gdyby ktoś go już m
 albo dostał komendą; to nie jest wyłączenie moda, tylko zamknięcie drogi
 wytwarzania. Wyłączenie działania magnesu robi się gdzie indziej — mod ma na to
 opcję `enableMagnetUpgrade` w swojej konfiguracji serwera.
+
+
+8. Anty-x-ray
+-------------
+
+Meow Anti-Xray obfuskuje rudy w paczkach chunków: pod ziemią klient dostaje
+fałszywe dane bloków, więc x-ray widzi szum zamiast żył. Chodzi wyłącznie po
+stronie serwera — nikt nie musi nic instalować i grając normalnie nie widać
+różnicy, bo prawdziwy blok pojawia się w momencie wykopania.
+
+To zaślepienie, nie wykrywanie. Mod nikogo nie łapie i nikogo nie karze; on
+odbiera x-rayowi dane wejściowe. Jeżeli kiedyś dojdzie wykrywanie i karanie za
+wzorce kopania, to osobne narzędzie i osobna decyzja.
+
+Czego nie zasłoni: tego, co dzieje się poza grą. Czytanie plików świata z
+kopii, cudza mapa, nagranie z drugiego konta — serwer nie bierze w tym udziału.
+Od griefu i tak zostaje Ledger.
+
+Konfiguracja powstaje przy pierwszym starcie; domyślne ustawienia odpowiadają
+engine-mode 1 z Papera. Włączenie obfuskacji kosztuje trochę CPU na przepisywanie
+paczek chunków — jeżeli TPS siada po jego dodaniu, `/spark profiler start`
+pokaże to od razu.
+
+Uwaga operacyjna: mod odpytuje przy starcie publiczne API Modrinth o nowszą
+wersję (jedno GET, bez danych o serwerze i graczach) i nie ma opcji, żeby to
+wyłączyć. Jeżeli serwer ma mieć zerowy ruch wychodzący, trzeba to odciąć na
+firewallu.
