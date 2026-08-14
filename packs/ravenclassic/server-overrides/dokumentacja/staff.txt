@@ -196,6 +196,16 @@ cofa zmiany bloków, ale nie ekwipunki, nie enderchesty i nie uszkodzony
 BlueMap renderuje mapę świata do przeglądarki. Pierwsze renderowanie zjada
 sporo CPU — puść je po pregeneracji Chunky'ego, nie równolegle z nią.
 
+Mapa stoi na porcie 25566 (config/bluemap/webserver.conf), nie na domyślnym
+8100. Port musi być otwarty po stronie hostingu — panel routuje przydzieloną
+pulę i nic poza nią, więc nieprzydzielony port nasłuchuje w próżnię i nie
+zgłasza błędu. Jeżeli mapa nie odpowiada, sprawdź panel, zanim zaczniesz
+szukać winy w BlueMapie.
+
+Logowanie żądań webserwera jest świadomie wyłączone. Jego format zapisuje
+adres IP każdego odwiedzającego, a mapa jest publiczna i nie wymaga logowania;
+brak sekcji `log` to udokumentowany przez BlueMapa sposób na wyłączenie tego.
+
 
 7. Wyłączone receptury
 ----------------------
