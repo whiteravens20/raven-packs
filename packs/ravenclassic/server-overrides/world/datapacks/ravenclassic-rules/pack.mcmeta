@@ -9,6 +9,10 @@
       {
         "namespace": "waystones",
         "path": "recipe/.*waystone.*\\.json"
+      },
+      {
+        "namespace": "travelersbackpack",
+        "path": "recipe/magnet_upgrade\\.json"
       }
     ]
   }

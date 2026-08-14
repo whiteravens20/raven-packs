@@ -195,3 +195,23 @@ cofa zmiany bloków, ale nie ekwipunki, nie enderchesty i nie uszkodzony
 
 BlueMap renderuje mapę świata do przeglądarki. Pierwsze renderowanie zjada
 sporo CPU — puść je po pregeneracji Chunky'ego, nie równolegle z nią.
+
+
+7. Wyłączone receptury
+----------------------
+
+Magnet upgrade z Traveler's Backpack nie ma receptury. Wycina ją ten sam
+datapack ravenclassic-rules co receptury waystone'ów — filtr `filter.block`
+w jego pack.mcmeta, czyli mechanizm vanilli, nie mod. Wpis wskazuje przestrzeń
+nazw i ścieżkę pliku wewnątrz niej:
+
+    { "namespace": "travelersbackpack", "path": "recipe/magnet_upgrade\\.json" }
+
+Datapacki świata ładują się po danych modów, więc filtr zasłania plik moda
+i receptura po prostu nie powstaje. Serwer rozsyła recepturę klientom, więc
+znika też z ich księgi — nikt nie musi nic instalować.
+
+Zablokowany jest wyłącznie craft. Sam przedmiot działa, gdyby ktoś go już miał
+albo dostał komendą; to nie jest wyłączenie moda, tylko zamknięcie drogi
+wytwarzania. Wyłączenie działania magnesu robi się gdzie indziej — mod ma na to
+opcję `enableMagnetUpgrade` w swojej konfiguracji serwera.
