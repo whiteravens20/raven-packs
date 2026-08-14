@@ -195,3 +195,60 @@ cofa zmiany bloków, ale nie ekwipunki, nie enderchesty i nie uszkodzony
 
 BlueMap renderuje mapę świata do przeglądarki. Pierwsze renderowanie zjada
 sporo CPU — puść je po pregeneracji Chunky'ego, nie równolegle z nią.
+
+Mapa stoi na porcie 25566 (config/bluemap/webserver.conf), nie na domyślnym
+8100. Port musi być otwarty po stronie hostingu — panel routuje przydzieloną
+pulę i nic poza nią, więc nieprzydzielony port nasłuchuje w próżnię i nie
+zgłasza błędu. Jeżeli mapa nie odpowiada, sprawdź panel, zanim zaczniesz
+szukać winy w BlueMapie.
+
+Logowanie żądań webserwera jest świadomie wyłączone. Jego format zapisuje
+adres IP każdego odwiedzającego, a mapa jest publiczna i nie wymaga logowania;
+brak sekcji `log` to udokumentowany przez BlueMapa sposób na wyłączenie tego.
+
+
+7. Wyłączone receptury
+----------------------
+
+Magnet upgrade z Traveler's Backpack nie ma receptury. Wycina ją ten sam
+datapack ravenclassic-rules co receptury waystone'ów — filtr `filter.block`
+w jego pack.mcmeta, czyli mechanizm vanilli, nie mod. Wpis wskazuje przestrzeń
+nazw i ścieżkę pliku wewnątrz niej:
+
+    { "namespace": "travelersbackpack", "path": "recipe/magnet_upgrade\\.json" }
+
+Datapacki świata ładują się po danych modów, więc filtr zasłania plik moda
+i receptura po prostu nie powstaje. Serwer rozsyła recepturę klientom, więc
+znika też z ich księgi — nikt nie musi nic instalować.
+
+Zablokowany jest wyłącznie craft. Sam przedmiot działa, gdyby ktoś go już miał
+albo dostał komendą; to nie jest wyłączenie moda, tylko zamknięcie drogi
+wytwarzania. Wyłączenie działania magnesu robi się gdzie indziej — mod ma na to
+opcję `enableMagnetUpgrade` w swojej konfiguracji serwera.
+
+
+8. Anty-x-ray
+-------------
+
+Meow Anti-Xray obfuskuje rudy w paczkach chunków: pod ziemią klient dostaje
+fałszywe dane bloków, więc x-ray widzi szum zamiast żył. Chodzi wyłącznie po
+stronie serwera — nikt nie musi nic instalować i grając normalnie nie widać
+różnicy, bo prawdziwy blok pojawia się w momencie wykopania.
+
+To zaślepienie, nie wykrywanie. Mod nikogo nie łapie i nikogo nie karze; on
+odbiera x-rayowi dane wejściowe. Jeżeli kiedyś dojdzie wykrywanie i karanie za
+wzorce kopania, to osobne narzędzie i osobna decyzja.
+
+Czego nie zasłoni: tego, co dzieje się poza grą. Czytanie plików świata z
+kopii, cudza mapa, nagranie z drugiego konta — serwer nie bierze w tym udziału.
+Od griefu i tak zostaje Ledger.
+
+Konfiguracja powstaje przy pierwszym starcie; domyślne ustawienia odpowiadają
+engine-mode 1 z Papera. Włączenie obfuskacji kosztuje trochę CPU na przepisywanie
+paczek chunków — jeżeli TPS siada po jego dodaniu, `/spark profiler start`
+pokaże to od razu.
+
+Uwaga operacyjna: mod odpytuje przy starcie publiczne API Modrinth o nowszą
+wersję (jedno GET, bez danych o serwerze i graczach) i nie ma opcji, żeby to
+wyłączyć. Jeżeli serwer ma mieć zerowy ruch wychodzący, trzeba to odciąć na
+firewallu.

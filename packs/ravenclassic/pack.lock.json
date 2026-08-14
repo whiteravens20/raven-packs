@@ -3,7 +3,7 @@
   "pack": {
     "slug": "ravenclassic",
     "name": "White Ravens Classic",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "minecraft": "26.2",
     "loader": {
       "type": "fabric",
@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-09T21:14:53.388Z",
+  "generatedAt": "2026-08-14T14:21:06.486Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -886,18 +886,18 @@
       "name": "Waystones",
       "source": "modrinth",
       "projectId": "LOpKHB2A",
-      "versionId": "grpTenJz",
-      "version": "26.2.0.7+fabric-26.2",
-      "fileName": "waystones-fabric-26.2-26.2.0.7.jar",
-      "url": "https://cdn.modrinth.com/data/LOpKHB2A/versions/grpTenJz/waystones-fabric-26.2-26.2.0.7.jar",
-      "size": 1206407,
-      "sha1": "1ab5db106f714b22bd32ff57357a7864ce0618e9",
-      "sha512": "ccbcf3f6684512b0538defd2498b3356ef210f3db61278101c6cf6021e34d8d91e00efcab1f4ec4f726ae80c5776727959d23d19ea52d73c224340905076017c",
+      "versionId": "5lrxhmSm",
+      "version": "26.2.0.9+fabric-26.2",
+      "fileName": "waystones-fabric-26.2-26.2.0.9.jar",
+      "url": "https://cdn.modrinth.com/data/LOpKHB2A/versions/5lrxhmSm/waystones-fabric-26.2-26.2.0.9.jar",
+      "size": 1213926,
+      "sha1": "a36a8ef270dd8b7498803d84734212a1225c0284",
+      "sha512": "09b39fea07b175f557a8c3c8ea6734355e0af1acb19ca2e7fa5ce43f7db35a9e21d82a9d96bc592bfe2857c598b54f6596ec75e2ed16262505943ff7a1c2b7ad",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
-        "P7dR8mSH",
         "MBAkmtvl",
-        "bi4iCmsw"
+        "bi4iCmsw",
+        "P7dR8mSH"
       ]
     },
     {
@@ -1172,6 +1172,28 @@
       "sha512": "d5df460ccb86f130fac83af9c6fec3ff3a36d071af01c7d2d49c5a9abc915938fc172782e2762d857f1a3e7f5b2c78c68f7e62dc416d6eed907570a176977763",
       "license": "LGPL-3.0-only",
       "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"meowanti-xray\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "meowanti-xray",
+      "name": "Meow Anti-Xray",
+      "source": "modrinth",
+      "projectId": "8pl8obwY",
+      "versionId": "gnp1C7GA",
+      "version": "1.5.0+mc26.2.fabric",
+      "fileName": "meowantixray-fabric-1.5.0.jar",
+      "url": "https://cdn.modrinth.com/data/8pl8obwY/versions/gnp1C7GA/meowantixray-fabric-1.5.0.jar",
+      "size": 183944,
+      "sha1": "cc870e1f0773b8425ec2b0ae198833c21fe9c83a",
+      "sha512": "3d604831603aaff2a671502d82175b0765c7824479ada735f357c7e6317bdc7ccb7bf3521f447e77575ca00868fd3c1138937070f8a53859106572f2264283bd",
+      "license": "MIT",
+      "requiredDependencies": [
+        "P7dR8mSH"
+      ]
     },
     {
       "requestKey": "{\"slug\":\"easyauth\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",

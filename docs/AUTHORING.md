@@ -106,10 +106,16 @@ Each format carries them differently — the launcher manifest as `configFiles[]
 (fetched from the published URL, hash-verified), the `.mrpack` under
 `overrides/`, and the zips at the archive root.
 
-> Overrides **overwrite** the player's file on every sync. Only ship files the
-> pack genuinely needs to own. Shipping `options.txt` resets a returning
-> player's video settings — consider a mod like YOSBR that applies defaults only
-> on first run.
+> Overrides are **defaults, not policy**. Raven Forge writes one when the
+> profile is missing it or when this pack changed it since the last sync, and
+> otherwise leaves it alone — so `options.txt` sets a new player up without
+> resetting a returning one's keybinds. Change the file in the pack and every
+> player gets the new version; that is the trade, and it means an override is
+> the wrong home for anything a player is expected to keep tuning.
+>
+> Older launcher builds re-applied every override on every sync, and other
+> launchers apply them once at import and never again. Neither reads a file back
+> to see what the player did with it, so ship only what the pack needs to own.
 
 ### server-resourcepack/
 
