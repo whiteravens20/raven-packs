@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-09T21:14:53.388Z",
+  "generatedAt": "2026-08-14T14:21:06.486Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -886,18 +886,18 @@
       "name": "Waystones",
       "source": "modrinth",
       "projectId": "LOpKHB2A",
-      "versionId": "grpTenJz",
-      "version": "26.2.0.7+fabric-26.2",
-      "fileName": "waystones-fabric-26.2-26.2.0.7.jar",
-      "url": "https://cdn.modrinth.com/data/LOpKHB2A/versions/grpTenJz/waystones-fabric-26.2-26.2.0.7.jar",
-      "size": 1206407,
-      "sha1": "1ab5db106f714b22bd32ff57357a7864ce0618e9",
-      "sha512": "ccbcf3f6684512b0538defd2498b3356ef210f3db61278101c6cf6021e34d8d91e00efcab1f4ec4f726ae80c5776727959d23d19ea52d73c224340905076017c",
+      "versionId": "5lrxhmSm",
+      "version": "26.2.0.9+fabric-26.2",
+      "fileName": "waystones-fabric-26.2-26.2.0.9.jar",
+      "url": "https://cdn.modrinth.com/data/LOpKHB2A/versions/5lrxhmSm/waystones-fabric-26.2-26.2.0.9.jar",
+      "size": 1213926,
+      "sha1": "a36a8ef270dd8b7498803d84734212a1225c0284",
+      "sha512": "09b39fea07b175f557a8c3c8ea6734355e0af1acb19ca2e7fa5ce43f7db35a9e21d82a9d96bc592bfe2857c598b54f6596ec75e2ed16262505943ff7a1c2b7ad",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
-        "P7dR8mSH",
         "MBAkmtvl",
-        "bi4iCmsw"
+        "bi4iCmsw",
+        "P7dR8mSH"
       ]
     },
     {
