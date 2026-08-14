@@ -157,6 +157,53 @@ async function validatePack(slug) {
   console.log(`  \x1b[32m✓\x1b[0m lockfile in sync — ${lock.files.length} files, locked ${lock.generatedAt.slice(0, 10)}`);
 }
 
+/**
+ * Every JSON file under `site/` has to parse.
+ *
+ * These are hand-edited feeds that the launcher fetches at startup — the news
+ * list and the announcement banner. Nothing else reads them on the way out:
+ * `build.mjs` copies `site/` through verbatim, so a stray quote inside a
+ * message reaches Pages intact and the launcher gets a body it cannot parse.
+ *
+ * That is exactly how a Polish closing quote typed as a plain `"` ended a
+ * string early and published a broken announcement feed. One `JSON.parse` per
+ * file closes it.
+ */
+async function validateSiteJson() {
+  const SITE = path.join(ROOT, 'site');
+  let checked = 0;
+
+  async function walk(dir) {
+    let entries;
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch {
+      return; // no site/ in this repo state
+    }
+    for (const e of entries) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) {
+        await walk(full);
+      } else if (e.name.endsWith('.json')) {
+        checked++;
+        try {
+          JSON.parse(await fs.readFile(full, 'utf8'));
+        } catch (err) {
+          fail('site', `${path.relative(ROOT, full)} is not valid JSON — ${err.message}`);
+        }
+      }
+    }
+  }
+
+  await walk(SITE);
+  const broken = problems.filter((p) => p.startsWith('site:')).length;
+  if (broken) {
+    console.log(`\n  \x1b[31m✗\x1b[0m ${broken} of ${checked} site JSON file(s) do not parse`);
+  } else if (checked) {
+    console.log(`\n  \x1b[32m✓\x1b[0m ${checked} site JSON file(s) parse`);
+  }
+}
+
 async function main() {
   const requested = process.argv.slice(2).filter((a) => !a.startsWith('-'));
   const slugs = requested.length
@@ -167,6 +214,7 @@ async function main() {
         .sort();
 
   for (const slug of slugs) await validatePack(slug);
+  await validateSiteJson();
 
   if (problems.length > 0) {
     console.error(`\n\x1b[31m✗ ${problems.length} problem(s):\x1b[0m`);
