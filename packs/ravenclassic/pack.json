@@ -2,7 +2,7 @@
   "$schema": "../../docs/pack.schema.json",
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "summary": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
   "author": "White Ravens",
   "minecraft": "26.2",
