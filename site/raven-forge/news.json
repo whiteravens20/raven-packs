@@ -1,9 +1,17 @@
 [
   {
+    "id": "microsoft-login-live",
+    "title": "Logowanie przez Microsoft już działa",
+    "excerpt": "Aplikacja przeszła weryfikację Mojanga, więc konto Microsoft, skin i serwery w trybie online są już dostępne.",
+    "body": "Aplikacja Azure przeszła weryfikację Mojanga, więc **logowanie przez Microsoft działa**. To był ostatni element, który trzymał launcher przy samym trybie offline.\n\n## Co to zmienia\n- Logujesz się swoim kontem Microsoft prosto z launchera — hasło wpisujesz na stronie Microsoftu, nigdy u nas\n- Wchodzisz na serwery w trybie **online**, czyli tam, gdzie tożsamość gracza jest weryfikowana\n- Przy koncie widać głowę z twojego skina i skrót do ustawień konta na minecraft.net\n\n## Tryb offline zostaje\nNie znika i nie ma takiego planu. Singleplayer, LAN i serwery offline działają dokładnie jak wcześniej. Konto Microsoft jest wyborem, a nie warunkiem uruchomienia gry.\n\n## O co launcher prosi\nWyłącznie o zakres `XboxLive.signin`. Pozwala zalogować się do Xbox Live i Minecrafta i nic poza tym — bez dostępu do poczty, plików czy kontaktów. Twojego hasła nie przechowujemy, bo nigdy do nas nie trafia, a token sesji trzymamy w pęku kluczy systemu.",
+    "url": "https://github.com/whiteravens20/raven-forge",
+    "publishedAt": "2026-08-14T12:00:00Z"
+  },
+  {
     "id": "raven-forge-development",
     "title": "Raven Forge — jak idzie rozwój",
     "excerpt": "Launcher jest we wczesnej fazie i mówimy wprost, co działa, a czego jeszcze nie ma.",
-    "body": "Raven Forge powstaje otwarcie — kod, plan i lista braków są publiczne od pierwszego dnia.\n\n## Co już działa\n- Uruchamianie gry: vanilla i zmodowanej\n- Fabric, Quilt, Forge i NeoForge, instalowane z ekranu profilu\n- Synchronizacja modów z podpisanego manifestu\n- Mody, shadery i paczki zasobów prosto z Modrinth\n- Import gotowych paczek w formacie `.mrpack`\n- Automatyczne pobranie odpowiedniej Javy pod wybraną wersję gry\n\n## Czego jeszcze nie ma\n- **Logowanie przez Microsoft** czeka na zatwierdzenie aplikacji przez Mojang — do tego czasu działa wyłącznie tryb offline\n- CurseForge wymaga twojego własnego klucza API\n- macOS nie jest jeszcze obsługiwany\n\nNie oznaczamy niczego jako gotowe, dopóki nie zostanie sprawdzone na żywo. Jeśli coś u ciebie nie działa, [zgłoś to na GitHubie](https://github.com/whiteravens20/raven-forge/issues) — to najszybsza droga, żeby trafiło do kolejnej wersji.",
+    "body": "Raven Forge powstaje otwarcie — kod, plan i lista braków są publiczne od pierwszego dnia.\n\n## Co już działa\n- Logowanie przez Microsoft i gra na serwerach w trybie online\n- Uruchamianie gry: vanilla i zmodowanej\n- Fabric, Quilt, Forge i NeoForge, instalowane z ekranu profilu\n- Synchronizacja modów z podpisanego manifestu\n- Mody, shadery i paczki zasobów prosto z Modrinth\n- Import gotowych paczek w formacie `.mrpack`\n- Automatyczne pobranie odpowiedniej Javy pod wybraną wersję gry\n\n## Czego jeszcze nie ma\n- CurseForge wymaga twojego własnego klucza API\n- macOS nie jest jeszcze obsługiwany\n\nNie oznaczamy niczego jako gotowe, dopóki nie zostanie sprawdzone na żywo. Jeśli coś u ciebie nie działa, [zgłoś to na GitHubie](https://github.com/whiteravens20/raven-forge/issues) — to najszybsza droga, żeby trafiło do kolejnej wersji.",
     "url": "https://github.com/whiteravens20/raven-forge",
     "publishedAt": "2026-08-05T12:00:00Z"
   },
