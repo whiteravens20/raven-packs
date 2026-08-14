@@ -35,6 +35,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchFile, sha1, sha256, listFiles } from './lib/download.mjs';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { ZipWriter } from './lib/zip.mjs';
+import { buildServersDat, serverAddress } from './lib/servers-dat.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -353,6 +354,20 @@ async function buildPack(slug, { withZip }) {
 
   const overrideContents = await readOverrides(slug, 'client');
   const serverOverrides = await readOverrides(slug, 'server');
+
+  // Put the pack's own server in the multiplayer list, so a new install has it
+  // without anyone typing an address. Generated rather than committed: the
+  // address lives in pack.json and nowhere else, and a checked-in binary would
+  // be free to drift from it with nothing to catch the difference.
+  if (pack.server?.ip) {
+    const address = serverAddress(pack.server);
+    overrideContents.push({
+      relative: 'servers.dat',
+      data: buildServersDat([{ name: pack.serverListName ?? pack.name, ip: address }]),
+    });
+    ok(`servers.dat — ${address}`);
+  }
+
   if (overrideContents.length > 0) ok(`${overrideContents.length} client override files`);
   if (serverOverrides.length > 0) ok(`${serverOverrides.length} server override files`);
 

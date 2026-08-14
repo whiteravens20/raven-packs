@@ -252,3 +252,22 @@ Uwaga operacyjna: mod odpytuje przy starcie publiczne API Modrinth o nowszą
 wersję (jedno GET, bez danych o serwerze i graczach) i nie ma opcji, żeby to
 wyłączyć. Jeżeli serwer ma mieć zerowy ruch wychodzący, trzeba to odciąć na
 firewallu.
+
+
+9. Wygląd na liście serwerów
+----------------------------
+
+Gracz po instalacji paczki ma serwer od razu na liście Multiplayer — nie musi
+wpisywać adresu. Wpis powstaje przy buildzie z pola `server` w pack.json, więc
+adres jest zapisany w jednym miejscu; nazwa na liście to `serverListName`
+i renderują się w niej kody `§` (stąd kolor i pogrubienie).
+
+Ikonę obok nazwy wysyła serwer, nie paczka: `server-icon.png` w katalogu
+głównym serwera, dokładnie 64x64. Klient pobiera ją przy pierwszym pingu
+i cache'uje. Podmiana ikony to podmiana tego jednego pliku i restart — nikt
+nie musi nic reinstalować.
+
+UWAGA przy zmianie adresu serwera. `servers.dat` jest overridem, więc launcher
+nadpisze go u wszystkich, gdy paczka go zmieni — razem z serwerami, które gracz
+dodał sobie sam. Przy przeprowadzce serwera to cena do zapłacenia, ale nie
+ruszaj tego pliku dla kosmetyki.

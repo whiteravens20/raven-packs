@@ -15,6 +15,7 @@
     "ip": "209.25.141.16",
     "port": 32909
   },
+  "serverListName": "\u00a7d\u00a7lWhite Ravens \u00a77\u00a7lClassic",
   "mods": [
     { "slug": "fabric-api", "reason": "Required by most of the list" },
     {
