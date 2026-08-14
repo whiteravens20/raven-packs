@@ -11,6 +11,10 @@
     "version": "0.19.3"
   },
   "recommendedRamMb": 6144,
+  "server": {
+    "ip": "209.25.141.16",
+    "port": 32909
+  },
   "mods": [
     { "slug": "fabric-api", "reason": "Required by most of the list" },
     {
