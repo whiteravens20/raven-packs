@@ -29,6 +29,7 @@ Kolejność pierwszego uruchomienia
        world/serverconfig/openpartiesandclaims-server.toml
        config/luckperms/luckperms.conf
        config/EssentialCommands.properties
+       config/styled-chat.json
        world/config/playtime-rewards/config.json
 
    Pliki urosną o brakujące klucze — to normalne. Ważne, żeby wartości, które
@@ -71,10 +72,20 @@ Książkę Modonomicon niesie datapack rozpakowany razem ze światem:
 
     world/datapacks/ravenclassic-guide/
 
-Same teksty siedzą po stronie klienta, w resource packu `ravenclassic-guide`,
-który paczka włącza w options.txt. Jeśli po wejściu na serwer strony pokazują
-surowe klucze zamiast zdań, to znaczy, że resource pack nie jest włączony —
-nie że książka się nie wczytała.
+Same teksty jadą osobno, w resource packu, który wysyła serwer: adres i sha1
+stoją w server.properties (`resource-pack`, `resource-pack-sha1`), a
+`require-resource-pack=true` robi z niego warunek wejścia. Dlatego docierają
+też do graczy, którzy przyszli innym launcherem niż Raven Forge.
+
+Jeśli strony pokazują surowe klucze zamiast zdań, to gracz odrzucił resource
+pack albo serwer podaje adres, pod którym nic nie ma. Książka wczytała się
+dobrze — brakuje jej samego tekstu.
+
+Poprawiony tekst przewodnika nie dojedzie sam. To nowy zip przy nowym wydaniu,
+więc po każdym trzeba podmienić w server.properties `resource-pack`
+i `resource-pack-sha1` (oba stoją gotowe w server.zip z tego wydania) i zrestartować
+serwer. `resource-pack-id` zostaje ten sam z rozmysłem: po nim klient poznaje,
+że to ta sama paczka w nowej wersji, a nie druga obok niej.
 
 
 Zablokowane recepty
@@ -101,6 +112,7 @@ Po starcie sprawdź oba datapacki:
 
     /datapack list
 
-Deklarują szeroki zakres `supported_formats`, bo numeru formatu dla 26.2 nie
-dało się ustalić bez uruchomionego serwera. Gdyby Minecraft odmówił je wczytać,
-w pack.mcmeta trzeba wpisać numer, który wypisze w logu.
+Oba deklarują format danych 107, czyli ten, którego chce 26.2 (numer stoi
+w version.json w jarze klienta, pole pack_version.data_major). Gdyby po zmianie
+wersji Minecrafta któryś wylądował na liście wyłączonych, to jest jedyna liczba
+do poprawienia — i jedyny objaw, bo start serwera nie zaprotestuje.
