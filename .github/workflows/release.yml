@@ -117,6 +117,14 @@ jobs:
           key: mods-${{ hashFiles('packs/*/pack.lock.json') }}
           restore-keys: mods-
 
+      # The lockfile records which projects a mod depends on, never which
+      # versions — Modrinth does not publish that. The requirement lives in each
+      # jar's fabric.mod.json, so the only way to know a pack starts is to read
+      # them. Skipping this once shipped a release that crashed Fabric Loader on
+      # launch, which is a failure no amount of metadata validation can see.
+      - name: Check mod dependencies resolve
+        run: node scripts/check-deps.mjs
+
       # Order matters. buildPack wipes dist/<slug> before writing it, so the
       # tagged pack is built *last* — an all-packs pass afterwards would delete
       # the zips this release needs.
