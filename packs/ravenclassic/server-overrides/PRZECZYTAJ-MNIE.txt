@@ -102,6 +102,7 @@ Po starcie sprawdź oba datapacki:
 
     /datapack list
 
-Deklarują szeroki zakres `supported_formats`, bo numeru formatu dla 26.2 nie
-dało się ustalić bez uruchomionego serwera. Gdyby Minecraft odmówił je wczytać,
-w pack.mcmeta trzeba wpisać numer, który wypisze w logu.
+Oba deklarują format danych 107, czyli ten, którego chce 26.2 (numer stoi
+w version.json w jarze klienta, pole pack_version.data_major). Gdyby po zmianie
+wersji Minecrafta któryś wylądował na liście wyłączonych, to jest jedyna liczba
+do poprawienia — i jedyny objaw, bo start serwera nie zaprotestuje.
