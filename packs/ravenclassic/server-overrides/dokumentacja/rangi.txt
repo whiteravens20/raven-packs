@@ -48,15 +48,17 @@ Progi czasu i nagrody zmienia się w world/config/playtime-rewards/config.json
 2. Staff
 --------
 
-    Budowniczy      zwykły gracz + tryb kreatywny
+    Budowniczy      zwykły gracz + tryb kreatywny + praca na spawnie
     Moderator       zwykły gracz + moderacja + awansowanie graczy
     Administrator   Moderator + Budowniczy + WorldEdit + uprawnienia
     Architekt       wszystko, jedyne konto z op
 
-Budowniczy przełącza się w tryb kreatywny i tyle. Kreatywny to w Minecrafcie
-jedna flaga gracza, nie trzy — zawiera latanie, nieśmiertelność i nieskończone
-bloki naraz i nie da się tego rozdzielić. Dlatego Budowniczy nie dostaje
-osobnego /fly: kreatywny już lata.
+Budowniczy przełącza się w tryb kreatywny i buduje działki serwerowe — spawn,
+market, arenę. Nic ponadto: cudza działka jest dla niego zamknięta tak samo
+jak dla każdego innego. Kreatywny to w Minecrafcie jedna flaga gracza, nie
+trzy — zawiera latanie, nieśmiertelność i nieskończone bloki naraz i nie da się
+tego rozdzielić. Dlatego Budowniczy nie dostaje osobnego /fly: kreatywny już
+lata.
 
 WorldEdit świadomie zostaje wyżej, przy Administratorze. Nie z braku zaufania,
 tylko dlatego, że WorldEdit nie widzi działek — `//set air` w promieniu 50
@@ -245,10 +247,20 @@ drabinka domów przestaje wtedy istnieć, a wygląda, jakby działała.
 
     lp group budowniczy     permission set minecraft.command.gamemode true
     lp group budowniczy     permission set essentialcommands.top true
+    lp group budowniczy     permission set xaero.pac_server_claims true
 
 Węzeł `minecraft.command.gamemode` istnieje dzięki modowi Vanilla Permissions
 i obejmuje wszystkie tryby — także spectator, który przy oglądaniu cudzej
 budowy bywa wygodniejszy od kreatywnego.
+
+`xaero.pac_server_claims` to prawo do pracy na spawnie i na innych działkach
+serwerowych — bez niego Budowniczy nie postawi tam ani jednego bloku, bo claim
+serwerowy broni się przed każdym. Uprawnienie samo nie wystarczy: trzeba jeszcze
+włączyć `/openpac-claims server-claim-mode` na czas budowania. Dlaczego akurat
+tak i co dokładnie ten tryb otwiera — dokumentacja/dzialki.txt, sekcja 2a.
+Świadomie nie dajemy tu `xaero.pac_claims_admin_mode`: ten wpuszczałby również
+na działki graczy, a Budowniczy ma budować serwer, nie wchodzić ludziom do
+domów.
 
 Nie ma tu ani `worldedit.*`, ani `essentialcommands.fly.self`. Pierwszego z
 rozmysłem (sekcja 2), drugiego dlatego, że kreatywny już lata. Gdybyś kiedyś
@@ -367,7 +379,6 @@ zakazu.
     lp group administrator  permission set essentialcommands.spawn.set true
     lp group administrator  permission set universal_shops.admin true
     lp group administrator  permission set xaero.pac_claims_admin_mode true
-    lp group administrator  permission set xaero.pac_server_claims true
     lp group administrator  permission set xaero.pac_parties_admin_mode true
 
     lp group administrator  permission set luckperms.user.parent.add.architekt false

@@ -67,6 +67,50 @@ Podgląd cudzych limitów:
 
     /openpac-claims about <nick>
 
+Wszystkie komendy `/openpac...` musi wpisać gracz w grze. Z konsoli odbijają
+się błędem o brak gracza — inaczej niż LuckPerms, którego wkleja się właśnie
+do konsoli.
+
+
+2a. Budowanie na claimie serwerowym
+-----------------------------------
+
+Claim serwerowy jest chroniony przed wszystkimi, łącznie z tym, kto go
+postawił. Nie ma tu żadnego „serwerowe, czyli wspólne": właścicielem jest
+puste UUID i niczyje UUID mu nie odpowiada. Op też nie pomaga — mod nie pyta o
+poziom op ani razu, więc Architekt odbija się od spawnu tak samo jak Nowy.
+
+Mod sprawdza po kolei trzy drzwi i pierwsze otwarte wygrywa:
+
+  1. **Tryb admina włączony** — wpuszcza na każdą działkę, także serwerową.
+  2. **Tryb serwerowy włączony** + uprawnienie `xaero.pac_server_claims` —
+     wpuszcza wyłącznie na działki serwerowe.
+  3. **Wyjątek fullAccess** w konfiguracji claimów serwerowych wskazuje grupę,
+     w której jesteś.
+
+Stąd bierze się najczęstsza niespodzianka: zajmujesz spawn w trybie serwerowym,
+wyłączasz tryb zgodnie z akapitem wyżej — i od tej chwili nie postawisz tam
+bloku. Nic się nie zepsuło, po prostu zamknąłeś sobie drzwi numer 2.
+
+Na co dzień wystarczy więc `/openpac-claims server-claim-mode` na czas pracy.
+Budowniczy dostaje do tego uprawnienie w dokumentacja/rangi.txt, sekcja 7 —
+i tylko to. Na cudzą działkę tryb serwerowy nie wpuszcza, więc budowniczy
+buduje spawn, a domu gracza nie tknie. Cena jest jedna i trzeba ją znać: w tym
+trybie `claim` i `unclaim` też działają na serwer, czyli budowniczy może dołożyć
+albo zwolnić chunk spawnu.
+
+Jeśli wolisz nie pamiętać o trybie, zrób to raz i na stałe — grupą:
+
+    /openpac server-claims-config player-groups create ekipa
+    /openpac server-claims-config player-groups include-player ekipa <nick>
+    /openpac server-claims-config set playerConfig.claims.protection.exceptions.fullAccess ekipa
+
+Od tej chwili każdy z tej listy buduje na każdej działce serwerowej bez
+przełączania czegokolwiek. To jest własna lista nazw wewnątrz OPAC-a, a nie
+grupa LuckPermsa — mod o LuckPermsa pyta wyłącznie o limity i o dwa
+uprawnienia wyżej. Nowego budowniczego trzeba dopisać tutaj ręcznie i to jest
+cały koszt tego wariantu.
+
 
 3. Co jest chronione
 --------------------
