@@ -30,16 +30,25 @@
 		[serverConfig.claims.protection]
 			# Everything inside a claim is closed to outsiders by default —
 			# blocks, chests, doors, animals. These are the deliberate holes.
+			# The list is global: it does not care whose claim the block
+			# stands in, so it covers server claims (spawn, market) exactly
+			# like a player's.
 			#
-			# No prefix means "may be right-clicked, still may not be broken",
-			# which is exactly what a shop customer and a traveller need. The
-			# shop's own settings screen stays owner-only, so an open shop
+			# The "anything$" prefix means "may be right-clicked whatever is
+			# in the hand, still may not be broken". Without it the mod lets
+			# the click through and then rejects the held item, so a customer
+			# carrying a stack of dirt cannot open a shop — the interaction
+			# a claim is meant to allow fails on a detail nobody would guess.
+			# A sneaking player is deliberately excluded from the shortcut,
+			# which is what keeps block placing protected.
+			#
+			# The shop's own settings screen stays owner-only, so an open shop
 			# block is a till, not a back door.
 			#
-			# The crafting table is the mod's own default; keep it.
+			# The crafting table is the mod's own default, left as it ships.
 			forcedBlockProtectionExceptionList = [
 				"minecraft:crafting_table",
-				"waystones:*",
-				"universal_shops:trade_block",
-				"universal_shops:admin_trade_block"
+				"anything$waystones:*",
+				"anything$universal_shops:trade_block",
+				"anything$universal_shops:admin_trade_block"
 			]
