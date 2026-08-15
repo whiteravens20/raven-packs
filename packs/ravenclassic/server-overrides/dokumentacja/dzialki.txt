@@ -150,11 +150,14 @@ Gracz może otworzyć więcej sam. Mod ma gotowe grupy do przełączania w
 ustawieniach działki: Controls, Doors, Chests, Barrels, Ender_Chests,
 Shulker_Boxes, Furnaces, Hoppers, Anvils, Stonecutters, Grindstones, Lecterns,
 Beds, Beacons, Enchanting_Tables, Crops i kilka innych. Ustawia się je per
-gracz albo per pojedyncza działka, przez interfejs moda lub `/openpac-config`.
-To wygodne przy wspólnej farmie albo publicznej kuźni.
+gracz albo per pojedyncza działka, przez interfejs moda lub
+`/openpac player-config`. To wygodne przy wspólnej farmie albo publicznej
+kuźni.
 
-Można też włączać wyjątki dla wybranych osób i grup — `/openpac-config` ma
-podkomendy do dodawania i usuwania graczy z listy zaufanych.
+Można też włączać wyjątki dla wybranych osób — `/openpac player-config
+player-groups` tworzy własne listy graczy, a opcje `...exceptions...`
+wskazują, która lista co może. Ten sam mechanizm co w sekcji 2a, tyle że na
+własnej działce.
 
 
 4. Chunk loading
