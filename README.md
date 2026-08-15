@@ -109,7 +109,7 @@ White Ravens Classic, 66 locked files:
 
 | | |
 |---|---|
-| Committed to git | 66 KB — 7.4 KB of definition, 59 KB of lockfile |
+| Committed to git | 66 KB — 7.7 KB of definition, 59 KB of lockfile |
 | `build.mjs`, cold | 0.2 s, Node startup included |
 | Network calls at build | 0 |
 | Published `.mrpack` | 17 KB |
