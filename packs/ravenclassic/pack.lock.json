@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-14T22:23:45.882Z",
+  "generatedAt": "2026-08-15T19:50:58.051Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1338,28 +1338,6 @@
       "sha512": "39392abede4575195d3733a90e217bab13e4636ff88d4d20caf0c8c48b17d20d6f34777a5251935de324104eceb8a34dc3efc6fbb246963beefef653dbaf969e",
       "license": "MIT",
       "requiredDependencies": []
-    },
-    {
-      "requestKey": "{\"slug\":\"bluemap\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
-      "kind": "mod",
-      "side": "server",
-      "clientSide": "unsupported",
-      "serverSide": "required",
-      "id": "bluemap",
-      "name": "BlueMap",
-      "source": "modrinth",
-      "projectId": "swbUV1cr",
-      "versionId": "bR8uae8S",
-      "version": "5.23-fabric",
-      "fileName": "bluemap-5.23-fabric.jar",
-      "url": "https://cdn.modrinth.com/data/swbUV1cr/versions/bR8uae8S/bluemap-5.23-fabric.jar",
-      "size": 6507617,
-      "sha1": "0a36c4e7cffcfaff28d23a17ccf7286101293c9b",
-      "sha512": "7997e47e89ddf69ccea187f8b2e52a278c9d4d3e77636f06b581e7166b7549f7c900d0867a827b81eb54823d804d4d422d040788a530559f27410a539450a91e",
-      "license": "MIT",
-      "requiredDependencies": [
-        "P7dR8mSH"
-      ]
     },
     {
       "requestKey": "{\"slug\":\"collective\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",

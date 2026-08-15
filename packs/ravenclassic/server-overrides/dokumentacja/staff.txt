@@ -193,18 +193,13 @@ backupy są po stronie hostingu. Z gry masz tylko Ledgera: `/lg rollback`
 cofa zmiany bloków, ale nie ekwipunki, nie enderchesty i nie uszkodzony
 świat. To narzędzie od griefu, nie kopia zapasowa.
 
-BlueMap renderuje mapę świata do przeglądarki. Pierwsze renderowanie zjada
-sporo CPU — puść je po pregeneracji Chunky'ego, nie równolegle z nią.
-
-Mapa stoi na porcie 25566 (config/bluemap/webserver.conf), nie na domyślnym
-8100. Port musi być otwarty po stronie hostingu — panel routuje przydzieloną
-pulę i nic poza nią, więc nieprzydzielony port nasłuchuje w próżnię i nie
-zgłasza błędu. Jeżeli mapa nie odpowiada, sprawdź panel, zanim zaczniesz
-szukać winy w BlueMapie.
-
-Logowanie żądań webserwera jest świadomie wyłączone. Jego format zapisuje
-adres IP każdego odwiedzającego, a mapa jest publiczna i nie wymaga logowania;
-brak sekcji `log` to udokumentowany przez BlueMapa sposób na wyłączenie tego.
+Mapy w przeglądarce (BlueMap i spółka) w paczce nie ma z rozmysłu. Renderuje
+się ją godzinami, zajmuje kilka GB dysku, potrzebuje osobnego portu od
+hostingu i pokazuje bez logowania cały świat — także to, czego z ziemi nie
+widać. Trzymamy tu MeowAntiXray, żeby klient nie widział złóż przez kamień
+(sekcja 8); publiczna mapa wystawiałaby tę samą informację od drugiej strony.
+Gracze mają mapę u siebie: Xaero rysuje im teren, który faktycznie zwiedzili,
+razem z działkami.
 
 
 7. Wyłączone receptury
