@@ -123,6 +123,7 @@ async function validatePack(slug) {
   console.log(`  ${entries.length} entries, Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}`);
 
   await validatePackMeta(slug);
+  await validateBookItems(slug, pack);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -155,6 +156,62 @@ async function validatePack(slug) {
   }
 
   console.log(`  \x1b[32m✓\x1b[0m lockfile in sync — ${lock.files.length} files, locked ${lock.generatedAt.slice(0, 10)}`);
+}
+
+/**
+ * An item named inside the guide book has to exist on the client.
+ *
+ * A Modonomicon spotlight page names an item, and the id is resolved against
+ * the *client's* registry when the book syncs on join. Name a mod that only
+ * ships to the server and that page fails to decode, the book collects a
+ * blocking error, and Modonomicon then skips pre-rendering markdown for the
+ * entire book — so every page in it comes out blank while the node view looks
+ * perfect and nothing in the build says a word.
+ *
+ * That shipped in 1.5.2, from one spotlight naming a Universal Shops block.
+ * The namespace is checked with underscores as well as dashes because a mod's
+ * Modrinth slug and its registry namespace disagree exactly often enough
+ * (`universal-shops` against `universal_shops`) to be the thing that hides it.
+ */
+async function validateBookItems(slug, pack) {
+  const serverOnly = new Set(
+    (pack.mods ?? [])
+      .filter((mod) => mod.side === 'server' && mod.slug)
+      .flatMap((mod) => [mod.slug, mod.slug.replace(/-/g, '_')]),
+  );
+  if (serverOnly.size === 0) return;
+
+  let pages;
+  try {
+    pages = (await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'))).filter(
+      (file) => file.relative.includes('/modonomicon/books/') && file.relative.endsWith('.json'),
+    );
+  } catch {
+    return;
+  }
+  if (pages.length === 0) return;
+
+  for (const page of pages) {
+    let json;
+    try {
+      json = JSON.parse(await fs.readFile(page.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${page.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    const item = typeof json.item === 'string' ? json.item : json.item?.id;
+    if (typeof item !== 'string') continue;
+    const namespace = item.replace(/^#/, '').split(':')[0];
+    if (serverOnly.has(namespace)) {
+      fail(
+        slug,
+        `${page.relative} shows "${item}", but ${namespace} ships to the server only — ` +
+          'the client cannot resolve that id and the whole book renders blank',
+      );
+    }
+  }
+
+  console.log(`  \x1b[32m✓\x1b[0m ${pages.length} guide book file(s) name only client-side items`);
 }
 
 /**

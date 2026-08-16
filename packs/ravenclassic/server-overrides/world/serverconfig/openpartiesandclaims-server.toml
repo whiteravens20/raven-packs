@@ -52,3 +52,15 @@
 				"anything$universal_shops:trade_block",
 				"anything$universal_shops:admin_trade_block"
 			]
+
+			# Blocks are one protection, the item in your hand is another. The
+			# mod disables most right-click item use inside a claim, and the
+			# guide book is an item — so a player standing on spawn, which is a
+			# server claim, was told to empty their hand instead of reading it.
+			# A book that exists to be opened has to be an exception.
+			#
+			# The wildcard covers the coloured variants too. Nothing in this
+			# namespace places, breaks or throws anything.
+			itemUseProtectionExceptionList = [
+				"modonomicon:*"
+			]
