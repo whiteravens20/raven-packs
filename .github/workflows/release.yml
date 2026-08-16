@@ -182,7 +182,13 @@ jobs:
             const named = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version)).map((f) => f.id);
             const beta = [...new Set([...asked, ...named])].sort();
             console.log(beta.length ? `prerelease — ${beta.join(", ")}` : "stable — no prerelease mods");
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `prerelease=${beta.length > 0}\n`);
+            // The title says what the pack is; the tag already says which tag it
+            // is, so repeating it there tells a reader nothing. Left unset, the
+            // action falls back to the tag name — which is how three releases
+            // ended up titled "ravenclassic-v1.5.2" and friends.
+            const title = `${pack.name} ${pack.version}${beta.length ? " — beta" : ""}`;
+            console.log(`title — ${title}`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `prerelease=${beta.length > 0}\ntitle=${title}\n`);
           ' "${{ steps.meta.outputs.slug }}"
 
       - name: Publish release
@@ -196,6 +202,7 @@ jobs:
           fail_on_unmatched_files: true
           generate_release_notes: true
           prerelease: ${{ steps.channel.outputs.prerelease }}
+          name: ${{ steps.channel.outputs.title }}
 
       # Only main can deploy to Pages, so only main uploads the artifact — see
       # `deploy-pages` below for why the tag run does not.
