@@ -81,6 +81,19 @@ Jeśli strony pokazują surowe klucze zamiast zdań, to gracz odrzucił resource
 pack albo serwer podaje adres, pod którym nic nie ma. Książka wczytała się
 dobrze — brakuje jej samego tekstu.
 
+Jeśli strony są całkiem puste, a węzły rysują się normalnie, to ktoś ruszył
+układ katalogów. Modonomicon szuka stron po ścieżce `entries/<kategoria>/<wpis>/
+pages/` i sprawdza ten człon z kategoriami książki; katalog nazwany kategorią,
+której już nie ma, odcina wszystkie leżące w nim strony bez słowa w logu serwera.
+`node scripts/validate.mjs` w repozytorium paczki to wyłapuje.
+
+Trzecia rzecz, która wygląda na usterkę i nią nie jest: po zmianie języka
+klienta nazwy kategorii i tytuły przechodzą na nowy język od razu, a treść stron
+zostaje w starym. Modonomicon renderuje treść raz, przy synchronizacji receptur
+na wejściu, i zapieka wynik; tytuły są komponentami tłumaczonymi przy każdym
+rysowaniu. Wystarczy wyjść z serwera i wejść ponownie — F3+T ani /reload tego
+nie ruszą.
+
 Poprawiony tekst przewodnika nie dojedzie sam. To nowy zip przy nowym wydaniu,
 więc po każdym trzeba podmienić w server.properties `resource-pack`
 i `resource-pack-sha1` (oba stoją gotowe w server.zip z tego wydania) i zrestartować
