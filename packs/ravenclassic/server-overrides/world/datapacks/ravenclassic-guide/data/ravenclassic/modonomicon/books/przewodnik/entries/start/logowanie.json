@@ -1,14 +1,14 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:start/logowanie",
-  "category": "ravenclassic:start",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.start.logowanie.name",
   "description": "book.ravenclassic.przewodnik.start.logowanie.description",
   "icon": {
     "id": "minecraft:oak_door"
   },
   "background": {
-    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/star_gold",
     "width": 26,
     "height": 26
   },

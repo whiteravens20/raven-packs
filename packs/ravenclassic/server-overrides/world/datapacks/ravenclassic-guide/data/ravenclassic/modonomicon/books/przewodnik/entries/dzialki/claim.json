@@ -1,21 +1,21 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:dzialki/claim",
-  "category": "ravenclassic:dzialki",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.dzialki.claim.name",
   "description": "book.ravenclassic.przewodnik.dzialki.claim.description",
   "icon": {
     "id": "minecraft:oak_fence_gate"
   },
   "background": {
-    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
     "width": 26,
     "height": 26
   },
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 0,
+  "sort_number": 3,
   "x": 0,
-  "y": 0
+  "y": 3
 }

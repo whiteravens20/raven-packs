@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:spotlight",
+  "id": "spot",
+  "title": "book.ravenclassic.przewodnik.handel.sklepy.spot.title",
+  "item": "universal_shops:trade_block",
+  "text": "book.ravenclassic.przewodnik.handel.sklepy.spot.text",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 0
+}

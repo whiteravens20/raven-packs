@@ -1,14 +1,14 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:start/komendy",
-  "category": "ravenclassic:start",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.start.komendy.name",
   "description": "book.ravenclassic.przewodnik.start.komendy.description",
   "icon": {
     "id": "minecraft:compass"
   },
   "background": {
-    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/star_gold",
     "width": 26,
     "height": 26
   },

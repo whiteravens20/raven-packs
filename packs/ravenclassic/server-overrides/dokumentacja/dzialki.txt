@@ -67,6 +67,50 @@ Podgląd cudzych limitów:
 
     /openpac-claims about <nick>
 
+Wszystkie komendy `/openpac...` musi wpisać gracz w grze. Z konsoli odbijają
+się błędem o brak gracza — inaczej niż LuckPerms, którego wkleja się właśnie
+do konsoli.
+
+
+2a. Budowanie na claimie serwerowym
+-----------------------------------
+
+Claim serwerowy jest chroniony przed wszystkimi, łącznie z tym, kto go
+postawił. Nie ma tu żadnego „serwerowe, czyli wspólne": właścicielem jest
+puste UUID i niczyje UUID mu nie odpowiada. Op też nie pomaga — mod nie pyta o
+poziom op ani razu, więc Architekt odbija się od spawnu tak samo jak Nowy.
+
+Mod sprawdza po kolei trzy drzwi i pierwsze otwarte wygrywa:
+
+  1. **Tryb admina włączony** — wpuszcza na każdą działkę, także serwerową.
+  2. **Tryb serwerowy włączony** + uprawnienie `xaero.pac_server_claims` —
+     wpuszcza wyłącznie na działki serwerowe.
+  3. **Wyjątek fullAccess** w konfiguracji claimów serwerowych wskazuje grupę,
+     w której jesteś.
+
+Stąd bierze się najczęstsza niespodzianka: zajmujesz spawn w trybie serwerowym,
+wyłączasz tryb zgodnie z akapitem wyżej — i od tej chwili nie postawisz tam
+bloku. Nic się nie zepsuło, po prostu zamknąłeś sobie drzwi numer 2.
+
+Na co dzień wystarczy więc `/openpac-claims server-claim-mode` na czas pracy.
+Budowniczy dostaje do tego uprawnienie w dokumentacja/rangi.txt, sekcja 7 —
+i tylko to. Na cudzą działkę tryb serwerowy nie wpuszcza, więc budowniczy
+buduje spawn, a domu gracza nie tknie. Cena jest jedna i trzeba ją znać: w tym
+trybie `claim` i `unclaim` też działają na serwer, czyli budowniczy może dołożyć
+albo zwolnić chunk spawnu.
+
+Jeśli wolisz nie pamiętać o trybie, zrób to raz i na stałe — grupą:
+
+    /openpac server-claims-config player-groups create ekipa
+    /openpac server-claims-config player-groups include-player ekipa <nick>
+    /openpac server-claims-config set playerConfig.claims.protection.exceptions.fullAccess ekipa
+
+Od tej chwili każdy z tej listy buduje na każdej działce serwerowej bez
+przełączania czegokolwiek. To jest własna lista nazw wewnątrz OPAC-a, a nie
+grupa LuckPermsa — mod o LuckPermsa pyta wyłącznie o limity i o dwa
+uprawnienia wyżej. Nowego budowniczego trzeba dopisać tutaj ręcznie i to jest
+cały koszt tego wariantu.
+
 
 3. Co jest chronione
 --------------------
@@ -82,24 +126,38 @@ Jedyny wyjątek, który zostaje z domyślnych ustawień moda, to stół rzemieś
 Paczka dokłada trzy własne, w
 world/serverconfig/openpartiesandclaims-server.toml:
 
-    waystones:*                       wszystkie kamienie podróży
-    universal_shops:trade_block       sklep gracza
-    universal_shops:admin_trade_block sklep admina
+    anything$waystones:*                       wszystkie kamienie podróży
+    anything$universal_shops:trade_block       sklep gracza
+    anything$universal_shops:admin_trade_block sklep admina
 
 Chodzi o to, żeby dało się kupić w sklepie stojącym na czyjejś działce i
-skoczyć z waystone'a stojącego w cudzej wiosce. Wyjątek dotyczy wyłącznie
-kliknięcia — rozbić tych bloków obcy dalej nie może, a ustawienia sklepu
-otwiera tylko właściciel. Otwarty sklep to kasa, nie tylne drzwi.
+skoczyć z waystone'a stojącego w cudzej wiosce. Ta lista jest globalna i nie
+pyta, czyja jest działka — działa tak samo na terenie gracza i na claimie
+serwerowym, więc sklepy admina na spawnie obsługują wszystkich.
+
+Wyjątek dotyczy wyłącznie kliknięcia — rozbić tych bloków obcy dalej nie może,
+a ustawienia sklepu otwiera tylko właściciel. Otwarty sklep to kasa, nie tylne
+drzwi.
+
+Przedrostek `anything$` nie jest ozdobą. Bez niego mod przepuszcza kliknięcie,
+ale zaraz potem osobno sprawdza, co gracz trzyma w ręce — i blokuje wszystko,
+co po kliknięciu coś robi, w tym każdy blok. Klient ze stosem ziemi w ręku
+odbijał się od sklepu bez żadnego sensownego komunikatu. `anything$` zamienia
+to w jednoznaczną zgodę. Zakradanie się (shift) jest z tej zgody wyłączone po
+stronie moda, więc stawianie bloków na cudzej działce dalej jest chronione.
 
 Gracz może otworzyć więcej sam. Mod ma gotowe grupy do przełączania w
 ustawieniach działki: Controls, Doors, Chests, Barrels, Ender_Chests,
 Shulker_Boxes, Furnaces, Hoppers, Anvils, Stonecutters, Grindstones, Lecterns,
 Beds, Beacons, Enchanting_Tables, Crops i kilka innych. Ustawia się je per
-gracz albo per pojedyncza działka, przez interfejs moda lub `/openpac-config`.
-To wygodne przy wspólnej farmie albo publicznej kuźni.
+gracz albo per pojedyncza działka, przez interfejs moda lub
+`/openpac player-config`. To wygodne przy wspólnej farmie albo publicznej
+kuźni.
 
-Można też włączać wyjątki dla wybranych osób i grup — `/openpac-config` ma
-podkomendy do dodawania i usuwania graczy z listy zaufanych.
+Można też włączać wyjątki dla wybranych osób — `/openpac player-config
+player-groups` tworzy własne listy graczy, a opcje `...exceptions...`
+wskazują, która lista co może. Ten sam mechanizm co w sekcji 2a, tyle że na
+własnej działce.
 
 
 4. Chunk loading

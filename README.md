@@ -31,7 +31,7 @@ costs about 70 KB of git history. See [the lockfile](#the-lockfile).
 
 | Pack | Minecraft | Loader | Contents |
 |---|---|---|---|
-| [White Ravens Classic](packs/ravenclassic/) | 26.2 | Fabric 0.19.3 | 65 mods and 2 shader packs — 44 files reach the client, 41 the server |
+| [White Ravens Classic](packs/ravenclassic/) | 26.2 | Fabric 0.19.3 | 64 mods and 2 shader packs — 44 files reach the client, 40 the server |
 
 White Ravens Classic is **beta**: it runs a live server now, and Minecraft 26.2
 is new enough that a few of its mods are still pinned to beta builds.
@@ -109,7 +109,7 @@ White Ravens Classic, 66 locked files:
 
 | | |
 |---|---|
-| Committed to git | 66 KB — 7.4 KB of definition, 59 KB of lockfile |
+| Committed to git | 66 KB — 7.7 KB of definition, 59 KB of lockfile |
 | `build.mjs`, cold | 0.2 s, Node startup included |
 | Network calls at build | 0 |
 | Published `.mrpack` | 17 KB |

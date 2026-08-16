@@ -1,21 +1,21 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:dzialki/forceload",
-  "category": "ravenclassic:dzialki",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.dzialki.forceload.name",
   "description": "book.ravenclassic.przewodnik.dzialki.forceload.description",
   "icon": {
     "id": "minecraft:hopper"
   },
   "background": {
-    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
     "width": 26,
     "height": 26
   },
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 1,
+  "sort_number": 4,
   "x": 2,
-  "y": 0
+  "y": 3
 }

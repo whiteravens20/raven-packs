@@ -14,7 +14,7 @@ nim, więc nikt nie „doawansuje się" do moderatora.
     Nowy        od wejścia         4           0      1
     Gracz       10 h gry           6           2      2
     Obywatel    40 h gry           8           4      3
-    Mistrz      za surowce        12           8      5
+    Mistrz      za surowce        12           8      3
 
 Chunk to 16×16 bloków na całą wysokość świata — F3+G rysuje siatkę. Cztery
 chunki ułożone w kwadrat to działka 32×32. OPAC nie wymaga, żeby chunki się
@@ -48,15 +48,17 @@ Progi czasu i nagrody zmienia się w world/config/playtime-rewards/config.json
 2. Staff
 --------
 
-    Budowniczy      zwykły gracz + tryb kreatywny
+    Budowniczy      zwykły gracz + tryb kreatywny + praca na spawnie
     Moderator       zwykły gracz + moderacja + awansowanie graczy
     Administrator   Moderator + Budowniczy + WorldEdit + uprawnienia
     Architekt       wszystko, jedyne konto z op
 
-Budowniczy przełącza się w tryb kreatywny i tyle. Kreatywny to w Minecrafcie
-jedna flaga gracza, nie trzy — zawiera latanie, nieśmiertelność i nieskończone
-bloki naraz i nie da się tego rozdzielić. Dlatego Budowniczy nie dostaje
-osobnego /fly: kreatywny już lata.
+Budowniczy przełącza się w tryb kreatywny i buduje działki serwerowe — spawn,
+market, arenę. Nic ponadto: cudza działka jest dla niego zamknięta tak samo
+jak dla każdego innego. Kreatywny to w Minecrafcie jedna flaga gracza, nie
+trzy — zawiera latanie, nieśmiertelność i nieskończone bloki naraz i nie da się
+tego rozdzielić. Dlatego Budowniczy nie dostaje osobnego /fly: kreatywny już
+lata.
 
 WorldEdit świadomie zostaje wyżej, przy Administratorze. Nie z braku zaufania,
 tylko dlatego, że WorldEdit nie widzi działek — `//set air` w promieniu 50
@@ -206,34 +208,56 @@ zmutować Administratora z konta Moderatora.
     lp group nowy           permission set essentialcommands.home.set true
     lp group nowy           permission set essentialcommands.home.tp true
     lp group nowy           permission set essentialcommands.home.delete true
-    lp group nowy           permission set essentialcommands.spawn.tp true
     lp group nowy           permission set essentialcommands.back true
     lp group nowy           permission set essentialcommands.randomteleport true
     lp group nowy           permission set essentialcommands.afk true
-    lp group nowy           permission set essentialcommands.enderchest true
-    lp group nowy           permission set essentialcommands.workbench true
     lp group nowy           permission set essentialcommands.nickname.self true
     lp group nowy           permission set staffsee.report true
 
-Gracz teleportuje się w cztery miejsca i ani jedno więcej: do własnego domu,
-na spawn, tam gdzie przed chwilą był (/back) i w losowy punkt dziczy (/rtp,
-czyli sposób na znalezienie miejsca na pierwszą działkę). Nie ma /tpa, nie ma
-/warp — do reszty świata jeździ się na waystone'ach, które trzeba najpierw
+Gracz teleportuje się w trzy miejsca i ani jedno więcej: do własnego domu, tam
+gdzie przed chwilą był (/back) i w losowy punkt dziczy (/rtp, czyli sposób na
+znalezienie miejsca na pierwszą działkę). Nie ma /tpa, nie ma /warp, nie ma
+/spawn — do reszty świata jeździ się na waystone'ach, które trzeba najpierw
 znaleźć. To jest cały pomysł na podróż na tym serwerze i dlatego warto się
 przy nim upierać: gdyby gracz mógł teleportować się do znajomego jednym
 kliknięciem, sieć waystone'ów przestałaby cokolwiek znaczyć.
+
+`essentialcommands.spawn.tp` nie stoi na tej liście z rozmysłu i to jest
+najświeższa zmiana w tej sekcji. Na spawnie stoją sklepy admina, więc darmowy
+skok tam z dowolnego punktu świata jest darmowym skokiem na rynek — a `/back`
+zaraz potem odwozi z powrotem pod kopalnię. Wychodzi z tego para waystone'ów,
+której nikt nie musiał znaleźć ani postawić, i akurat ta jedna para, do której
+chce jeździć każdy. W survivalu droga na rynek ma być częścią ceny. Kto wyszedł
+ze spawnu, wraca po swojemu albo stawia sobie waystone.
+
+Z tego samego powodu nie ma tu `essentialcommands.enderchest` ani
+`essentialcommands.workbench`. Obie komendy podstawiają blok, który w survivalu
+trzeba wytworzyć, unieść i postawić: enderskrzynia kosztuje obsydian i oko
+Endera, warsztat zajmuje slot w plecaku. Wywołane z ręki są darmowe, nic nie
+ważą i nikt ich nie ukradnie — a enderskrzynia na komendę zamienia każdą
+wyprawę w kopalnię z nieskończonym ekwipunkiem, bo nadmiar odsyła się do bazy
+zamiast znosić. Kto chce mieć je pod ręką, nosi je ze sobą albo stawia w
+kopalni. Pozostałe komendy od bloków — `/anvil`, `/grindstone`,
+`/stonecutter` — nigdy nie były nadane i tak zostaje.
 
 Chcesz jeszcze ostrzej — skreśl `essentialcommands.randomteleport` i niech
 nowi wychodzą ze spawnu na piechotę, albo `essentialcommands.back` i niech
 śmierć kosztuje drogę powrotną. Obie to jedna linijka.
 
 Limity domów. Numery muszą pokrywać się z listą home_limit w
-config/EssentialCommands.properties (tam stoi 1,2,3,5):
+config/EssentialCommands.properties (tam stoi 1,2,3):
 
     lp group nowy           permission set essentialcommands.home.limit.1 true
     lp group gracz          permission set essentialcommands.home.limit.2 true
     lp group obywatel       permission set essentialcommands.home.limit.3 true
-    lp group mistrz         permission set essentialcommands.home.limit.5 true
+
+Mistrz nie ma tu własnej linijki i to nie jest przeoczenie: dziedziczy trójkę
+po Obywatelu i na trójce drabinka domów się kończy. Dom to na tym serwerze
+darmowy teleport, więc jego liczba jest tą samą decyzją co zdjęcie `/spawn`
+kilka akapitów wyżej. Mistrz płaci za teren — dwanaście chunków i osiem
+forceloadów — a nie za skróty przez mapę. Jeśli kiedyś zmienisz zdanie, wróć
+najpierw do `home_limit` w configu; sama komenda LuckPermsa nic nie da, bo
+mod zna wyłącznie liczby wypisane w tamtej liście.
 
 PUŁAPKA. Nigdy nie nadawaj gołego `essentialcommands.home`. LuckPerms czyta go
 jak wildcard i gracz dostaje wszystkie węzły poniżej — łącznie z limit.5. Cała
@@ -245,10 +269,29 @@ drabinka domów przestaje wtedy istnieć, a wygląda, jakby działała.
 
     lp group budowniczy     permission set minecraft.command.gamemode true
     lp group budowniczy     permission set essentialcommands.top true
+    lp group budowniczy     permission set essentialcommands.spawn.tp true
+    lp group budowniczy     permission set xaero.pac_server_claims true
 
 Węzeł `minecraft.command.gamemode` istnieje dzięki modowi Vanilla Permissions
 i obejmuje wszystkie tryby — także spectator, który przy oglądaniu cudzej
 budowy bywa wygodniejszy od kreatywnego.
+
+`essentialcommands.spawn.tp` to `/spawn` — zwykły gracz go nie ma (sekcja 6) i
+tutaj zaczyna istnieć. Tak jest, bo spawn to miejsce pracy staffu: Budowniczy go
+buduje, a Administrator ustawia go komendą `/spawn set` i musi mieć czym
+sprawdzić, gdzie właściwie ustawił. Administrator i Architekt dostają to
+w spadku po Budowniczym. Moderator musi dostać ten sam węzeł osobno (sekcja 8),
+bo dziedziczy po Obywatelu, a nie po Budowniczym — obie gałęzie staffu schodzą
+się dopiero na Administratorze.
+
+`xaero.pac_server_claims` to prawo do pracy na spawnie i na innych działkach
+serwerowych — bez niego Budowniczy nie postawi tam ani jednego bloku, bo claim
+serwerowy broni się przed każdym. Uprawnienie samo nie wystarczy: trzeba jeszcze
+włączyć `/openpac-claims server-claim-mode` na czas budowania. Dlaczego akurat
+tak i co dokładnie ten tryb otwiera — dokumentacja/dzialki.txt, sekcja 2a.
+Świadomie nie dajemy tu `xaero.pac_claims_admin_mode`: ten wpuszczałby również
+na działki graczy, a Budowniczy ma budować serwer, nie wchodzić ludziom do
+domów.
 
 Nie ma tu ani `worldedit.*`, ani `essentialcommands.fly.self`. Pierwszego z
 rozmysłem (sekcja 2), drugiego dlatego, że kreatywny już lata. Gdybyś kiedyś
@@ -272,10 +315,18 @@ Moderacja — kick i ban są vanilla, resztę daje StaffSee:
     lp group moderator      permission set minecraft.command.pardon true
     lp group moderator      permission set minecraft.command.banlist true
     lp group moderator      permission set minecraft.command.tp true
+    lp group moderator      permission set essentialcommands.spawn.tp true
 
 Węzły `minecraft.command.*` istnieją dzięki modowi Vanilla Permissions. Bez
 niego komendy vanilla pytają wyłącznie o poziom op, a wtedy Moderator musiałby
 dostać opa — czyli od razu wszystko.
+
+Ostatnia linijka wygląda na powtórkę z sekcji 7 i nią nie jest. Drabinka
+rozdziela się na Obywatelu: Budowniczy i Moderator to dwie osobne gałęzie i
+schodzą się dopiero na Administratorze, który dziedziczy po obu. Węzeł nadany
+Budowniczemu nie dociera więc do Moderatora i trzeba go tu wypisać drugi raz.
+`/tp` samo nie wystarcza — bierze współrzędne albo gracza, a spawn nie jest ani
+jednym, ani drugim.
 
 Podglądanie i cofanie szkód:
 
@@ -367,7 +418,6 @@ zakazu.
     lp group administrator  permission set essentialcommands.spawn.set true
     lp group administrator  permission set universal_shops.admin true
     lp group administrator  permission set xaero.pac_claims_admin_mode true
-    lp group administrator  permission set xaero.pac_server_claims true
     lp group administrator  permission set xaero.pac_parties_admin_mode true
 
     lp group administrator  permission set luckperms.user.parent.add.architekt false

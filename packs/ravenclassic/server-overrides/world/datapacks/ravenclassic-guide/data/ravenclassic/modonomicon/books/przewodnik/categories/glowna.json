@@ -1,0 +1,38 @@
+{
+  "name": "book.ravenclassic.przewodnik.glowna.name",
+  "description": "",
+  "icon": {
+    "id": "minecraft:knowledge_book"
+  },
+  "background": "modonomicon:textures/gui/dark_slate_seamless.png",
+  "background_width": 512,
+  "background_height": 512,
+  "background_texture_zoom_multiplier": 1,
+  "max_scroll_x": 512,
+  "max_scroll_y": 512,
+  "display_mode": "node",
+  "show_category_button": true,
+  "sort_number": 0,
+  "background_parallax_layers": [
+    {
+      "background": "modonomicon:textures/gui/parallax/nightsky/nightsky_0.png",
+      "speed": 0.05
+    },
+    {
+      "background": "modonomicon:textures/gui/parallax/nightsky/nightsky_1.png",
+      "speed": 0.1
+    },
+    {
+      "background": "modonomicon:textures/gui/parallax/nightsky/nightsky_2.png",
+      "speed": 0.2
+    },
+    {
+      "background": "modonomicon:textures/gui/parallax/nightsky/nightsky_3.png",
+      "speed": 0.35
+    },
+    {
+      "background": "modonomicon:textures/gui/parallax/nightsky/nightsky_4.png",
+      "speed": 0.55
+    }
+  ]
+}
