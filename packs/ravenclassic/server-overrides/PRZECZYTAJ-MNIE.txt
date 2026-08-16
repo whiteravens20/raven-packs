@@ -60,15 +60,8 @@ i serwer wiąże je z nickiem.
     /auth register <hasło> <hasło>
     /auth login <hasło>
 
-Warunek, który tu kiedyś stał — „gdy logowanie MS ruszy" — jest już spełniony.
-Raven Forge ma pełne logowanie przez Microsoft od v0.4.0; workflow wydania nie
-przepuszcza builda bez własnego Azure client id, więc każdy opublikowany
-launcher je ma. Offline mode jest więc od tej chwili decyzją, nie oczekiwaniem.
-
-Jeśli ją podejmiesz: ustaw online-mode=true w server.properties i wyrzuć
-EasyAuth z paczki — w tej samej zmianie, nigdy osobno. I policz koszt, zanim
-klikniesz: od tego momentu wejdzie wyłącznie konto kupione u Mojanga, a każdy
-gracz, który dziś ma u Ciebie hasło i nie ma konta, przestanie się logować.
+EasyAuth jest tu warunkiem, nie dodatkiem. Bez niego offline mode znaczy tyle,
+że każdy może wejść na cudzy nick — nie wyrzucaj go z paczki.
 
 
 Przewodnik w grze
