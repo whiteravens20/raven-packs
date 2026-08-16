@@ -11,7 +11,7 @@
   "book.ravenclassic.przewodnik.start.komendy.name": "Commands",
   "book.ravenclassic.przewodnik.start.komendy.description": "Getting around",
   "book.ravenclassic.przewodnik.start.komendy.p0.title": "Home and teleports",
-  "book.ravenclassic.przewodnik.start.komendy.p0.text": "- [#](1F4E79)/sethome name[#]() — set a home\n- [#](1F4E79)/home name[#]() — return to it\n- [#](1F4E79)/spawn[#]() — back to spawn\n- [#](1F4E79)/back[#]() — return where you were\n- [#](1F4E79)/rtp[#]() — a random spot in the wild\n\nThere is no teleport to another player. The rest of the world you reach by waystone.",
+  "book.ravenclassic.przewodnik.start.komendy.p0.text": "- [#](1F4E79)/sethome name[#]() — set a home\n- [#](1F4E79)/home name[#]() — return to it\n- [#](1F4E79)/back[#]() — return where you were\n- [#](1F4E79)/rtp[#]() — a random spot in the wild\n\nThere is no teleport to another player and none back to spawn. The rest of the world you reach by waystone.",
   "book.ravenclassic.przewodnik.start.komendy.p1.title": "The starter kit",
   "book.ravenclassic.przewodnik.start.komendy.p1.text": "Stone tools, bread and this book arrive on their own: on your first join and after every death.\n\nNeed them sooner — [#](1F4E79)/trigger rc_kit[#](), once every half hour.\n\n[#](8B2500)Do it with room in your inventory.[#]() The kit rebuilds it, and whatever does not fit drops at your feet.",
   "book.ravenclassic.przewodnik.start.czat.name": "Chat",

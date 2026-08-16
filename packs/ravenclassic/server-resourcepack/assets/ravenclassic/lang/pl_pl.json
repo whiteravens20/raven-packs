@@ -11,7 +11,7 @@
   "book.ravenclassic.przewodnik.start.komendy.name": "Komendy",
   "book.ravenclassic.przewodnik.start.komendy.description": "Poruszanie się po świecie",
   "book.ravenclassic.przewodnik.start.komendy.p0.title": "Dom i teleporty",
-  "book.ravenclassic.przewodnik.start.komendy.p0.text": "- [#](1F4E79)/sethome nazwa[#]() — ustaw dom\n- [#](1F4E79)/home nazwa[#]() — wróć do niego\n- [#](1F4E79)/spawn[#]() — na spawn\n- [#](1F4E79)/back[#]() — wróć tam, gdzie byłeś\n- [#](1F4E79)/rtp[#]() — losowe miejsce w dziczy\n\nTeleportu do innego gracza nie ma. Do reszty świata jeździ się waystone'ami.",
+  "book.ravenclassic.przewodnik.start.komendy.p0.text": "- [#](1F4E79)/sethome nazwa[#]() — ustaw dom\n- [#](1F4E79)/home nazwa[#]() — wróć do niego\n- [#](1F4E79)/back[#]() — wróć tam, gdzie byłeś\n- [#](1F4E79)/rtp[#]() — losowe miejsce w dziczy\n\nNie ma teleportu do gracza ani z powrotem na spawn. Do reszty świata jeździ się waystone'ami.",
   "book.ravenclassic.przewodnik.start.komendy.p1.title": "Wyprawka",
   "book.ravenclassic.przewodnik.start.komendy.p1.text": "Kamienne narzędzia, chleb i ta książka wpadają same: przy pierwszym wejściu i po każdej śmierci.\n\nJeśli potrzebujesz ich wcześniej — [#](1F4E79)/trigger rc_kit[#](), raz na pół godziny.\n\n[#](8B2500)Rób to z miejscem w ekwipunku.[#]() Wyprawka układa go od nowa, a co się nie zmieści, wypadnie pod nogi.",
   "book.ravenclassic.przewodnik.start.czat.name": "Czat",

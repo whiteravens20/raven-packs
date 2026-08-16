@@ -208,7 +208,6 @@ zmutować Administratora z konta Moderatora.
     lp group nowy           permission set essentialcommands.home.set true
     lp group nowy           permission set essentialcommands.home.tp true
     lp group nowy           permission set essentialcommands.home.delete true
-    lp group nowy           permission set essentialcommands.spawn.tp true
     lp group nowy           permission set essentialcommands.back true
     lp group nowy           permission set essentialcommands.randomteleport true
     lp group nowy           permission set essentialcommands.afk true
@@ -217,13 +216,21 @@ zmutować Administratora z konta Moderatora.
     lp group nowy           permission set essentialcommands.nickname.self true
     lp group nowy           permission set staffsee.report true
 
-Gracz teleportuje się w cztery miejsca i ani jedno więcej: do własnego domu,
-na spawn, tam gdzie przed chwilą był (/back) i w losowy punkt dziczy (/rtp,
-czyli sposób na znalezienie miejsca na pierwszą działkę). Nie ma /tpa, nie ma
-/warp — do reszty świata jeździ się na waystone'ach, które trzeba najpierw
+Gracz teleportuje się w trzy miejsca i ani jedno więcej: do własnego domu, tam
+gdzie przed chwilą był (/back) i w losowy punkt dziczy (/rtp, czyli sposób na
+znalezienie miejsca na pierwszą działkę). Nie ma /tpa, nie ma /warp, nie ma
+/spawn — do reszty świata jeździ się na waystone'ach, które trzeba najpierw
 znaleźć. To jest cały pomysł na podróż na tym serwerze i dlatego warto się
 przy nim upierać: gdyby gracz mógł teleportować się do znajomego jednym
 kliknięciem, sieć waystone'ów przestałaby cokolwiek znaczyć.
+
+`essentialcommands.spawn.tp` nie stoi na tej liście z rozmysłu i to jest
+najświeższa zmiana w tej sekcji. Na spawnie stoją sklepy admina, więc darmowy
+skok tam z dowolnego punktu świata jest darmowym skokiem na rynek — a `/back`
+zaraz potem odwozi z powrotem pod kopalnię. Wychodzi z tego para waystone'ów,
+której nikt nie musiał znaleźć ani postawić, i akurat ta jedna para, do której
+chce jeździć każdy. W survivalu droga na rynek ma być częścią ceny. Kto wyszedł
+ze spawnu, wraca po swojemu albo stawia sobie waystone.
 
 Chcesz jeszcze ostrzej — skreśl `essentialcommands.randomteleport` i niech
 nowi wychodzą ze spawnu na piechotę, albo `essentialcommands.back` i niech
@@ -247,11 +254,19 @@ drabinka domów przestaje wtedy istnieć, a wygląda, jakby działała.
 
     lp group budowniczy     permission set minecraft.command.gamemode true
     lp group budowniczy     permission set essentialcommands.top true
+    lp group budowniczy     permission set essentialcommands.spawn.tp true
     lp group budowniczy     permission set xaero.pac_server_claims true
 
 Węzeł `minecraft.command.gamemode` istnieje dzięki modowi Vanilla Permissions
 i obejmuje wszystkie tryby — także spectator, który przy oglądaniu cudzej
 budowy bywa wygodniejszy od kreatywnego.
+
+`essentialcommands.spawn.tp` to `/spawn` — zwykły gracz go nie ma (sekcja 6) i
+tutaj zaczyna istnieć. Tak jest, bo spawn to miejsce pracy staffu: Budowniczy go
+buduje, a Administrator ustawia go komendą `/spawn set` i musi mieć czym
+sprawdzić, gdzie właściwie ustawił. Administrator i Architekt dostają to
+w spadku po Budowniczym. Moderator nie i nie musi — ma `minecraft.command.tp`,
+czyli coś mocniejszego.
 
 `xaero.pac_server_claims` to prawo do pracy na spawnie i na innych działkach
 serwerowych — bez niego Budowniczy nie postawi tam ani jednego bloku, bo claim
