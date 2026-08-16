@@ -54,15 +54,21 @@ Kolejność pierwszego uruchomienia
 Logowanie
 ---------
 
-Serwer chodzi w offline mode, bo logowanie przez Microsoft w Raven Forge czeka
-na zatwierdzenie przez Mojang. Trzyma to w ryzach EasyAuth: gracz rejestruje
-hasło i serwer wiąże je z nickiem.
+Serwer chodzi w offline mode, a nick trzyma EasyAuth: gracz rejestruje hasło
+i serwer wiąże je z nickiem.
 
     /auth register <hasło> <hasło>
     /auth login <hasło>
 
-Gdy logowanie MS ruszy: ustaw online-mode=true w server.properties i wyrzuć
-EasyAuth z paczki — w tej samej zmianie, nigdy osobno.
+Warunek, który tu kiedyś stał — „gdy logowanie MS ruszy" — jest już spełniony.
+Raven Forge ma pełne logowanie przez Microsoft od v0.4.0; workflow wydania nie
+przepuszcza builda bez własnego Azure client id, więc każdy opublikowany
+launcher je ma. Offline mode jest więc od tej chwili decyzją, nie oczekiwaniem.
+
+Jeśli ją podejmiesz: ustaw online-mode=true w server.properties i wyrzuć
+EasyAuth z paczki — w tej samej zmianie, nigdy osobno. I policz koszt, zanim
+klikniesz: od tego momentu wejdzie wyłącznie konto kupione u Mojanga, a każdy
+gracz, który dziś ma u Ciebie hasło i nie ma konta, przestanie się logować.
 
 
 Przewodnik w grze
