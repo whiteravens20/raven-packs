@@ -182,14 +182,15 @@ jobs:
             const named = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version)).map((f) => f.id);
             const beta = [...new Set([...asked, ...named])].sort();
             console.log(beta.length ? `prerelease — ${beta.join(", ")}` : "stable — no prerelease mods");
-            // The title says what the pack is; the tag already says which tag it
-            // is, so repeating it there tells a reader nothing. Left unset, the
-            // action falls back to the tag name — which is how three releases
-            // ended up titled "ravenclassic-v1.5.2" and friends.
-            const title = `${pack.name} ${pack.version}${beta.length ? " — beta" : ""}`;
+            // The tag itself is the title, plus the channel. The version is
+            // already in the tag, and repeating the pack name in front of it
+            // only makes the list harder to scan. "beta" is the only channel
+            // word this produces; if a pack ever needs "alpha" again, change
+            // the word here rather than inventing a config field for it.
+            const title = `${process.argv[2]}${beta.length ? " — beta" : ""}`;
             console.log(`title — ${title}`);
             fs.appendFileSync(process.env.GITHUB_OUTPUT, `prerelease=${beta.length > 0}\ntitle=${title}\n`);
-          ' "${{ steps.meta.outputs.slug }}"
+          ' "${{ steps.meta.outputs.slug }}" "${{ github.ref_name }}"
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
