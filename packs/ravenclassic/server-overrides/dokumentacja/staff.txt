@@ -346,10 +346,11 @@ nie przyjmuje, więc trzeba tam po prostu stanąć. Uprawnienie
 `essentialcommands.spawn.set` mają Administrator i Architekt (rangi.txt,
 sekcja 9).
 
-Samego `/spawn` zwykły gracz nie ma. `essentialcommands.spawn.tp` stoi przy
-Budowniczym i idzie w górę dziedziczeniem (rangi.txt, sekcje 6 i 7), więc ten
-spawn jest punktem pracy staffu, a nie skrótem na rynek dla całego serwera.
-Gracz wraca na spawn tak jak wszędzie indziej: waystone'em albo pieszo.
+Samego `/spawn` zwykły gracz nie ma. `essentialcommands.spawn.tp` nadaje się
+osobno Budowniczemu i Moderatorowi (rangi.txt, sekcje 7 i 8), a Administrator
+dziedziczy po obu — więc ten spawn jest punktem pracy staffu, a nie skrótem na
+rynek dla całego serwera. Gracz wraca na spawn tak jak wszędzie indziej:
+waystone'em albo pieszo.
 
 Te dwa spawny nie muszą leżeć w tym samym miejscu i domyślnie nic ich nie łączy:
 `respawn_at_ec_spawn` w config/EssentialCommands.properties stoi na `Never`,

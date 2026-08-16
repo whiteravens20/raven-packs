@@ -280,8 +280,9 @@ budowy bywa wygodniejszy od kreatywnego.
 tutaj zaczyna istnieć. Tak jest, bo spawn to miejsce pracy staffu: Budowniczy go
 buduje, a Administrator ustawia go komendą `/spawn set` i musi mieć czym
 sprawdzić, gdzie właściwie ustawił. Administrator i Architekt dostają to
-w spadku po Budowniczym. Moderator nie i nie musi — ma `minecraft.command.tp`,
-czyli coś mocniejszego.
+w spadku po Budowniczym. Moderator musi dostać ten sam węzeł osobno (sekcja 8),
+bo dziedziczy po Obywatelu, a nie po Budowniczym — obie gałęzie staffu schodzą
+się dopiero na Administratorze.
 
 `xaero.pac_server_claims` to prawo do pracy na spawnie i na innych działkach
 serwerowych — bez niego Budowniczy nie postawi tam ani jednego bloku, bo claim
@@ -314,10 +315,18 @@ Moderacja — kick i ban są vanilla, resztę daje StaffSee:
     lp group moderator      permission set minecraft.command.pardon true
     lp group moderator      permission set minecraft.command.banlist true
     lp group moderator      permission set minecraft.command.tp true
+    lp group moderator      permission set essentialcommands.spawn.tp true
 
 Węzły `minecraft.command.*` istnieją dzięki modowi Vanilla Permissions. Bez
 niego komendy vanilla pytają wyłącznie o poziom op, a wtedy Moderator musiałby
 dostać opa — czyli od razu wszystko.
+
+Ostatnia linijka wygląda na powtórkę z sekcji 7 i nią nie jest. Drabinka
+rozdziela się na Obywatelu: Budowniczy i Moderator to dwie osobne gałęzie i
+schodzą się dopiero na Administratorze, który dziedziczy po obu. Węzeł nadany
+Budowniczemu nie dociera więc do Moderatora i trzeba go tu wypisać drugi raz.
+`/tp` samo nie wystarcza — bierze współrzędne albo gracza, a spawn nie jest ani
+jednym, ani drugim.
 
 Podglądanie i cofanie szkód:
 
