@@ -61,7 +61,7 @@
   "book.ravenclassic.przewodnik.sprzet.groby.name": "Graves",
   "book.ravenclassic.przewodnik.sprzet.groby.description": "Dying does not cost you your gear",
   "book.ravenclassic.przewodnik.sprzet.groby.p0.title": "Your grave",
-  "book.ravenclassic.przewodnik.sprzet.groby.p0.text": "When you die your gear does not lie on the ground — a grave appears. Come back and click it to take everything at once.\n\n- [#](1F4E79)/grave list[#]() — your graves\n\nThe grave is yours; no stranger opens it.",
+  "book.ravenclassic.przewodnik.sprzet.groby.p0.text": "When you die your gear does not lie on the ground — a grave appears. Come back and click it to take everything at once.\n\n- [#](1F4E79)/graves list[#]() — your graves\n\nThe grave is yours; no stranger opens it.",
   "book.ravenclassic.przewodnik.sprzet.drzewa.name": "Felling trees",
   "book.ravenclassic.przewodnik.sprzet.drzewa.description": "A whole tree in one cut",
   "book.ravenclassic.przewodnik.sprzet.drzewa.p0.title": "FallingTree",
