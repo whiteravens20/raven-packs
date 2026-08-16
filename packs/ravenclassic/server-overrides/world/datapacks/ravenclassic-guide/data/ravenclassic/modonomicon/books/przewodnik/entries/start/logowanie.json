@@ -1,7 +1,7 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:start/logowanie",
-  "category": "ravenclassic:start",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.start.logowanie.name",
   "description": "book.ravenclassic.przewodnik.start.logowanie.description",
   "icon": {

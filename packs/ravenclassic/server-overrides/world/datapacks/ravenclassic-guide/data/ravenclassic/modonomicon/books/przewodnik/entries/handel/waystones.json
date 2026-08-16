@@ -1,7 +1,7 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:handel/waystones",
-  "category": "ravenclassic:handel",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.handel.waystones.name",
   "description": "book.ravenclassic.przewodnik.handel.waystones.description",
   "icon": {
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 1,
+  "sort_number": 8,
   "x": 2,
-  "y": 0
+  "y": 6
 }

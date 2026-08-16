@@ -1,7 +1,7 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:start/komendy",
-  "category": "ravenclassic:start",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.start.komendy.name",
   "description": "book.ravenclassic.przewodnik.start.komendy.description",
   "icon": {

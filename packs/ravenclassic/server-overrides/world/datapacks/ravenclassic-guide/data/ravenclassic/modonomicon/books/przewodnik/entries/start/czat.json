@@ -1,7 +1,7 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:start/czat",
-  "category": "ravenclassic:start",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.start.czat.name",
   "description": "book.ravenclassic.przewodnik.start.czat.description",
   "icon": {

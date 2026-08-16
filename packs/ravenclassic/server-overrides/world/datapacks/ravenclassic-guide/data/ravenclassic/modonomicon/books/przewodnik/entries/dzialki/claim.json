@@ -1,7 +1,7 @@
 {
   "type": "modonomicon:content",
   "id": "ravenclassic:dzialki/claim",
-  "category": "ravenclassic:dzialki",
+  "category": "ravenclassic:glowna",
   "name": "book.ravenclassic.przewodnik.dzialki.claim.name",
   "description": "book.ravenclassic.przewodnik.dzialki.claim.description",
   "icon": {
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 0,
+  "sort_number": 3,
   "x": 0,
-  "y": 0
+  "y": 3
 }
