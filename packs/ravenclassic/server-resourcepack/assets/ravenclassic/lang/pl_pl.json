@@ -5,7 +5,7 @@
   "book.ravenclassic.przewodnik.start.logowanie.name": "Logowanie",
   "book.ravenclassic.przewodnik.start.logowanie.description": "Zanim zaczniesz grać",
   "book.ravenclassic.przewodnik.start.logowanie.p0.title": "Hasło, nie konto",
-  "book.ravenclassic.przewodnik.start.logowanie.p0.text": "Serwer chodzi w trybie offline, bo logowanie przez Microsoft w Raven Forge czeka na zatwierdzenie przez Mojanga. Twój nick chroni więc hasło.\n\n**Przy pierwszym wejściu**\n\n- [#](1F4E79)/auth register hasło hasło[#]()\n\n**Przy każdym kolejnym**\n\n- [#](1F4E79)/auth login hasło[#]()",
+  "book.ravenclassic.przewodnik.start.logowanie.p0.text": "Serwer chodzi w trybie offline: Twój nick trzyma hasło, a nie konto Microsoft. Dlatego zanim zagrasz, zakładasz je u nas.\n\n**Przy pierwszym wejściu**\n\n- [#](1F4E79)/auth register hasło hasło[#]()\n\n**Przy każdym kolejnym**\n\n- [#](1F4E79)/auth login hasło[#]()",
   "book.ravenclassic.przewodnik.start.logowanie.p1.title": "Zanim się zalogujesz",
   "book.ravenclassic.przewodnik.start.logowanie.p1.text": "Do czasu zalogowania nie możesz się ruszać ani nic zniszczyć. To nie jest lag — to ochrona Twojego nicka.\n\n[#](8B2500)Hasła nie odzyskasz sam.[#]() Jeśli je zgubisz, odezwij się do obsługi.",
   "book.ravenclassic.przewodnik.start.komendy.name": "Komendy",
