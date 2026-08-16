@@ -161,6 +161,30 @@ jobs:
             node scripts/sign.mjs "$manifest"
           done
 
+      # A pack that ships a beta mod is a beta pack, and saying so is the honest
+      # part of publishing one. Two signals count and they catch different
+      # things: `allowPrerelease` in the definition marks a mod whose only build
+      # for this Minecraft version is a beta, while the version string catches a
+      # mod that shipped a beta without us asking for one.
+      #
+      # Marking it by hand does not survive the next release, which is how
+      # 1.5.2 went out as stable while carrying a JEI beta.
+      - name: Decide the release channel
+        id: channel
+        if: steps.meta.outputs.slug != ''
+        run: |
+          node -e '
+            const fs = require("fs");
+            const dir = `packs/${process.argv[1]}`;
+            const pack = JSON.parse(fs.readFileSync(`${dir}/pack.json`, "utf8"));
+            const lock = JSON.parse(fs.readFileSync(`${dir}/pack.lock.json`, "utf8"));
+            const asked = (pack.mods ?? []).filter((m) => m.allowPrerelease).map((m) => m.slug);
+            const named = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version)).map((f) => f.id);
+            const beta = [...new Set([...asked, ...named])].sort();
+            console.log(beta.length ? `prerelease — ${beta.join(", ")}` : "stable — no prerelease mods");
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `prerelease=${beta.length > 0}\n`);
+          ' "${{ steps.meta.outputs.slug }}"
+
       - name: Publish release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
@@ -171,6 +195,7 @@ jobs:
             dist/${{ steps.meta.outputs.slug }}/manifest.json
           fail_on_unmatched_files: true
           generate_release_notes: true
+          prerelease: ${{ steps.channel.outputs.prerelease }}
 
       # Only main can deploy to Pages, so only main uploads the artifact — see
       # `deploy-pages` below for why the tag run does not.
