@@ -14,7 +14,7 @@ nim, więc nikt nie „doawansuje się" do moderatora.
     Nowy        od wejścia         4           0      1
     Gracz       10 h gry           6           2      2
     Obywatel    40 h gry           8           4      3
-    Mistrz      za surowce        12           8      5
+    Mistrz      za surowce        12           8      3
 
 Chunk to 16×16 bloków na całą wysokość świata — F3+G rysuje siatkę. Cztery
 chunki ułożone w kwadrat to działka 32×32. OPAC nie wymaga, żeby chunki się
@@ -237,12 +237,19 @@ nowi wychodzą ze spawnu na piechotę, albo `essentialcommands.back` i niech
 śmierć kosztuje drogę powrotną. Obie to jedna linijka.
 
 Limity domów. Numery muszą pokrywać się z listą home_limit w
-config/EssentialCommands.properties (tam stoi 1,2,3,5):
+config/EssentialCommands.properties (tam stoi 1,2,3):
 
     lp group nowy           permission set essentialcommands.home.limit.1 true
     lp group gracz          permission set essentialcommands.home.limit.2 true
     lp group obywatel       permission set essentialcommands.home.limit.3 true
-    lp group mistrz         permission set essentialcommands.home.limit.5 true
+
+Mistrz nie ma tu własnej linijki i to nie jest przeoczenie: dziedziczy trójkę
+po Obywatelu i na trójce drabinka domów się kończy. Dom to na tym serwerze
+darmowy teleport, więc jego liczba jest tą samą decyzją co zdjęcie `/spawn`
+kilka akapitów wyżej. Mistrz płaci za teren — dwanaście chunków i osiem
+forceloadów — a nie za skróty przez mapę. Jeśli kiedyś zmienisz zdanie, wróć
+najpierw do `home_limit` w configu; sama komenda LuckPermsa nic nie da, bo
+mod zna wyłącznie liczby wypisane w tamtej liście.
 
 PUŁAPKA. Nigdy nie nadawaj gołego `essentialcommands.home`. LuckPerms czyta go
 jak wildcard i gracz dostaje wszystkie węzły poniżej — łącznie z limit.5. Cała
