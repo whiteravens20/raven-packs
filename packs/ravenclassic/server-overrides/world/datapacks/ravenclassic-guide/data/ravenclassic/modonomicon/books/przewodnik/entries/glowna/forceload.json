@@ -1,11 +1,11 @@
 {
   "type": "modonomicon:content",
-  "id": "ravenclassic:dzialki/claim",
+  "id": "ravenclassic:glowna/forceload",
   "category": "ravenclassic:glowna",
-  "name": "book.ravenclassic.przewodnik.dzialki.claim.name",
-  "description": "book.ravenclassic.przewodnik.dzialki.claim.description",
+  "name": "book.ravenclassic.przewodnik.dzialki.forceload.name",
+  "description": "book.ravenclassic.przewodnik.dzialki.forceload.description",
   "icon": {
-    "id": "minecraft:oak_fence_gate"
+    "id": "minecraft:hopper"
   },
   "background": {
     "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 3,
-  "x": 0,
+  "sort_number": 4,
+  "x": 2,
   "y": 3
 }

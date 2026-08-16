@@ -1,11 +1,11 @@
 {
   "type": "modonomicon:content",
-  "id": "ravenclassic:dzialki/forceload",
+  "id": "ravenclassic:glowna/rangi",
   "category": "ravenclassic:glowna",
-  "name": "book.ravenclassic.przewodnik.dzialki.forceload.name",
-  "description": "book.ravenclassic.przewodnik.dzialki.forceload.description",
+  "name": "book.ravenclassic.przewodnik.dzialki.rangi.name",
+  "description": "book.ravenclassic.przewodnik.dzialki.rangi.description",
   "icon": {
-    "id": "minecraft:hopper"
+    "id": "minecraft:gold_ingot"
   },
   "background": {
     "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 4,
-  "x": 2,
+  "sort_number": 6,
+  "x": 6,
   "y": 3
 }

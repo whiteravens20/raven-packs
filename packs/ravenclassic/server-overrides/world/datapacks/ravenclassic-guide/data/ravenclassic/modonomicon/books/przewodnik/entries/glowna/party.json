@@ -1,11 +1,11 @@
 {
   "type": "modonomicon:content",
-  "id": "ravenclassic:dzialki/rangi",
+  "id": "ravenclassic:glowna/party",
   "category": "ravenclassic:glowna",
-  "name": "book.ravenclassic.przewodnik.dzialki.rangi.name",
-  "description": "book.ravenclassic.przewodnik.dzialki.rangi.description",
+  "name": "book.ravenclassic.przewodnik.dzialki.party.name",
+  "description": "book.ravenclassic.przewodnik.dzialki.party.description",
   "icon": {
-    "id": "minecraft:gold_ingot"
+    "id": "minecraft:white_banner"
   },
   "background": {
     "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 6,
-  "x": 6,
+  "sort_number": 5,
+  "x": 4,
   "y": 3
 }

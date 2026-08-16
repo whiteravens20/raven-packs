@@ -61,7 +61,7 @@
   "book.ravenclassic.przewodnik.sprzet.groby.name": "Groby",
   "book.ravenclassic.przewodnik.sprzet.groby.description": "Śmierć nie kosztuje ekwipunku",
   "book.ravenclassic.przewodnik.sprzet.groby.p0.title": "Twój grób",
-  "book.ravenclassic.przewodnik.sprzet.groby.p0.text": "Gdy zginiesz, ekwipunek nie leży na ziemi — pojawia się grób. Wróć na miejsce i kliknij go, żeby odebrać wszystko naraz.\n\n- [#](1F4E79)/grave list[#]() — Twoje groby\n\nGrób jest Twój; nikt obcy go nie otworzy.",
+  "book.ravenclassic.przewodnik.sprzet.groby.p0.text": "Gdy zginiesz, ekwipunek nie leży na ziemi — pojawia się grób. Wróć na miejsce i kliknij go, żeby odebrać wszystko naraz.\n\n- [#](1F4E79)/graves list[#]() — Twoje groby\n\nGrób jest Twój; nikt obcy go nie otworzy.",
   "book.ravenclassic.przewodnik.sprzet.drzewa.name": "Ścinanie drzew",
   "book.ravenclassic.przewodnik.sprzet.drzewa.description": "Całe drzewo jednym cięciem",
   "book.ravenclassic.przewodnik.sprzet.drzewa.p0.title": "FallingTree",

@@ -1,11 +1,11 @@
 {
   "type": "modonomicon:content",
-  "id": "ravenclassic:sprzet/drzewa",
+  "id": "ravenclassic:glowna/plecaki",
   "category": "ravenclassic:glowna",
-  "name": "book.ravenclassic.przewodnik.sprzet.drzewa.name",
-  "description": "book.ravenclassic.przewodnik.sprzet.drzewa.description",
+  "name": "book.ravenclassic.przewodnik.sprzet.plecaki.name",
+  "description": "book.ravenclassic.przewodnik.sprzet.plecaki.description",
   "icon": {
-    "id": "minecraft:iron_axe"
+    "id": "minecraft:leather"
   },
   "background": {
     "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 11,
-  "x": 4,
+  "sort_number": 9,
+  "x": 0,
   "y": 9
 }
