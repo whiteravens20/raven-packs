@@ -124,6 +124,7 @@ async function validatePack(slug) {
 
   await validatePackMeta(slug);
   await validateBookItems(slug, pack);
+  await validateBookLayout(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -212,6 +213,83 @@ async function validateBookItems(slug, pack) {
   }
 
   console.log(`  \x1b[32m✓\x1b[0m ${pages.length} guide book file(s) name only client-side items`);
+}
+
+/**
+ * A Modonomicon page is found by where it sits, not by what it says.
+ *
+ * The layout the mod expects is `entries/<category>/<entry>/pages/`, and it
+ * resolves that `<category>` segment against the book's real categories before
+ * attaching anything. Merge or rename a category without moving the directories
+ * and every page quietly fails to attach: the node view renders perfectly,
+ * every page in the book comes out blank, and neither the build nor the game
+ * says a word about it. That shipped in 1.5.2 and survived a hotfix, because
+ * the symptom looks like a rendering problem and the cause is a path.
+ *
+ * The entry's own `id` and `category` are checked against the same path for the
+ * same reason — the pages are matched to an entry by the id the path implies,
+ * so a file that disagrees with its own location attaches nothing.
+ */
+async function validateBookLayout(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'));
+  } catch {
+    return;
+  }
+
+  const books = new Map();
+  for (const file of files) {
+    const match = file.relative.match(/^(?<root>.*\/([^/]+)\/modonomicon\/books\/[^/]+)\/(?<rest>.+)$/);
+    if (!match) continue;
+    const { root, rest } = match.groups;
+    if (!books.has(root)) books.set(root, { namespace: match[2], contents: [] });
+    books.get(root).contents.push({ rest, absolute: file.absolute });
+  }
+  if (books.size === 0) return;
+
+  let checked = 0;
+  for (const [root, { namespace, contents }] of books) {
+    const categories = new Set(
+      contents
+        .map((file) => file.rest.match(/^categories\/([^/]+)\.json$/)?.[1])
+        .filter(Boolean),
+    );
+
+    for (const file of contents) {
+      const parts = file.rest.match(/^entries\/([^/]+)\/([^/]+)\.json$/);
+      if (!parts) continue;
+      const [, category, name] = parts;
+      checked++;
+
+      if (!categories.has(category)) {
+        fail(
+          slug,
+          `${root}/entries/${category}/ names no category in this book — Modonomicon finds pages by ` +
+            'that path, so every page under it stays unattached and renders blank',
+        );
+        continue;
+      }
+
+      let entry;
+      try {
+        entry = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+      } catch (error) {
+        fail(slug, `${file.rest} is not valid JSON: ${error.message}`);
+        continue;
+      }
+      const wantCategory = `${namespace}:${category}`;
+      const wantId = `${namespace}:${category}/${name}`;
+      if (entry.category !== wantCategory) {
+        fail(slug, `${file.rest} sits in ${category}/ but claims category "${entry.category}" — expected "${wantCategory}"`);
+      }
+      if (entry.id !== wantId) {
+        fail(slug, `${file.rest} claims id "${entry.id}" — expected "${wantId}", or its pages attach to nothing`);
+      }
+    }
+  }
+
+  if (checked > 0) console.log(`  \x1b[32m✓\x1b[0m ${checked} guide book entr(ies) sit under a real category`);
 }
 
 /**
