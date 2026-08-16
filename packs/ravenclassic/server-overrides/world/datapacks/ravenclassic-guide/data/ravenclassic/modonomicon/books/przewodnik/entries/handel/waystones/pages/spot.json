@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:spotlight",
+  "id": "spot",
+  "title": "book.ravenclassic.przewodnik.handel.waystones.spot.title",
+  "item": "waystones:andesite_waystone",
+  "text": "book.ravenclassic.przewodnik.handel.waystones.spot.text",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 0
+}

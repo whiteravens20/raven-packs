@@ -8,7 +8,7 @@
     "id": "minecraft:paper"
   },
   "background": {
-    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/star_gold",
     "width": 26,
     "height": 26
   },

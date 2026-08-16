@@ -8,7 +8,7 @@
     "id": "minecraft:hopper"
   },
   "background": {
-    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
     "width": 26,
     "height": 26
   },
