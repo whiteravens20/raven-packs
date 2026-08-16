@@ -1,11 +1,11 @@
 {
   "type": "modonomicon:content",
-  "id": "ravenclassic:dzialki/party",
+  "id": "ravenclassic:glowna/claim",
   "category": "ravenclassic:glowna",
-  "name": "book.ravenclassic.przewodnik.dzialki.party.name",
-  "description": "book.ravenclassic.przewodnik.dzialki.party.description",
+  "name": "book.ravenclassic.przewodnik.dzialki.claim.name",
+  "description": "book.ravenclassic.przewodnik.dzialki.claim.description",
   "icon": {
-    "id": "minecraft:white_banner"
+    "id": "minecraft:oak_fence_gate"
   },
   "background": {
     "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/hexagon_purple",
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 5,
-  "x": 4,
+  "sort_number": 3,
+  "x": 0,
   "y": 3
 }

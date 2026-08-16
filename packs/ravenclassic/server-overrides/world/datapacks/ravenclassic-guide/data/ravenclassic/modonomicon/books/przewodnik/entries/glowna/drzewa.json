@@ -1,11 +1,11 @@
 {
   "type": "modonomicon:content",
-  "id": "ravenclassic:sprzet/groby",
+  "id": "ravenclassic:glowna/drzewa",
   "category": "ravenclassic:glowna",
-  "name": "book.ravenclassic.przewodnik.sprzet.groby.name",
-  "description": "book.ravenclassic.przewodnik.sprzet.groby.description",
+  "name": "book.ravenclassic.przewodnik.sprzet.drzewa.name",
+  "description": "book.ravenclassic.przewodnik.sprzet.drzewa.description",
   "icon": {
-    "id": "minecraft:skeleton_skull"
+    "id": "minecraft:iron_axe"
   },
   "background": {
     "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gray",
@@ -15,7 +15,7 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "sort_number": 10,
-  "x": 2,
+  "sort_number": 11,
+  "x": 4,
   "y": 9
 }
