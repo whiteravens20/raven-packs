@@ -204,6 +204,37 @@ jobs:
           prerelease: ${{ steps.channel.outputs.prerelease }}
           name: ${{ steps.channel.outputs.title }}
 
+      # The two big zips exist so somebody can install the pack. Nobody installs
+      # a superseded version: the launcher syncs from the manifest on Pages and
+      # never touches a release asset, and a manual installer wants the newest.
+      # They are ~140 MB a release, which is the whole storage cost of this repo.
+      #
+      # The resource pack is the exception and must never be swept up here. Every
+      # running server points its `resource-pack` at the exact asset its own
+      # server.properties was built against, and requires it to join — deleting
+      # one turns away every player on a server nobody asked to upgrade. The
+      # mrpack and the manifest stay too; they are kilobytes and they are what a
+      # third-party launcher imported.
+      - name: Drop the installable zips from superseded releases
+        if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLUG: ${{ steps.meta.outputs.slug }}
+          KEEP: ${{ github.ref_name }}
+        run: |
+          gh release list --limit 100 --json tagName --jq '.[].tagName' \
+            | grep "^${SLUG}-v" \
+            | grep -v "^${KEEP}$" \
+            | while read -r tag; do
+                version="${tag#"${SLUG}-v"}"
+                for asset in "${SLUG}-${version}.zip" "${SLUG}-${version}-server.zip"; do
+                  if gh release view "$tag" --json assets --jq '.assets[].name' | grep -qx "$asset"; then
+                    echo "removing $asset from $tag"
+                    gh release delete-asset "$tag" "$asset" --yes
+                  fi
+                done
+              done
+
       # Only main can deploy to Pages, so only main uploads the artifact — see
       # `deploy-pages` below for why the tag run does not.
       - uses: actions/upload-pages-artifact@v3
