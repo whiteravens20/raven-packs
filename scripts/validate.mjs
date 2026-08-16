@@ -125,6 +125,7 @@ async function validatePack(slug) {
   await validatePackMeta(slug);
   await validateBookItems(slug, pack);
   await validateBookLayout(slug);
+  await validateBookText(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -290,6 +291,87 @@ async function validateBookLayout(slug) {
   }
 
   if (checked > 0) console.log(`  \x1b[32m✓\x1b[0m ${checked} guide book entr(ies) sit under a real category`);
+}
+
+/**
+ * Book text has to survive Modonomicon's markdown renderer.
+ *
+ * `CoreComponentNodeRenderer` claims the Paragraph node type but implements no
+ * visitor for it, so a blank line between two paragraphs emits *nothing at all*
+ * and the sentences render fused: "…zależy od rangi.Nie ma teleportu…". That
+ * shipped in every release up to 1.5.4. A hard line break — a backslash ending
+ * the line — is the separator that actually works.
+ *
+ * The same backslash immediately before a list is the opposite trap. There it
+ * falls at the end of its block, where CommonMark keeps it as an ordinary
+ * character, and a stray "\" appears on the page. A list already starts its own
+ * line, so that boundary wants nothing.
+ *
+ * Both are invisible in the source and only show up in game, which is what
+ * makes them worth a gate rather than a habit.
+ */
+async function validateBookText(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-resourcepack'));
+  } catch {
+    return;
+  }
+  const langs = files.filter((file) => /\/lang\/[a-z]{2}_[a-z]{2}\.json$/.test(file.relative));
+  if (langs.length === 0) return;
+
+  const isListItem = (line) => /^\s*[-*+]\s+/.test(line);
+  const keysets = new Map();
+  let checked = 0;
+
+  for (const file of langs) {
+    let lang;
+    try {
+      lang = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    keysets.set(file.relative, new Set(Object.keys(lang)));
+
+    for (const [key, value] of Object.entries(lang)) {
+      if (!key.endsWith('.text') || typeof value !== 'string') continue;
+      checked++;
+      const lines = value.split('\n');
+
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].trim() !== '') continue;
+        const before = [...lines.slice(0, i)].reverse().find((line) => line.trim() !== '');
+        const after = lines.slice(i + 1).find((line) => line.trim() !== '');
+        if (before && after && !isListItem(before) && !isListItem(after)) {
+          fail(
+            slug,
+            `${file.relative}: ${key} splits paragraphs with a blank line, which Modonomicon renders as ` +
+              'nothing — end the line with a backslash instead',
+          );
+        }
+      }
+
+      for (let i = 0; i < lines.length - 1; i++) {
+        if (lines[i].endsWith('\\') && isListItem(lines[i + 1])) {
+          fail(slug, `${file.relative}: ${key} ends a line with a backslash right before a list, which renders as a literal "\\"`);
+        }
+      }
+    }
+  }
+
+  // The languages have to describe the same server, so they carry the same keys.
+  const sets = [...keysets.entries()].sort(([a], [b]) => a.localeCompare(b));
+  for (let i = 0; i < sets.length; i++) {
+    for (let j = i + 1; j < sets.length; j++) {
+      const [nameA, setA] = sets[i];
+      const [nameB, setB] = sets[j];
+      for (const key of setA) if (!setB.has(key)) fail(slug, `${key} is in ${nameA} but missing from ${nameB}`);
+      for (const key of setB) if (!setA.has(key)) fail(slug, `${key} is in ${nameB} but missing from ${nameA}`);
+    }
+  }
+
+  if (checked > 0) console.log(`  \x1b[32m✓\x1b[0m ${checked} guide book text(s) render with their paragraphs separated`);
 }
 
 /**
