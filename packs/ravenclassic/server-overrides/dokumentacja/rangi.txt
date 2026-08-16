@@ -211,8 +211,6 @@ zmutować Administratora z konta Moderatora.
     lp group nowy           permission set essentialcommands.back true
     lp group nowy           permission set essentialcommands.randomteleport true
     lp group nowy           permission set essentialcommands.afk true
-    lp group nowy           permission set essentialcommands.enderchest true
-    lp group nowy           permission set essentialcommands.workbench true
     lp group nowy           permission set essentialcommands.nickname.self true
     lp group nowy           permission set staffsee.report true
 
@@ -231,6 +229,16 @@ zaraz potem odwozi z powrotem pod kopalnię. Wychodzi z tego para waystone'ów,
 której nikt nie musiał znaleźć ani postawić, i akurat ta jedna para, do której
 chce jeździć każdy. W survivalu droga na rynek ma być częścią ceny. Kto wyszedł
 ze spawnu, wraca po swojemu albo stawia sobie waystone.
+
+Z tego samego powodu nie ma tu `essentialcommands.enderchest` ani
+`essentialcommands.workbench`. Obie komendy podstawiają blok, który w survivalu
+trzeba wytworzyć, unieść i postawić: enderskrzynia kosztuje obsydian i oko
+Endera, warsztat zajmuje slot w plecaku. Wywołane z ręki są darmowe, nic nie
+ważą i nikt ich nie ukradnie — a enderskrzynia na komendę zamienia każdą
+wyprawę w kopalnię z nieskończonym ekwipunkiem, bo nadmiar odsyła się do bazy
+zamiast znosić. Kto chce mieć je pod ręką, nosi je ze sobą albo stawia w
+kopalni. Pozostałe komendy od bloków — `/anvil`, `/grindstone`,
+`/stonecutter` — nigdy nie były nadane i tak zostaje.
 
 Chcesz jeszcze ostrzej — skreśl `essentialcommands.randomteleport` i niech
 nowi wychodzą ze spawnu na piechotę, albo `essentialcommands.back` i niech
