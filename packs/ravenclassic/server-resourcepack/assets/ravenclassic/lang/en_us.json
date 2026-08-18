@@ -5,7 +5,7 @@
   "book.ravenclassic.przewodnik.start.logowanie.name": "Signing in",
   "book.ravenclassic.przewodnik.start.logowanie.description": "Before you can play",
   "book.ravenclassic.przewodnik.start.logowanie.p0.title": "You set a password",
-  "book.ravenclassic.przewodnik.start.logowanie.p0.text": "Before you play, you set a password here. It is what holds your name — nobody else can log in as you.\\\n\\\n**First time**\n\n- [#](1F4E79)/auth register password password[#]()\n\n**Every time after**\n\n- [#](1F4E79)/auth login password[#]()",
+  "book.ravenclassic.przewodnik.start.logowanie.p0.text": "Before you play, you set a password here. It is what holds your name — nobody else can log in as you.\\\n\\\n**First time**\n\n- [#](1F4E79)/register password password[#]()\n\n**Every time after**\n\n- [#](1F4E79)/login password[#]()",
   "book.ravenclassic.przewodnik.start.logowanie.p1.title": "Until you log in",
   "book.ravenclassic.przewodnik.start.logowanie.p1.text": "Until you log in you cannot move or break anything. That is not lag — it is what keeps your name yours.\\\n\\\n[#](8B2500)Nobody can recover the password for you.[#]() If you lose it, ask staff.",
   "book.ravenclassic.przewodnik.start.komendy.name": "Commands",
