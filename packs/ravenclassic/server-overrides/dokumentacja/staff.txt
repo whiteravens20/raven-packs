@@ -312,7 +312,61 @@ w niej nie zmieniamy. Uzupełnianie brakujących pól obejmuje wszystko oprócz
 niej, więc blok `default` bez emotek skasowałby je po cichu.
 
 
-11. Spawn
+11. Lista graczy (Tab)
+----------------------
+
+Wygląd listy pod klawiszem Tab rysuje Styled Player List. Konfiguracja to dwa
+pliki z paczki:
+
+    config/styledplayerlist/config.json           wiersz gracza
+    config/styledplayerlist/styles/default.json   nagłówek i stopka
+
+Wiersz gracza to ten sam prefiks, co na czacie:
+
+    %luckperms:prefix%<white>%player:displayname%</white>
+
+czyli jedno źródło prawdy — opis rangi leży w LuckPermsie i nigdzie indziej
+(rangi.txt, sekcja 11). `%player:displayname%` przepuszcza pseudonim ze Styled
+Nicknames, więc gracz, który go sobie ustawił, widnieje na liście pod nim.
+
+W nagłówku nazwa serwera i licznik `%server:online%/%server:max_players%`,
+w stopce `%server:tps_colored%` i `%player:ping_colored%`. Obie liczby mod
+koloruje sam, według wartości, więc spadek TPS widać bez czytania.
+
+Twarzy skórek na tej liście nie ma i nie ma czego wyłączać. Klient rysuje je
+tylko wtedy, gdy połączenie jest szyfrowane albo gra idzie w singlu — a ten
+serwer stoi na `online-mode=false`, więc szyfrowania nie ma i vanilla sama
+pomija głowy. Ten sam mechanizm działa w drugą stronę: gdybyś kiedyś przeszedł
+na tryb online, głowy wrócą i żaden config ich nie zdejmie. Słupki pingu po
+prawej rysuje vanilla niezależnie od wszystkiego.
+
+Odświeżanie stoi w dwóch miejscach i w dwóch różnych rytmach. Nagłówek i stopka
+co 20 ticków — stąd sekundowy TPS i ping. Wiersz gracza co 200 ticków, bo nick
+sam z siebie się nie zmienia, ale awans owszem, a Playtime Rewards przestawia
+grupę w trakcie gry. Dziesięć sekund to cała różnica między „awansowałem i
+widzę to" a „awansowałem, wyloguj się i wejdź".
+
+`modify_visibility` stoi na false z rozmysłem. Włączone, mod sam decyduje, kto
+jest na liście — a dokładnie to samo robi Vanish (sekcja 3). Dwa mody przy
+jednej gałce kończą się staffem, którego raz widać, a raz nie.
+
+Zmiany wchodzą komendą `/styledplayerlist reload`, bez restartu. Nikt ze staffu
+nie ma węzła `styledplayerlist.reload` i nie potrzebuje: plik i tak trzeba
+najpierw zmienić na dysku, a kto ma dysk, ten ma konsolę. Jeśli mimo to chcesz
+przeładowywać z czatu, to jedna linijka — `lp group administrator permission
+set styledplayerlist.reload true`.
+
+Katalog `styles/` może mieć więcej plików niż jeden; każdy to osobny styl,
+a gracz przełącza się `/plstyle <nazwa pliku bez .json>`. Paczka daje jeden,
+bo jeden wystarczy.
+
+Sortowanie rangami (staff u góry) jest wyłączone — `modify_list_order` na
+false. Włącza się je wpisami `sorting_index` w `player.styles`, ale kierunek,
+czy większa liczba idzie w górę czy w dół, to porządek vanilli, nie moda.
+Sprawdź go na żywym serwerze, zanim wpiszesz liczby dla ośmiu grup.
+
+
+12. Spawn
 ---------
 
 Są dwa różne spawny i pomylenie ich kosztuje pół godziny.

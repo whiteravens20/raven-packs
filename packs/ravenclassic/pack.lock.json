@@ -1320,6 +1320,26 @@
       "requiredDependencies": []
     },
     {
+      "requestKey": "{\"slug\":\"styledplayerlist\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "styledplayerlist",
+      "name": "Styled Player List",
+      "source": "modrinth",
+      "projectId": "DQIfKUHf",
+      "versionId": "dphV3ifd",
+      "version": "3.12.0+26.2",
+      "fileName": "styledplayerlist-3.12.0+26.2.jar",
+      "url": "https://cdn.modrinth.com/data/DQIfKUHf/versions/dphV3ifd/styledplayerlist-3.12.0%2B26.2.jar",
+      "size": 375998,
+      "sha1": "789f9956407ab94f959922790eabed79b54eec20",
+      "sha512": "3e768c12a56a4fcd34bb5c22719e8b7f5581e19640de74af716b36d8feac23921be8120a6066b13efe620a4cb6135538357723d64062656321196596346d65ca",
+      "license": "LGPL-3.0-only",
+      "requiredDependencies": []
+    },
+    {
       "requestKey": "{\"slug\":\"vanish\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
       "kind": "mod",
       "side": "server",
