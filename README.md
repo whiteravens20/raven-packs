@@ -105,15 +105,15 @@ Full authoring guide: **[docs/AUTHORING.md](docs/AUTHORING.md)**.
 versions, filenames, CDN URLs, sizes and hashes. It is this repo's equivalent of
 packwiz's `index.toml`, and it is what keeps large packs cheap:
 
-White Ravens Classic, 66 locked files:
+White Ravens Classic, 67 locked files:
 
 | | |
 |---|---|
-| Committed to git | 66 KB — 7.7 KB of definition, 59 KB of lockfile |
+| Committed to git | 68 KB — 7.9 KB of definition, 60 KB of lockfile |
 | `build.mjs`, cold | 0.2 s, Node startup included |
 | Network calls at build | 0 |
-| Published `.mrpack` | 17 KB |
-| Jars it resolves to | 48.5 MiB, none of them in this repo |
+| Published `.mrpack` | 11 KB |
+| Jars it resolves to | 48.8 MiB, none of them in this repo |
 
 **No mod jars are ever committed.** They live on Modrinth's CDN; the repo stores
 only references. Builds are offline because the lockfile already records every
