@@ -169,6 +169,14 @@ jobs:
       #
       # Marking it by hand does not survive the next release, which is how
       # 1.5.2 went out as stable while carrying a JEI beta.
+      #
+      # The word goes in the title and nowhere else. GitHub's pre-release flag
+      # is not a label but a switch: a flagged release never becomes "Latest",
+      # and anything asking the API for the latest release skips straight past
+      # it. These packs are the ones players are meant to install — they carry a
+      # beta mod because that is the only build it has for this Minecraft
+      # version, not because the pack is untested. So the release is a release,
+      # and the title is where it says beta.
       - name: Decide the release channel
         id: channel
         if: steps.meta.outputs.slug != ''
@@ -181,7 +189,7 @@ jobs:
             const asked = (pack.mods ?? []).filter((m) => m.allowPrerelease).map((m) => m.slug);
             const named = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version)).map((f) => f.id);
             const beta = [...new Set([...asked, ...named])].sort();
-            console.log(beta.length ? `prerelease — ${beta.join(", ")}` : "stable — no prerelease mods");
+            console.log(beta.length ? `beta — ${beta.join(", ")}` : "stable — no prerelease mods");
             // The tag itself is the title, plus the channel. The version is
             // already in the tag, and repeating the pack name in front of it
             // only makes the list harder to scan. "beta" is the only channel
@@ -189,7 +197,7 @@ jobs:
             // the word here rather than inventing a config field for it.
             const title = `${process.argv[2]}${beta.length ? " — beta" : ""}`;
             console.log(`title — ${title}`);
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `prerelease=${beta.length > 0}\ntitle=${title}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
           ' "${{ steps.meta.outputs.slug }}" "${{ github.ref_name }}"
 
       - name: Publish release
@@ -202,7 +210,6 @@ jobs:
             dist/${{ steps.meta.outputs.slug }}/manifest.json
           fail_on_unmatched_files: true
           generate_release_notes: true
-          prerelease: ${{ steps.channel.outputs.prerelease }}
           name: ${{ steps.channel.outputs.title }}
 
       # The two big zips exist so somebody can install the pack. Nobody installs
