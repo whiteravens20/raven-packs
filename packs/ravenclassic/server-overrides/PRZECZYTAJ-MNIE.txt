@@ -57,8 +57,12 @@ Logowanie
 Serwer chodzi w offline mode, a nick trzyma EasyAuth: gracz rejestruje hasło
 i serwer wiąże je z nickiem.
 
-    /auth register <hasło> <hasło>
-    /auth login <hasło>
+    /register <hasło> <hasło>
+    /login <hasło>
+
+`/auth` to komenda administracyjna, nie gracza: `/auth register <nick> <hasło>`
+zakłada konto za kogoś, `/auth remove <nick>` je kasuje. Gracz zmienia sobie
+hasło przez `/account changePassword <stare> <nowe>`.
 
 EasyAuth jest tu warunkiem, nie dodatkiem. Bez niego offline mode znaczy tyle,
 że każdy może wejść na cudzy nick — nie wyrzucaj go z paczki.

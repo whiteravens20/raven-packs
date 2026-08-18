@@ -112,6 +112,64 @@ uprawnienia wyżej. Nowego budowniczego trzeba dopisać tutaj ręcznie i to jest
 cały koszt tego wariantu.
 
 
+2b. Moby na działkach serwerowych
+---------------------------------
+
+Na działce serwerowej nic się nie rodzi i nic po niej nie chodzi. Robią to dwie
+osobne rzeczy, bo jedna nie umie obu.
+
+RODZENIE SIĘ — OPAC. W world/serverconfig/openpartiesandclaims-server-claim-config.toml
+paczka wyłącza cztery wyjątki, które mod domyślnie trzyma na true:
+
+    naturalSpawnHostile  = false
+    naturalSpawnFriendly = false
+    spawnersHostile      = false
+    spawnersFriendly     = false
+
+Od tej chwili na chunkach zajętych w trybie serwerowym nie zrodzi się nic —
+ani wrogie, ani przyjazne, ani z bloku spawnera. Działek graczy to nie dotyka:
+one chodzą po openpartiesandclaims-default-player-config.toml i tam paczka nie
+zmienia nic, bo limity mobów u siebie to sprawa gracza.
+
+PUŁAPKA przy ręcznej edycji. W sekcji [playerConfig] musi stać `version = 15`.
+Bez tej jednej linijki OPAC uznaje plik za obcy, kasuje go i wypisuje własne
+domyślne — po cichu, bez słowa w logu. Wygląda to dokładnie tak, jakby zmiana
+nie zadziałała, a zadziałała i została cofnięta. Plik z paczki tę linijkę ma;
+plik, który mod wygenerował sam, też ją ma, więc edytując go na miejscu nie
+masz jak się pomylić. Zmiana wchodzi po restarcie.
+
+Komendy `/opac server-claims-config set ...` robią to samo bez restartu, ale
+wyłącznie z ręki gracza — z konsoli ich nie ma, bo mod żąda gracza jako
+wykonawcy i bez niego cała gałąź komendy znika.
+
+WCHODZENIE Z ZEWNĄTRZ — datapack. OPAC nie wyrzuci moba, który wszedł na
+działkę na własnych nogach, i nie pokazuje swoich działek żadnej komendzie,
+więc datapack sam z siebie nie wie, gdzie one są. Strefę wyznacza się
+znacznikiem, postawionym tam, gdzie stoisz:
+
+    /summon minecraft:marker ~ ~ ~ {Tags:["rc_nomobs"]}
+
+Datapack ravenclassic-rules raz na sekundę zabija wrogie moby w promieniu 48
+bloków od każdego takiego znacznika. Znaczników może być dowolnie wiele — jeden
+na spawn, jeden na market, tyle ile trzeba, żeby pokryć teren.
+
+    gdzie stoją    /execute as @e[type=minecraft:marker,tag=rc_nomobs] at @s run particle minecraft:end_rod ~ ~1 ~ 0 2 0 0 60
+    usuń najbliższy    /kill @e[type=minecraft:marker,tag=rc_nomobs,distance=..8]
+
+Co ginie, stoi w data/ravenclassic/tags/entity_type/wrogie_moby.json. Są tam
+#minecraft:undead i #minecraft:raiders, więc nowe nieumarłe i nowi najeźdźcy
+dochodzą same przy aktualizacji gry; resztę wypisano z nazwy. Krowa, wieśniak,
+stojak na zbroję i rzeczy na ziemi zostają — to jest sprawdzone, nie założone.
+
+Promień jest kulą wokół znacznika, a nie kwadratem i nie działką: znacznik przy
+granicy zabija też moby u sąsiada. Stawiaj go w środku terenu.
+
+Ostatnia rzecz, przez którą test na pustym serwerze wygląda na zepsuty: bez
+graczy serwer po minucie przestaje tickować (pause-when-empty-seconds w
+server.properties). Pętla datapacka wtedy stoi i moby nie giną. Rusza sama, gdy
+ktoś wejdzie.
+
+
 3. Co jest chronione
 --------------------
 

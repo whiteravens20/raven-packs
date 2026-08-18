@@ -1,0 +1,31 @@
+# Open Parties and Claims — konfiguracja działek SERWEROWYCH.
+#
+# Dotyczy wyłącznie działek postawionych w trybie serwerowym (spawn, market,
+# arena). Działki graczy chodzą po openpartiesandclaims-default-player-config
+# i tam paczka nie zmienia nic — każdy ustawia sobie swoją sam.
+#
+# PUŁAPKA. Linijka "version" musi tu być. Bez niej OPAC uznaje ten plik za
+# obcy, kasuje go i wypisuje własne domyślne — po cichu, bez ostrzeżenia w
+# logu. Sprawdzone: plik bez wersji wraca po pierwszym starcie do samych true.
+# Po aktualizacji moda zajrzyj, czy cztery wartości niżej dalej stoją na false.
+#
+# Reszta opcji dopisze się sama przy pierwszym starcie — tak jak w pliku obok.
+
+[playerConfig]
+	version = 15
+
+	[playerConfig.claims]
+		[playerConfig.claims.protection]
+			[playerConfig.claims.protection.exceptions]
+				# Cztery wyjątki, które OPAC domyślnie trzyma na true, czyli
+				# wpuszcza moby na chronioną działkę mimo ochrony. Wyłączone: na
+				# działce serwerowej nie zrodzi się nic — ani wrogie, ani
+				# przyjazne, ani z bloku spawnera.
+				#
+				# To zamyka wyłącznie rodzenie się. Mob, który wszedł z zewnątrz,
+				# jest sprawą datapacka ravenclassic-rules — patrz
+				# dokumentacja/dzialki.txt, sekcja 2b.
+				naturalSpawnHostile = false
+				naturalSpawnFriendly = false
+				spawnersHostile = false
+				spawnersFriendly = false
