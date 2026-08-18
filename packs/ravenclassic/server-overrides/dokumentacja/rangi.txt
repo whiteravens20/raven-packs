@@ -14,7 +14,7 @@ nim, więc nikt nie „doawansuje się" do moderatora.
     Nowy        od wejścia         4           0      1
     Gracz       10 h gry           6           2      2
     Obywatel    40 h gry           8           4      3
-    Mistrz      za surowce        12           8      3
+    Mistrz      za diamenty       12           8      3
 
 Chunk to 16×16 bloków na całą wysokość świata — F3+G rysuje siatkę. Cztery
 chunki ułożone w kwadrat to działka 32×32. OPAC nie wymaga, żeby chunki się
@@ -28,10 +28,14 @@ Liczby wyżej są celowo niższe od liczby chunków: dziesięciu Mistrzów to ju
 Jedna komenda niżej, ale najpierw zobacz w /spark, co serwer robi teraz.
 
 Awans na Gracza i Obywatela robi automat (mod Playtime Rewards) — liczy czas
-w grze i sam przestawia grupę w LuckPermsie. Mistrz jest ręczny: gracz
-płaci obsłudze w sklepie admina umówioną cenę, obsługa robi `promote`. Na
-Fabricu 26.2 nie ma moda, który przyjąłby przedmioty i nadał grupę, więc ten
-jeden szczebel przechodzi przez człowieka z wyboru, nie z niedoróbki.
+w grze i sam przestawia grupę w LuckPermsie. Mistrz jest ręczny: kosztuje
+64 bloki diamentu, gracz zgłasza się do admina albo moderatora, płaci w
+sklepie admina, obsługa robi `promote`. Na Fabricu 26.2 nie ma moda, który
+przyjąłby przedmioty i nadał grupę, więc ten jeden szczebel przechodzi przez
+człowieka z wyboru, nie z niedoróbki.
+
+Ta sama cena stoi w przewodniku w grze — wpis „Rangi", strona „Mistrz".
+Zmieniasz ją tutaj, popraw i tam, bo inaczej gracz przyjdzie z inną kwotą.
 
 Obywatel dostaje przy awansie jeden waystone. To jedyna nagroda przedmiotowa
 w drabince i stoi tu z powodu: receptur na waystone'y nie ma (wycina je

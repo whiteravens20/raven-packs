@@ -3,7 +3,7 @@
   "pack": {
     "slug": "ravenclassic",
     "name": "White Ravens Classic",
-    "version": "1.5.2",
+    "version": "1.6.0",
     "minecraft": "26.2",
     "loader": {
       "type": "fabric",
@@ -16,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-15T19:51:22.175Z",
+  "generatedAt": "2026-08-18T14:16:10.602Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -28,13 +28,13 @@
       "name": "Fabric API",
       "source": "modrinth",
       "projectId": "P7dR8mSH",
-      "versionId": "3gT0I5vt",
-      "version": "0.156.0+26.2",
-      "fileName": "fabric-api-0.156.0+26.2.jar",
-      "url": "https://cdn.modrinth.com/data/P7dR8mSH/versions/3gT0I5vt/fabric-api-0.156.0%2B26.2.jar",
-      "size": 2531175,
-      "sha1": "d96e0d9ef8ea3604fac4ca7495d7c6148f3ac816",
-      "sha512": "5bbc436d07f836cd90b88287e2ef27f1cd67e26185b2cd4a62cb2ae850eb74e5edbbc7ba7772e92ea91ebf35b263f8815421e3d5e7d2836cb28993ba1d534816",
+      "versionId": "NqwNSxwA",
+      "version": "0.158.0+26.2",
+      "fileName": "fabric-api-0.158.0+26.2.jar",
+      "url": "https://cdn.modrinth.com/data/P7dR8mSH/versions/NqwNSxwA/fabric-api-0.158.0%2B26.2.jar",
+      "size": 2535765,
+      "sha1": "7d0fb560579d28b933bdbc36b47449efe78d3bda",
+      "sha512": "4c2c1ebe74ffd54875a01ff371b53ba3d8674ac98d561f7dae02a96d3d37fbdbc5f5abc6e820f73b6154d6f873ddd05a442b0998ed2d456863dc0ad972e040a6",
       "license": "Apache-2.0",
       "requiredDependencies": []
     },
@@ -99,8 +99,8 @@
       "sha512": "bd4bd3c3c3c4d98932fa526dc42cc7071bab3717849a3a1de808e6ef1ad3b2f3f24f201854c2485bec3b31dece24d190441d0f7db32e81216cddf005ec474fb6",
       "license": "AGPL-3.0-or-later",
       "requiredDependencies": [
-        "Ha28R6CL",
-        "P7dR8mSH"
+        "P7dR8mSH",
+        "Ha28R6CL"
       ]
     },
     {
@@ -449,13 +449,13 @@
       "name": "ImmediatelyFast",
       "source": "modrinth",
       "projectId": "5ZwdcRci",
-      "versionId": "uJHxuQxy",
-      "version": "1.16.2+26.2-fabric",
-      "fileName": "ImmediatelyFast-Fabric-1.16.2+26.2.jar",
-      "url": "https://cdn.modrinth.com/data/5ZwdcRci/versions/uJHxuQxy/ImmediatelyFast-Fabric-1.16.2%2B26.2.jar",
-      "size": 91422,
-      "sha1": "2d1cd27b0b570f908b665c02a35b49381b4c5ec1",
-      "sha512": "5f7c9d7993bfe3654b4f384c23afd83c1adcc359b1fa669b20f29ffa41e4e3135a161c1fdf97c66c5fc513ec5fe63e757a46b6e183b7b93148a28412496c5a0b",
+      "versionId": "rxHcwxdQ",
+      "version": "1.16.3+26.2-fabric",
+      "fileName": "ImmediatelyFast-Fabric-1.16.3+26.2.jar",
+      "url": "https://cdn.modrinth.com/data/5ZwdcRci/versions/rxHcwxdQ/ImmediatelyFast-Fabric-1.16.3%2B26.2.jar",
+      "size": 92582,
+      "sha1": "3a9fe02bbfdecd6af9ab418b55d4ebc9f0f1f5d3",
+      "sha512": "79321f00b73755ae54f08120e81fd559dc5d7a34ef7bedddd1e9e467de0daebec885b377db5fffd4aa190d81ce44c66af38fbef82ad49f661da5ddd2ef3fc49e",
       "license": "LGPL-3.0-or-later",
       "requiredDependencies": []
     },
@@ -555,13 +555,13 @@
       "name": "Just Enough Items (JEI)",
       "source": "modrinth",
       "projectId": "u6dRKJwZ",
-      "versionId": "zVFZv3yA",
-      "version": "30.17.0.135",
-      "fileName": "jei-26.2-fabric-30.17.0.135.jar",
-      "url": "https://cdn.modrinth.com/data/u6dRKJwZ/versions/zVFZv3yA/jei-26.2-fabric-30.17.0.135.jar",
-      "size": 1687459,
-      "sha1": "b727a83cb06bd10020c82c89a31865821d94a1c8",
-      "sha512": "3ed2730d0574f8c793d84d9ee1e1b2c75a4ae04bf52b67ce531ce1d1e00878fd13a104cdb372957217e167067cd8f22afeda60c95b618ec2a552cd1ab76fd51b",
+      "versionId": "oUBC3w4U",
+      "version": "30.24.0.170",
+      "fileName": "jei-26.2-fabric-30.24.0.170.jar",
+      "url": "https://cdn.modrinth.com/data/u6dRKJwZ/versions/oUBC3w4U/jei-26.2-fabric-30.24.0.170.jar",
+      "size": 1805826,
+      "sha1": "1a5157411c54897e6aeb535807283426c6d84350",
+      "sha512": "75048257380c6cd83f4fc70b54f1727444eab33b85449e6497627fdc9b1263c13049eac459815c0ad4b61af69278a476347b52152a5de81d529488a1d3378945",
       "license": "MIT",
       "requiredDependencies": []
     },
@@ -575,13 +575,13 @@
       "name": "Jade 🔍",
       "source": "modrinth",
       "projectId": "nvQzSEkH",
-      "versionId": "JB4B8a9g",
-      "version": "26.2.10+fabric",
-      "fileName": "Jade-mc26.2-Fabric-26.2.10.jar",
-      "url": "https://cdn.modrinth.com/data/nvQzSEkH/versions/JB4B8a9g/Jade-mc26.2-Fabric-26.2.10.jar",
-      "size": 1043666,
-      "sha1": "9ff6d8c9041251c453a25152c302ef51b918509e",
-      "sha512": "5964e943cd56a4ba9fdf6be4ed351e3b57811ce3026714348590270087f6d198c64d06b5efea7968752cbb2a3a7fba8974e014ca7573608930c87365422215ec",
+      "versionId": "ue8CO97w",
+      "version": "26.2.11+fabric",
+      "fileName": "Jade-mc26.2-Fabric-26.2.11.jar",
+      "url": "https://cdn.modrinth.com/data/nvQzSEkH/versions/ue8CO97w/Jade-mc26.2-Fabric-26.2.11.jar",
+      "size": 1043764,
+      "sha1": "101668371882c3413531025373f5d91b63e26dd0",
+      "sha512": "730e07dd5cbbf850ba0e7fd4852b528867d3e2fc2de63b156c89eee9ee6dd92d882b744f97fe724f2aa0afc5b468577486d9558f80d3e46cc5fa133ba241b9c9",
       "license": "CC-BY-NC-SA-4.0",
       "requiredDependencies": [
         "P7dR8mSH"
@@ -674,8 +674,8 @@
       "sha512": "705a98e5d05c15854c5a711fb6f1a9fbe5eaae354bdaf8b5c1641b09f89457c98ed41b819c9221b380c1faf0a342df93debc19a3ceeadf4cd4b1bdc1219ed606",
       "license": "MIT",
       "requiredDependencies": [
-        "P7dR8mSH",
-        "fuuu3xnx"
+        "fuuu3xnx",
+        "P7dR8mSH"
       ]
     },
     {
@@ -697,9 +697,9 @@
       "sha512": "0212fc1ded72d027df0d346546f45903b9c6cc37c521379724cf2d28eb8a9867a52f26391e690dcadeedcd32899d22b00b7405b2e6bbefd949fb9df383e3c5b4",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
-        "Ha28R6CL",
+        "1eAoo2KR",
         "P7dR8mSH",
-        "1eAoo2KR"
+        "Ha28R6CL"
       ]
     },
     {
@@ -712,13 +712,13 @@
       "name": "No Chat Reports",
       "source": "modrinth",
       "projectId": "qQyHxfxd",
-      "versionId": "uiY9tUaj",
-      "version": "Fabric-26.2-v2.20.1",
-      "fileName": "NoChatReports-FABRIC-26.2-v2.20.1.jar",
-      "url": "https://cdn.modrinth.com/data/qQyHxfxd/versions/uiY9tUaj/NoChatReports-FABRIC-26.2-v2.20.1.jar",
-      "size": 239191,
-      "sha1": "0c095e6ee699cb1f5c9732ef632cf93998b1d468",
-      "sha512": "139dd09e04cc66fe4745264ddfbe3249be6e956326c931eb9707f9a640bbc011a4f1fd5684d04ca90e1b473be55772b0279e5c2f935c2f2e85d054e2ab0a6923",
+      "versionId": "aDbxaVTi",
+      "version": "Fabric-26.2-v2.20.2",
+      "fileName": "NoChatReports-FABRIC-26.2-v2.20.2.jar",
+      "url": "https://cdn.modrinth.com/data/qQyHxfxd/versions/aDbxaVTi/NoChatReports-FABRIC-26.2-v2.20.2.jar",
+      "size": 239602,
+      "sha1": "680b60f6ec5c09a646e7a76bb17cf551608051cd",
+      "sha512": "aa14fa2d1cc94803f4c965fd817a945823037237bd7a1fea9dc9a0c6427084d25b8d9273da76bc132fe68794d2be8b91540bfff1309125aea37820c12bff0268",
       "license": "WTFPL",
       "requiredDependencies": [
         "P7dR8mSH"
@@ -756,13 +756,13 @@
       "name": "LambDynamicLights - Dynamic Lights",
       "source": "modrinth",
       "projectId": "yBW8D80W",
-      "versionId": "jBLH7Qy8",
-      "version": "4.12.2+26.2",
-      "fileName": "lambdynamiclights-4.12.2+26.2.jar",
-      "url": "https://cdn.modrinth.com/data/yBW8D80W/versions/jBLH7Qy8/lambdynamiclights-4.12.2%2B26.2.jar",
-      "size": 1348440,
-      "sha1": "0667b3e1d203a54a0fcede02d97fc3b9f384711c",
-      "sha512": "3c2ab4028e47da4155e860c9449231d7b17e10dc6d9d110ab58dc621ab806fcc0b21741c73a671c0d72fb9ae5021792cea18f09b515180ae33e86c4008c3d139",
+      "versionId": "LCAMVAqE",
+      "version": "4.12.3+26.2",
+      "fileName": "lambdynamiclights-4.12.3+26.2.jar",
+      "url": "https://cdn.modrinth.com/data/yBW8D80W/versions/LCAMVAqE/lambdynamiclights-4.12.3%2B26.2.jar",
+      "size": 1344044,
+      "sha1": "8ed8a01b56a93432affcdaed30f9517051274f6a",
+      "sha512": "73ede5f2f9bfe86941615540357e4f40773cef4a76f850d158cf7895f9b67b93c7327566e1fbc1e3b03de0a41c18cb9970bd395e4883c113cae90350251fb742",
       "license": "LicenseRef-Lambda-License",
       "requiredDependencies": [
         "P7dR8mSH"
@@ -952,17 +952,17 @@
       "name": "Open Parties and Claims",
       "source": "modrinth",
       "projectId": "gF3BGWvG",
-      "versionId": "tdvSCMV3",
-      "version": "fabric-26.2-0.29.3",
-      "fileName": "open-parties-and-claims-fabric-26.2-0.29.3.jar",
-      "url": "https://cdn.modrinth.com/data/gF3BGWvG/versions/tdvSCMV3/open-parties-and-claims-fabric-26.2-0.29.3.jar",
-      "size": 1739616,
-      "sha1": "b08ab0ae99605ae25f2cf5c8a39d68e46de72ea1",
-      "sha512": "84f454a549fc5f4484637123c48b9d3c280472407acac28679b9a7071382a319342293033a780588fb0839296d9882d4913f3aa91af52894892ab706a4f0f390",
+      "versionId": "F5QKC95u",
+      "version": "fabric-26.2-0.30.0",
+      "fileName": "open-parties-and-claims-fabric-26.2-0.30.0.jar",
+      "url": "https://cdn.modrinth.com/data/gF3BGWvG/versions/F5QKC95u/open-parties-and-claims-fabric-26.2-0.30.0.jar",
+      "size": 1884007,
+      "sha1": "2aa38a39b2d9b97f258961281816d0351601e767",
+      "sha512": "94ddd8364991cae2514c2e9dc6009e19d01fcd745a36c21f5bba3d5f4718fbdcd36fa31b15f142df137b50aaa4bf7b8dbb8f240ea17b2d14acb4035fb4a78244",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
-        "P7dR8mSH",
-        "ohNO6lps"
+        "ohNO6lps",
+        "P7dR8mSH"
       ]
     },
     {
@@ -1316,6 +1316,26 @@
       "size": 298696,
       "sha1": "2996c88aec6f186af02367477dced329a1a5909a",
       "sha512": "94f9088433c44634de5ff600bec5d7532c9b97abdf49c731e55e4a1d8ed71bf4e82596114d5d3bc7caa78a84adc62c9fd355a5a2dd7f74d13240942d2409b020",
+      "license": "LGPL-3.0-only",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"styledplayerlist\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "styledplayerlist",
+      "name": "Styled Player List",
+      "source": "modrinth",
+      "projectId": "DQIfKUHf",
+      "versionId": "dphV3ifd",
+      "version": "3.12.0+26.2",
+      "fileName": "styledplayerlist-3.12.0+26.2.jar",
+      "url": "https://cdn.modrinth.com/data/DQIfKUHf/versions/dphV3ifd/styledplayerlist-3.12.0%2B26.2.jar",
+      "size": 375998,
+      "sha1": "789f9956407ab94f959922790eabed79b54eec20",
+      "sha512": "3e768c12a56a4fcd34bb5c22719e8b7f5581e19640de74af716b36d8feac23921be8120a6066b13efe620a4cb6135538357723d64062656321196596346d65ca",
       "license": "LGPL-3.0-only",
       "requiredDependencies": []
     },

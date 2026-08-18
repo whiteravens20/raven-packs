@@ -54,15 +54,14 @@ Kolejność pierwszego uruchomienia
 Logowanie
 ---------
 
-Serwer chodzi w offline mode, bo logowanie przez Microsoft w Raven Forge czeka
-na zatwierdzenie przez Mojang. Trzyma to w ryzach EasyAuth: gracz rejestruje
-hasło i serwer wiąże je z nickiem.
+Serwer chodzi w offline mode, a nick trzyma EasyAuth: gracz rejestruje hasło
+i serwer wiąże je z nickiem.
 
     /auth register <hasło> <hasło>
     /auth login <hasło>
 
-Gdy logowanie MS ruszy: ustaw online-mode=true w server.properties i wyrzuć
-EasyAuth z paczki — w tej samej zmianie, nigdy osobno.
+EasyAuth jest tu warunkiem, nie dodatkiem. Bez niego offline mode znaczy tyle,
+że każdy może wejść na cudzy nick — nie wyrzucaj go z paczki.
 
 
 Przewodnik w grze
@@ -80,6 +79,19 @@ też do graczy, którzy przyszli innym launcherem niż Raven Forge.
 Jeśli strony pokazują surowe klucze zamiast zdań, to gracz odrzucił resource
 pack albo serwer podaje adres, pod którym nic nie ma. Książka wczytała się
 dobrze — brakuje jej samego tekstu.
+
+Jeśli strony są całkiem puste, a węzły rysują się normalnie, to ktoś ruszył
+układ katalogów. Modonomicon szuka stron po ścieżce `entries/<kategoria>/<wpis>/
+pages/` i sprawdza ten człon z kategoriami książki; katalog nazwany kategorią,
+której już nie ma, odcina wszystkie leżące w nim strony bez słowa w logu serwera.
+`node scripts/validate.mjs` w repozytorium paczki to wyłapuje.
+
+Trzecia rzecz, która wygląda na usterkę i nią nie jest: po zmianie języka
+klienta nazwy kategorii i tytuły przechodzą na nowy język od razu, a treść stron
+zostaje w starym. Modonomicon renderuje treść raz, przy synchronizacji receptur
+na wejściu, i zapieka wynik; tytuły są komponentami tłumaczonymi przy każdym
+rysowaniu. Wystarczy wyjść z serwera i wejść ponownie — F3+T ani /reload tego
+nie ruszą.
 
 Poprawiony tekst przewodnika nie dojedzie sam. To nowy zip przy nowym wydaniu,
 więc po każdym trzeba podmienić w server.properties `resource-pack`

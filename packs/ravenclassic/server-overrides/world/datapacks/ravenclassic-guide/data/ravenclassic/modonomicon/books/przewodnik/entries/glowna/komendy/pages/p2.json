@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "id": "p2",
+  "title": "book.ravenclassic.przewodnik.start.komendy.p2.title",
+  "text": "book.ravenclassic.przewodnik.start.komendy.p2.text",
+  "show_title_separator": true,
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "sort_number": 2
+}

@@ -105,15 +105,15 @@ Full authoring guide: **[docs/AUTHORING.md](docs/AUTHORING.md)**.
 versions, filenames, CDN URLs, sizes and hashes. It is this repo's equivalent of
 packwiz's `index.toml`, and it is what keeps large packs cheap:
 
-White Ravens Classic, 66 locked files:
+White Ravens Classic, 67 locked files:
 
 | | |
 |---|---|
-| Committed to git | 66 KB — 7.7 KB of definition, 59 KB of lockfile |
+| Committed to git | 68 KB — 7.9 KB of definition, 60 KB of lockfile |
 | `build.mjs`, cold | 0.2 s, Node startup included |
 | Network calls at build | 0 |
-| Published `.mrpack` | 17 KB |
-| Jars it resolves to | 48.5 MiB, none of them in this repo |
+| Published `.mrpack` | 11 KB |
+| Jars it resolves to | 48.8 MiB, none of them in this repo |
 
 **No mod jars are ever committed.** They live on Modrinth's CDN; the repo stores
 only references. Builds are offline because the lockfile already records every
@@ -190,6 +190,19 @@ That last asset is load-bearing rather than convenient. The `server.properties`
 inside the server zip points at it by release URL and requires it, so a server
 built from a tag that was never pushed serves a 404 and turns away every player.
 It is the one output where deleting a release breaks something already running.
+
+Which is what splits the assets into two kinds, and why a release only keeps all
+of them while it is the newest. **Only the current release carries the client
+zip and the server zip.** Publishing a new tag sweeps both off every older
+release of that pack, because nothing installs a superseded version — the
+launcher syncs from the manifest on Pages and never reads a release asset, and
+anyone installing by hand wants the newest. At roughly 140 MB a release that is
+the entire storage cost of this repository.
+
+**The resource pack, the `.mrpack` and the manifest stay on every release,
+forever.** The first for the reason above: a server that nobody asked to upgrade
+is still pointing at its own copy and requiring it. The other two are kilobytes,
+and they are what a third-party launcher imported.
 
 The two outputs differ in scope on purpose:
 
