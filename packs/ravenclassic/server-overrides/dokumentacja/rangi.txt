@@ -48,6 +48,13 @@ Playtime Rewards pilnuje, żeby nikt nie odebrał nagrody dwa razy.
 Progi czasu i nagrody zmienia się w world/config/playtime-rewards/config.json
 (pole `seconds`, 10 h = 36000; pole `rewards`). Po zmianie: /playtime reload.
 
+Ogłoszenie o awansie stoi w tym samym pliku, w polu `rankUpBroadcast`, i kolor
+bierze z kodów `§`, nie `&`. Playtime Rewards wysyła je jako zwykłą wiadomość
+systemową i sam niczego nie parsuje — formatowanie nakłada dopiero klient, a
+klient zna wyłącznie `§`. Prefiksy z sekcji 11 zostają przy `&`, bo idą inną
+drogą: przez placeholder, który rozwija Styled Chat. Wpisane tutaj `&` niczego
+nie psuje poza wyglądem — ogłoszenie wychodzi białe, z widocznym „&e".
+
 
 2. Staff
 --------
