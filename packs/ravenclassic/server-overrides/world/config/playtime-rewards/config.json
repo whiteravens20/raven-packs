@@ -1,6 +1,6 @@
 {
   "unrankedName": "Bez rangi",
-  "rankUpBroadcast": "§e{player} awansuje na §f{rank}§e! ({playtime})",
+  "rankUpBroadcast": "§e{player} awansuje na rangę §f{rank}§e! ({playtime})",
   "ranks": [
     {
       "name": "Nowy",
