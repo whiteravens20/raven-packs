@@ -2,7 +2,7 @@
   "CONFIG_VERSION_DONT_TOUCH_THIS": 3,
   "default": {
     "message_formats": {
-      "chat": "%luckperms:prefix%${player}<gray>:</gray> ${message}"
+      "chat": "%luckperms:prefix%<gray>${player}:</gray> <white>${message}</white>"
     },
     "emoticons": {
       "$emojibase:builtin:joypixels": "${emoji}",

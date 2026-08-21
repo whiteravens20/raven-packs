@@ -276,7 +276,11 @@ format `<${player}> ${message}` i o prefiks w ogóle nie pyta — dlatego Archit
 z poprawnie ustawionym `meta setprefix` i tak pisze na biało. Format zmienia
 config/styled-chat.json z paczki:
 
-    %luckperms:prefix%${player}<gray>:</gray> ${message}
+    %luckperms:prefix%<gray>${player}:</gray> <white>${message}</white>
+
+Kolory rozkładają się tak: prefiks niesie kolor rangi, nick jest jasnoszary,
+a treść biała. Nick jest celowo ciemniejszy od wiadomości — na ruchliwym
+czacie najjaśniejsza ma być treść, nie to, kto ją napisał.
 
 `%luckperms:prefix%` rejestruje sam LuckPerms (przez Placeholder API) i on też
 parsuje kody `&`, więc `&5[Architekt] ` z rangi.txt daje fioletowy napis. Nie
