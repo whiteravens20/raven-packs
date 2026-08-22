@@ -1,0 +1,30 @@
+# ── Dependabot configuration ──────────────────────────────────────────────────
+# Only GitHub Actions. This repo declares no npm dependencies — package.json has
+# empty `dependencies` and `devDependencies` and there is no lockfile; the
+# scripts run on plain node. An npm entry here would have nothing to update.
+#
+# The actions are a real surface even so: they are pinned to moving major tags
+# (`actions/checkout@v5`), and a tag can be repointed at any commit.
+#
+# Supply-chain quarantine: `cooldown: default-days: 7` means Dependabot will not
+# propose a version until it has been public for a week, so a too-fresh release
+# never becomes a PR and cannot be merged early. Security updates are exempt by
+# design and still open the moment an advisory lands.
+
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: UTC
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "ci"
+    cooldown:
+      default-days: 7
