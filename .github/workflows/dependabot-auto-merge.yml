@@ -1,0 +1,74 @@
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions: {}
+
+# Patch bumps merge themselves; minors get a nudge; majors get a label and wait
+# for a human.
+#
+# What makes this safe rather than reckless is two things holding at once:
+#
+#   1. `cooldown: default-days: 7` in dependabot.yml — nothing reaches a PR
+#      until it has been public for a week, so this never lands a freshly
+#      published (possibly compromised) release unattended.
+#   2. Required status checks on the target branch — GitHub's auto-merge fires
+#      as soon as the branch's requirements are met, so with none required that
+#      would be immediately, CI unread. This branch requires:
+#      `validate`
+#
+# If either is ever removed, turn this workflow off with it.
+
+jobs:
+  dependabot:
+    name: Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.actor == 'dependabot[bot]'
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      # Belt and braces — branch protection is the real gate, this just avoids
+      # queueing a merge we already know will not pass.
+      - name: Wait for CI checks
+        uses: lewagon/wait-on-check-action@v1.9.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-regexp: 'validate.*'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 20
+          allowed-conclusions: success,skipped
+        continue-on-error: true
+
+      - name: Auto-merge patch updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on minor updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr comment "$PR_URL" --body "Minor dependency update — review and merge when ready."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Label major updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          gh pr edit "$PR_URL" --add-label "dependencies,major-update"
+          gh pr comment "$PR_URL" --body "Major version update — manual review required before merging."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
