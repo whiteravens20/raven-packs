@@ -41,7 +41,7 @@ jobs:
       # Belt and braces — branch protection is the real gate, this just avoids
       # queueing a merge we already know will not pass.
       - name: Wait for CI checks
-        uses: lewagon/wait-on-check-action@v1.9.0
+        uses: lewagon/wait-on-check-action@v1.9.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           check-regexp: 'validate.*'
