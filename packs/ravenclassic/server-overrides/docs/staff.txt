@@ -160,7 +160,7 @@ When it arrives:
 Staff commands:
 
     /sk give <name> <kit>  hand somebody a kit out of turn
-    /sk set <name>         save your current inventory as a kit
+    /sk set <kit>          save your current inventory as a kit
     /sk list               what is active
     /sk reload             after editing the files by hand
 
