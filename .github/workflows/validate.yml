@@ -28,7 +28,7 @@ jobs:
       - name: Build packs (metadata only)
         run: node scripts/build.mjs
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packs
           path: dist/
