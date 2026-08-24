@@ -13,24 +13,15 @@
  * are, so adding one mod does not silently bump the other ninety-nine.
  */
 
-import fs from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import {
-  getProject,
-  resolveVersion,
-  findMissingDependencies,
-} from "./lib/modrinth.mjs";
-import { fetchFile } from "./lib/download.mjs";
-import {
-  readLockfile,
-  writeLockfile,
-  entryKey,
-  LOCKFILE_VERSION,
-} from "./lib/lockfile.mjs";
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { getProject, resolveVersion, findMissingDependencies } from './lib/modrinth.mjs';
+import { fetchFile } from './lib/download.mjs';
+import { readLockfile, writeLockfile, entryKey, LOCKFILE_VERSION } from './lib/lockfile.mjs';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PACKS_DIR = path.join(ROOT, "packs");
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const PACKS_DIR = path.join(ROOT, 'packs');
 
 const ok = (msg) => console.log(`  \x1b[32m✓\x1b[0m ${msg}`);
 const keep = (msg) => console.log(`  \x1b[90m·\x1b[0m ${msg}`);
@@ -50,9 +41,9 @@ const warn = (msg) => console.log(`  \x1b[33m!\x1b[0m ${msg}`);
  */
 function inferSide(project, override) {
   if (override) return override;
-  if (project.serverSide === "unsupported") return "client";
-  if (project.clientSide === "unsupported") return "server";
-  return "both";
+  if (project.serverSide === 'unsupported') return 'client';
+  if (project.clientSide === 'unsupported') return 'server';
+  return 'both';
 }
 
 /**
@@ -64,27 +55,19 @@ function inferSide(project, override) {
  * which JDK to install.
  */
 async function getRequiredJava(mcVersion) {
-  const ua = { "User-Agent": "whiteravens20/raven-packs" };
+  const ua = { 'User-Agent': 'whiteravens20/raven-packs' };
   try {
     const manifest = await (
-      await fetch(
-        "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json",
-        {
-          headers: ua,
-          signal: AbortSignal.timeout(15000),
-        },
-      )
+      await fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json', {
+        headers: ua,
+        signal: AbortSignal.timeout(15000),
+      })
     ).json();
 
     const entry = manifest.versions.find((v) => v.id === mcVersion);
     if (!entry) return null;
 
-    const meta = await (
-      await fetch(entry.url, {
-        headers: ua,
-        signal: AbortSignal.timeout(15000),
-      })
-    ).json();
+    const meta = await (await fetch(entry.url, { headers: ua, signal: AbortSignal.timeout(15000) })).json();
     return meta.javaVersion?.majorVersion ?? null;
   } catch {
     return null;
@@ -93,11 +76,11 @@ async function getRequiredJava(mcVersion) {
 
 /** Resolve the Fabric server launcher so the server pack can be turnkey. */
 async function getServerLauncher(pack) {
-  if (pack.loader.type !== "fabric") return null;
+  if (pack.loader.type !== 'fabric') return null;
 
   const installers = await (
-    await fetch("https://meta.fabricmc.net/v2/versions/installer", {
-      headers: { "User-Agent": "whiteravens20/raven-packs" },
+    await fetch('https://meta.fabricmc.net/v2/versions/installer', {
+      headers: { 'User-Agent': 'whiteravens20/raven-packs' },
       signal: AbortSignal.timeout(15000),
     })
   ).json();
@@ -108,17 +91,15 @@ async function getServerLauncher(pack) {
   return {
     installerVersion: installer.version,
     url: `https://meta.fabricmc.net/v2/versions/loader/${pack.minecraft}/${pack.loader.version}/${installer.version}/server/jar`,
-    fileName: "fabric-server-launch.jar",
+    fileName: 'fabric-server-launch.jar',
   };
 }
 
 async function readPack(slug) {
-  const file = path.join(PACKS_DIR, slug, "pack.json");
-  const pack = JSON.parse(await fs.readFile(file, "utf8"));
+  const file = path.join(PACKS_DIR, slug, 'pack.json');
+  const pack = JSON.parse(await fs.readFile(file, 'utf8'));
   if (pack.slug !== slug) {
-    throw new Error(
-      `${slug}/pack.json declares slug "${pack.slug}" — must match its directory`,
-    );
+    throw new Error(`${slug}/pack.json declares slug "${pack.slug}" — must match its directory`);
   }
   pack.mods ??= [];
   pack.resourcePacks ??= [];
@@ -133,26 +114,25 @@ async function lockEntry(entry, kind, pack) {
   if (entry.url) {
     // Nothing to ask an API about — hash the bytes so integrity still holds.
     const file = await fetchFile(entry.url);
-    const fileName =
-      entry.filename ?? path.basename(new URL(entry.url).pathname);
+    const fileName = entry.filename ?? path.basename(new URL(entry.url).pathname);
     // Nothing to infer from — a direct URL carries no side metadata.
-    const side = entry.side ?? (kind === "mod" ? "both" : "client");
+    const side = entry.side ?? (kind === 'mod' ? 'both' : 'client');
     ok(`${entry.name ?? fileName} (direct url, ${side})`);
     return {
       requestKey: key,
       kind,
       side,
-      id: entry.id ?? fileName.replace(/\.(jar|zip)$/i, ""),
+      id: entry.id ?? fileName.replace(/\.(jar|zip)$/i, ''),
       name: entry.name ?? fileName,
-      source: "url",
-      version: entry.version ?? "unknown",
+      source: 'url',
+      version: entry.version ?? 'unknown',
       fileName,
       url: entry.url,
       size: file.size,
       sha1: file.sha1,
       sha512: file.sha512,
       sha256: file.sha256,
-      license: "unknown",
+      license: 'unknown',
       requiredDependencies: [],
     };
   }
@@ -166,26 +146,22 @@ async function lockEntry(entry, kind, pack) {
   });
 
   // Resource packs and shaders are client-side by definition.
-  const side =
-    kind === "mod" ? inferSide(project, entry.side) : (entry.side ?? "client");
+  const side = kind === 'mod' ? inferSide(project, entry.side) : (entry.side ?? 'client');
 
-  // Resolved to project ids so the entry can name a dependency by slug.
+  // Resolved to project ids so an entry can name a dependency by slug.
   const ignoredDeps = new Set();
   for (const ignored of entry.ignoreDependencies ?? []) {
     const p = await getProject(ignored).catch(() => null);
     if (p) ignoredDeps.add(p.id);
-    else
-      warn(
-        `${key}: ignoreDependencies lists "${ignored}", which is not on Modrinth`,
-      );
+    else warn(`${key}: ignoreDependencies lists "${ignored}", which is not on Modrinth`);
   }
 
   const notes = [
-    entry.version ? "pinned" : null,
+    entry.version ? 'pinned' : null,
     version.usedPrerelease ? `\x1b[33m${version.versionType}\x1b[0m` : null,
     entry.side ? `side: ${side} (forced)` : `side: ${side}`,
   ].filter(Boolean);
-  ok(`${project.title} ${version.versionNumber} (${notes.join(", ")})`);
+  ok(`${project.title} ${version.versionNumber} (${notes.join(', ')})`);
 
   return {
     requestKey: key,
@@ -195,7 +171,7 @@ async function lockEntry(entry, kind, pack) {
     serverSide: project.serverSide,
     id: project.slug,
     name: project.title,
-    source: "modrinth",
+    source: 'modrinth',
     projectId: project.id,
     versionId: version.versionId,
     version: version.versionNumber,
@@ -208,7 +184,7 @@ async function lockEntry(entry, kind, pack) {
     sha512: version.file.sha512,
     license: project.license,
     requiredDependencies: (version.dependencies ?? [])
-      .filter((d) => d.dependency_type === "required" && d.project_id)
+      .filter((d) => d.dependency_type === 'required' && d.project_id)
       .map((d) => d.project_id)
       // A multiloader project publishes one version entry for every loader it
       // supports, and Modrinth's dependency list has no per-loader granularity.
@@ -223,36 +199,29 @@ async function lockEntry(entry, kind, pack) {
 async function lockPack(slug, { update }) {
   const pack = await readPack(slug);
   // An outdated lockfile is exactly what this script exists to replace.
-  const existing = await readLockfile(PACKS_DIR, slug, {
-    outdatedIsNull: true,
-  });
+  const existing = await readLockfile(PACKS_DIR, slug, { outdatedIsNull: true });
 
   console.log(
     `\n\x1b[1m\x1b[36m${pack.name}\x1b[0m v${pack.version} — Minecraft ${pack.minecraft}, ` +
-      `${pack.loader.type} ${pack.loader.version}${update ? " \x1b[33m(updating)\x1b[0m" : ""}`,
+      `${pack.loader.type} ${pack.loader.version}${update ? ' \x1b[33m(updating)\x1b[0m' : ''}`,
   );
 
   // A Minecraft or loader change invalidates every resolved version.
   const packChanged =
     existing &&
-    (existing.pack.minecraft !== pack.minecraft ||
-      existing.pack.loader?.type !== pack.loader.type);
+    (existing.pack.minecraft !== pack.minecraft || existing.pack.loader?.type !== pack.loader.type);
   if (packChanged) {
-    console.log(
-      "  \x1b[33mMinecraft/loader changed — re-resolving everything\x1b[0m",
-    );
+    console.log('  \x1b[33mMinecraft/loader changed — re-resolving everything\x1b[0m');
   }
 
   const previous = new Map(
-    packChanged || update
-      ? []
-      : (existing?.files ?? []).map((f) => [f.requestKey, f]),
+    packChanged || update ? [] : (existing?.files ?? []).map((f) => [f.requestKey, f]),
   );
 
   const entries = [
-    ...pack.mods.map((e) => ["mod", e]),
-    ...pack.resourcePacks.map((e) => ["resourcepack", e]),
-    ...pack.shaders.map((e) => ["shader", e]),
+    ...pack.mods.map((e) => ['mod', e]),
+    ...pack.resourcePacks.map((e) => ['resourcepack', e]),
+    ...pack.shaders.map((e) => ['shader', e]),
   ];
 
   const files = [];
@@ -270,9 +239,7 @@ async function lockPack(slug, { update }) {
     } catch (err) {
       // Keep going: with a large pack you want the full list of what needs
       // attention, not whichever entry happened to fail first.
-      console.log(
-        `  \x1b[31m✗\x1b[0m ${entry.slug ?? entry.url} — ${err.message}`,
-      );
+      console.log(`  \x1b[31m✗\x1b[0m ${entry.slug ?? entry.url} — ${err.message}`);
       failures.push({ label: entry.slug ?? entry.url, message: err.message });
     }
   }
@@ -280,7 +247,7 @@ async function lockPack(slug, { update }) {
   if (failures.length > 0) {
     throw new Error(
       `${failures.length} of ${entries.length} entries could not be resolved:\n` +
-        failures.map((f) => `    - ${f.label}: ${f.message}`).join("\n"),
+        failures.map((f) => `    - ${f.label}: ${f.message}`).join('\n'),
     );
   }
 
@@ -289,13 +256,13 @@ async function lockPack(slug, { update }) {
   const included = new Set(files.map((f) => f.projectId).filter(Boolean));
   const missing = await findMissingDependencies(
     files
-      .filter((f) => f.source === "modrinth")
+      .filter((f) => f.source === 'modrinth')
       .map((f) => ({
         project: { id: f.projectId, slug: f.id },
         version: {
           dependencies: f.requiredDependencies.map((id) => ({
             project_id: id,
-            dependency_type: "required",
+            dependency_type: 'required',
           })),
         },
       })),
@@ -304,24 +271,18 @@ async function lockPack(slug, { update }) {
 
   if (stillMissing.length > 0) {
     for (const dep of stillMissing) {
-      warn(
-        `missing required dependency: ${dep.title} (${dep.slug}) — needed by ${dep.requiredBy.join(", ")}`,
-      );
+      warn(`missing required dependency: ${dep.title} (${dep.slug}) — needed by ${dep.requiredBy.join(', ')}`);
     }
     throw new Error(
       `${stillMissing.length} required dependencies are not in the pack. Add to packs/${slug}/pack.json: ` +
-        stillMissing.map((d) => `{ "slug": "${d.slug}" }`).join(", "),
+        stillMissing.map((d) => `{ "slug": "${d.slug}" }`).join(', '),
     );
   }
 
   const serverLauncher = await getServerLauncher(pack);
   const requiredJava = await getRequiredJava(pack.minecraft);
-  if (requiredJava)
-    ok(`Minecraft ${pack.minecraft} requires Java ${requiredJava}`);
-  else
-    warn(
-      `could not determine the Java version for Minecraft ${pack.minecraft}`,
-    );
+  if (requiredJava) ok(`Minecraft ${pack.minecraft} requires Java ${requiredJava}`);
+  else warn(`could not determine the Java version for Minecraft ${pack.minecraft}`);
 
   const lock = {
     lockfileVersion: LOCKFILE_VERSION,
@@ -340,30 +301,26 @@ async function lockPack(slug, { update }) {
 
   await writeLockfile(PACKS_DIR, slug, lock);
 
-  const clientCount = files.filter(
-    (f) => f.side === "client" || f.side === "both",
-  ).length;
-  const serverCount = files.filter(
-    (f) => f.side === "server" || f.side === "both",
-  ).length;
+  const clientCount = files.filter((f) => f.side === 'client' || f.side === 'both').length;
+  const serverCount = files.filter((f) => f.side === 'server' || f.side === 'both').length;
   const changed = files.filter((f) => !previous.has(f.requestKey)).length;
 
   console.log(
     `  \x1b[1m→ pack.lock.json: ${files.length} files` +
-      `${changed ? `, ${changed} resolved` : ", no changes"}\x1b[0m`,
+      `${changed ? `, ${changed} resolved` : ', no changes'}\x1b[0m`,
   );
   console.log(`     client pack: ${clientCount} · server pack: ${serverCount}`);
 
   if (serverCount === 0) {
-    warn("no server-side content — this pack runs against a plain server");
+    warn('no server-side content — this pack runs against a plain server');
   }
   return lock;
 }
 
 async function main() {
   const args = process.argv.slice(2);
-  const update = args.includes("--update") || args.includes("-u");
-  const requested = args.filter((a) => !a.startsWith("-"));
+  const update = args.includes('--update') || args.includes('-u');
+  const requested = args.filter((a) => !a.startsWith('-'));
 
   const slugs = requested.length
     ? requested
@@ -374,7 +331,7 @@ async function main() {
 
   for (const slug of slugs) await lockPack(slug, { update });
 
-  console.log("\n\x1b[32m✓ lockfiles up to date — commit them\x1b[0m");
+  console.log('\n\x1b[32m✓ lockfiles up to date — commit them\x1b[0m');
 }
 
 main().catch((err) => {
