@@ -4,16 +4,27 @@
   "title": "Raven Packs pack definition",
   "description": "Source of truth for one modpack. See docs/AUTHORING.md.",
   "type": "object",
-  "required": ["slug", "name", "version", "minecraft", "loader"],
+  "required": [
+    "slug",
+    "name",
+    "version",
+    "minecraft",
+    "loader"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
+    "$schema": {
+      "type": "string"
+    },
     "slug": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*$",
       "description": "Must match the containing directory name; used in URLs and filenames."
     },
-    "name": { "type": "string", "minLength": 1 },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
@@ -22,17 +33,28 @@
     "summary": {
       "description": "One line describing the pack. A plain string is taken as English; a { locale: text } map lets the launcher show it in the language the player picked. Give \"en\" whenever you give a map — it is what the .mrpack carries to other launchers.",
       "oneOf": [
-        { "type": "string" },
+        {
+          "type": "string"
+        },
         {
           "type": "object",
-          "required": ["en"],
+          "required": [
+            "en"
+          ],
           "minProperties": 1,
-          "propertyNames": { "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
-          "additionalProperties": { "type": "string", "minLength": 1 }
+          "propertyNames": {
+            "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       ]
     },
-    "author": { "type": "string" },
+    "author": {
+      "type": "string"
+    },
     "minecraft": {
       "type": "string",
       "minLength": 1,
@@ -40,23 +62,42 @@
     },
     "loader": {
       "type": "object",
-      "required": ["type", "version"],
+      "required": [
+        "type",
+        "version"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "enum": ["fabric", "quilt", "forge", "neoforge"] },
+        "type": {
+          "enum": [
+            "fabric",
+            "quilt",
+            "forge",
+            "neoforge"
+          ]
+        },
         "version": {
           "type": "string",
           "description": "Pin it — an unpinned loader makes builds irreproducible."
         }
       }
     },
-    "recommendedRamMb": { "type": "integer", "minimum": 1024 },
+    "recommendedRamMb": {
+      "type": "integer",
+      "minimum": 1024
+    },
     "server": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "ip": { "type": "string" },
-        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+        "ip": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        }
       }
     },
     "serverListName": {
@@ -64,21 +105,37 @@
       "minLength": 1,
       "description": "Name shown in Minecraft's multiplayer list; takes section-sign formatting codes. Defaults to `name`."
     },
-    "mods": { "$ref": "#/$defs/entryList" },
-    "resourcePacks": { "$ref": "#/$defs/entryList" },
-    "shaders": { "$ref": "#/$defs/entryList" }
+    "mods": {
+      "$ref": "#/$defs/entryList"
+    },
+    "resourcePacks": {
+      "$ref": "#/$defs/entryList"
+    },
+    "shaders": {
+      "$ref": "#/$defs/entryList"
+    }
   },
   "$defs": {
     "entryList": {
       "type": "array",
-      "items": { "$ref": "#/$defs/entry" }
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
     },
     "entry": {
       "type": "object",
       "additionalProperties": false,
       "oneOf": [
-        { "required": ["slug"] },
-        { "required": ["url"] }
+        {
+          "required": [
+            "slug"
+          ]
+        },
+        {
+          "required": [
+            "url"
+          ]
+        }
       ],
       "properties": {
         "slug": {
@@ -103,15 +160,32 @@
           "type": "string",
           "description": "Stable identifier for URL entries; defaults to the filename."
         },
-        "name": { "type": "string", "description": "Display name for URL entries." },
-        "filename": { "type": "string", "description": "Override the derived filename for URL entries." },
+        "name": {
+          "type": "string",
+          "description": "Display name for URL entries."
+        },
+        "filename": {
+          "type": "string",
+          "description": "Override the derived filename for URL entries."
+        },
         "side": {
-          "enum": ["client", "server", "both"],
+          "enum": [
+            "client",
+            "server",
+            "both"
+          ],
           "description": "Which pack(s) this belongs in. Omit to infer from Modrinth's client_side/server_side; set explicitly when the inference is wrong (e.g. a minimap marked server-optional)."
         },
         "reason": {
           "type": "string",
           "description": "Why this is in the pack. Ignored by the build; read by humans later."
+        },
+        "ignoreDependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Modrinth slugs to drop from this entry's required-dependency list. For multiloader projects that publish one version for every loader: Modrinth has no per-loader dependency granularity, so a mod can list a dependency that is real on one loader and absent on another. Use sparingly, and only after reading the jar."
         }
       }
     }
