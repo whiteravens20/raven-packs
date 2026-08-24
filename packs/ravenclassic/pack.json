@@ -3,7 +3,10 @@
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
   "version": "1.6.1",
-  "summary": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
+  "summary": {
+    "pl": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
+    "en": "Classic Minecraft with a handful of quality-of-life mods chosen by our community."
+  },
   "author": "White Ravens",
   "minecraft": "26.2",
   "loader": {
