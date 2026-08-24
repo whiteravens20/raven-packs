@@ -274,4 +274,4 @@ jobs:
       # Publishing dist/ to Pages is what gives each pack a stable manifest URL:
       #   https://<owner>.github.io/<repo>/<slug>/manifest.json
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
