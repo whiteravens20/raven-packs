@@ -10,9 +10,16 @@
       "version": "21.1.248"
     },
     "requiredJava": 21,
-    "serverLauncher": null
+    "serverLauncher": {
+      "kind": "installer",
+      "installerVersion": "21.1.248",
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.1.248/neoforge-21.1.248-installer.jar",
+      "fileName": "neoforge-21.1.248-installer.jar",
+      "argsFile": "libraries/net/neoforged/neoforge/21.1.248/unix_args.txt",
+      "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
+    }
   },
-  "generatedAt": "2026-08-24T22:42:15.080Z",
+  "generatedAt": "2026-08-24T23:11:48.981Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
