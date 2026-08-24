@@ -17,14 +17,14 @@
 	[playerConfig.claims]
 		[playerConfig.claims.protection]
 			[playerConfig.claims.protection.exceptions]
-				# Cztery wyjątki, które OPAC domyślnie trzyma na true, czyli
-				# wpuszcza moby na chronioną działkę mimo ochrony. Wyłączone: na
-				# działce serwerowej nie zrodzi się nic — ani wrogie, ani
-				# przyjazne, ani z bloku spawnera.
+				# The four exceptions OPAC keeps on true by default, which let
+				# mobs onto a protected claim despite the protection. Turned off:
+				# on a server claim nothing spawns — not hostile, not friendly,
+				# not from a spawner block.
 				#
-				# To zamyka wyłącznie rodzenie się. Mob, który wszedł z zewnątrz,
-				# jest sprawą datapacka ravenclassic-rules — patrz
-				# dokumentacja/dzialki.txt, sekcja 2b.
+				# This closes spawning only. A mob that walked in from outside is
+				# the ravenclassic-rules datapack's business — see
+				# docs/claims.txt, section 2b.
 				naturalSpawnHostile = false
 				naturalSpawnFriendly = false
 				spawnersHostile = false

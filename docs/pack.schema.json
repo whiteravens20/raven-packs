@@ -19,7 +19,19 @@
       "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
       "description": "Semver. Bump on every release."
     },
-    "summary": { "type": "string" },
+    "summary": {
+      "description": "One line describing the pack. A plain string is taken as English; a { locale: text } map lets the launcher show it in the language the player picked. Give \"en\" whenever you give a map — it is what the .mrpack carries to other launchers.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["en"],
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      ]
+    },
     "author": { "type": "string" },
     "minecraft": {
       "type": "string",
