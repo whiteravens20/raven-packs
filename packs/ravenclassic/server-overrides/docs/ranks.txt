@@ -1,0 +1,509 @@
+Ranks
+=====
+
+Eight groups in two independent columns. The player's path is the `rangi` track —
+you move up it one rung at a time. Staff stands beside the track, not on it, so
+nobody ever "promotes their way" into moderator.
+
+Group names are the ones you type: `nowy`, `gracz`, `obywatel`, `mistrz`,
+`budowniczy`, `moderator`, `administrator`, `architekt`. They are identifiers on
+a live server and are left in Polish everywhere in this file — translating them
+here would mean commands that do not work when pasted.
+
+
+1. The player path
+------------------
+
+    rank        from            chunks   forceload   homes
+    -----------------------------------------------------
+    Nowy        on arrival           4           0       1
+    Gracz       10 h played          6           2       2
+    Obywatel    40 h played          8           4       3
+    Mistrz      for diamonds        12           8       3
+
+A chunk is 16×16 blocks over the full height of the world — F3+G draws the grid.
+Four chunks in a square make a 32×32 claim. OPAC does not require chunks to
+touch, so those four can just as well be four separate pieces in four places in
+the world. That is the player's call.
+
+Forceload is a chunk kept loaded while nobody is near — the only chunk loading
+on this server, because there are no craftable chunk loaders here. The numbers
+above are deliberately lower than the chunk counts: ten Mistrz accounts is
+already 80 chunks ticking non-stop. Want to give forceload on every chunk of a
+claim? One command below — but look at /spark first and see what the server is
+doing now.
+
+Promotion to Gracz and Obywatel is automatic (the Playtime Rewards mod) — it
+counts time in game and switches the group in LuckPerms itself. Mistrz is
+manual: it costs 64 diamond blocks, the player comes to an admin or a moderator,
+pays in the admin shop, and staff runs `promote`. On Fabric 26.2 there is no mod
+that would take items and grant a group, so this one rung goes through a person
+by choice, not by omission.
+
+The same price is in the in-game guide — entry "Ranks", page "Mistrz". If you
+change it here, change it there too, or the player will turn up with a different
+figure.
+
+Obywatel gets one waystone on promotion. It is the only item reward on the
+ladder and it is here for a reason: there are no waystone recipes (the
+ravenclassic-rules datapack cuts them), and a recipe cannot be made to depend on
+a rank — on Fabric 26.2 there is no mod that would ask LuckPerms at the crafting
+table. So the gate is the item: up to Obywatel you find waystones in villages or
+buy them in the admin shop, and from Obywatel you are given one of your own.
+Playtime Rewards makes sure nobody collects a reward twice.
+
+Time thresholds and rewards are changed in world/config/playtime-rewards/config.json
+(field `seconds`, 10 h = 36000; field `rewards`). After a change: /playtime reload.
+
+The promotion announcement lives in the same file, in the `rankUpBroadcast`
+field, and takes its colour from `§` codes, not `&`. Playtime Rewards sends it
+as an ordinary system message and parses nothing itself — the formatting is
+applied by the client, and the client only knows `§`. The prefixes in section 11
+stay on `&`, because they travel a different road: through a placeholder that
+Styled Chat expands. An `&` written here breaks nothing but the look — the
+announcement goes out white, with a visible "&e".
+
+
+2. Staff
+--------
+
+    Budowniczy      ordinary player + creative mode + work on spawn
+    Moderator       ordinary player + moderation + promoting players
+    Administrator   Moderator + Budowniczy + WorldEdit + permissions
+    Architekt       everything, the only account with op
+
+Budowniczy switches to creative mode and builds server claims — spawn, market,
+arena. Nothing beyond that: somebody else's claim is as closed to them as to
+anyone. Creative in Minecraft is one player flag, not three — it contains
+flight, invulnerability and infinite blocks at once and there is no splitting
+it. That is why Budowniczy gets no separate /fly: creative already flies.
+
+WorldEdit deliberately stays higher up, with Administrator. Not for lack of
+trust, but because WorldEdit cannot see claims — `//set air` at radius 50 levels
+other people's houses, because it does not ask OPAC for permission and has
+nothing to ask with. Details in docs/staff.txt.
+
+
+3. Creating the groups
+----------------------
+
+Paste into the server console. The console, not chat — in chat you will run out
+of permissions before you have granted yourself any.
+
+    lp creategroup nowy
+    lp creategroup gracz
+    lp creategroup obywatel
+    lp creategroup mistrz
+    lp creategroup budowniczy
+    lp creategroup moderator
+    lp creategroup administrator
+    lp creategroup architekt
+
+Weights. LuckPerms settles conflicts with them: when a player sits in two groups
+with different claim limits, the one with the higher weight wins. Without
+weights the limits can flip at random.
+
+    lp group nowy           setweight 10
+    lp group gracz          setweight 20
+    lp group obywatel       setweight 30
+    lp group mistrz         setweight 40
+    lp group budowniczy     setweight 50
+    lp group moderator      setweight 60
+    lp group administrator  setweight 90
+    lp group architekt      setweight 100
+
+Inheritance. Every rung takes everything from the one before, so an ordinary
+player's permissions are written once, in nowy.
+
+    lp group gracz          parent add nowy
+    lp group obywatel       parent add gracz
+    lp group mistrz         parent add obywatel
+    lp group budowniczy     parent add obywatel
+    lp group moderator      parent add obywatel
+    lp group administrator  parent add moderator
+    lp group administrator  parent add budowniczy
+    lp group architekt      parent add administrator
+
+    lp group default        parent add nowy
+
+That last line matters more than it looks: a player who has just arrived for the
+first time, and whom the automation has not assigned yet, gets the full set of
+basics through it instead of empty hands.
+
+The promotion track:
+
+    lp createtrack rangi
+    lp track rangi append nowy
+    lp track rangi append gracz
+    lp track rangi append obywatel
+    lp track rangi append mistrz
+
+Staff is deliberately not on the track. Because of that `promote` will never
+carry a player past Mistrz, however many times somebody clicks.
+
+
+4. Claim limits
+---------------
+
+Open Parties and Claims reads them from LuckPerms as meta, not as permissions.
+The key names are fixed by the mod and cannot be changed.
+
+    lp group nowy           meta set xaero.pac_max_claims 4
+    lp group nowy           meta set xaero.pac_max_forceloads 0
+    lp group gracz          meta set xaero.pac_max_claims 6
+    lp group gracz          meta set xaero.pac_max_forceloads 2
+    lp group obywatel       meta set xaero.pac_max_claims 8
+    lp group obywatel       meta set xaero.pac_max_forceloads 4
+    lp group mistrz         meta set xaero.pac_max_claims 12
+    lp group mistrz         meta set xaero.pac_max_forceloads 8
+    lp group architekt      meta set xaero.pac_max_claims 500
+    lp group architekt      meta set xaero.pac_max_forceloads 32
+
+For any of this to work at all, world/serverconfig/openpartiesandclaims-server.toml
+must say permissionSystem = "luck_perms". The pack sets it; check after the
+first start, because by default the mod looks for Prometheus and quietly ignores
+every meta value above.
+
+The second catch, this one from the mod's own documentation: a limit from
+permissions only takes effect after the player's first login since the server
+restarted. Until then maxPlayerClaims from the toml applies — which is why it is
+set to 4 and 0, the lowest rung. Were a higher number sitting there, every
+restart would hand everyone a moment of Mistrz limits.
+
+
+5. Who may touch whom
+---------------------
+
+A permission says "you may use /ban". It does not say "you may ban this
+particular person". The second half is a separate mechanism: selector weight,
+from the Vanilla Permissions mod. The rule is one sentence — **you can only
+target a player whose weight is lower than or equal to your own**.
+
+    lp group nowy           meta set minecraft.selector.weight.* 10
+    lp group gracz          meta set minecraft.selector.weight.* 20
+    lp group obywatel       meta set minecraft.selector.weight.* 30
+    lp group mistrz         meta set minecraft.selector.weight.* 40
+    lp group budowniczy     meta set minecraft.selector.weight.* 50
+    lp group moderator      meta set minecraft.selector.weight.* 60
+    lp group administrator  meta set minecraft.selector.weight.* 90
+    lp group architekt      meta set minecraft.selector.weight.* 100
+
+The same numbers as the group weights in section 3, deliberately — one number
+per rank, one less thing to remember.
+
+From here on Moderator (60) bans, kicks and teleports players and Budowniczy,
+while on Administrator (90) and Architekt (100) the command bounces with an
+error. This works for every vanilla command that takes a player as an argument:
+/ban, /kick, /tp, /gamemode, /op and the rest — because the block sits in the
+argument parsing, not in the command.
+
+The wildcard in the meta key works thanks to the Metadata Wildcard mod. Without
+it LuckPerms knows no wildcards in meta and you would have to write a separate
+key for every variant of every command — and there are several per command,
+because the key carries the whole argument path (`ban.targets.targets` and
+separately `ban.targets.targets.reason`). Do not remove that mod from the pack.
+
+Three things you need to know for this not to be an illusion:
+
+  * **Both sides must have a weight.** A player without one is targetable by
+    everybody. That is why `nowy` already has a weight and `default` inherits
+    from it — nobody is left without a number.
+  * **`/execute` goes around this check.** That is how it is written in Vanilla
+    Permissions and no config will change it. Which is why Moderator does not
+    get `minecraft.command.execute`, and should never get it.
+  * **A Moderator on weight 60 can touch another Moderator** (60 ≤ 60). If that
+    bothers you, give each of them a different number.
+
+The StaffSee commands (`/mute`, `/warn`, `/freeze`) are covered only if the mod
+uses vanilla arguments to name the player. There are no public sources to check
+this without running it — verify on a live server by trying to mute an
+Administrator from a Moderator account.
+
+
+6. Ordinary player permissions
+------------------------------
+
+    lp group nowy           permission set essentialcommands.home.set true
+    lp group nowy           permission set essentialcommands.home.tp true
+    lp group nowy           permission set essentialcommands.home.delete true
+    lp group nowy           permission set essentialcommands.back true
+    lp group nowy           permission set essentialcommands.randomteleport true
+    lp group nowy           permission set essentialcommands.afk true
+    lp group nowy           permission set essentialcommands.nickname.self true
+    lp group nowy           permission set staffsee.report true
+
+A player teleports to three places and not one more: their own home, where they
+just were (/back), and a random point in the wild (/rtp, which is how you find
+somewhere to put a first claim). There is no /tpa, no /warp, no /spawn — the
+rest of the world is reached by waystones, which have to be found first. That is
+the whole idea of travel on this server and it is worth being stubborn about: if
+a player could teleport to a friend with one click, the waystone network would
+stop meaning anything.
+
+`essentialcommands.spawn.tp` is deliberately absent from this list and it is the
+most recent change in this section. The admin shops stand on spawn, so a free
+jump there from anywhere in the world is a free jump to the market — and a
+`/back` right after drives you home to the mine. What comes out of it is a pair
+of waystones nobody had to find or place, and precisely the one pair everybody
+wants to use. In survival, the journey to the market is meant to be part of the
+price. Whoever left spawn walks back their own way, or puts up a waystone.
+
+For the same reason there is no `essentialcommands.enderchest` or
+`essentialcommands.workbench` here. Both commands conjure a block that in
+survival has to be crafted, carried and placed: an ender chest costs obsidian
+and an eye of ender, a crafting table takes a slot in the backpack. Called from
+the hand they are free, weigh nothing and cannot be stolen — and an ender chest
+on command turns every expedition into a mine with infinite inventory, because
+the overflow gets posted home instead of hauled. Anyone who wants them to hand
+carries them, or places one in the mine. The remaining block commands —
+`/anvil`, `/grindstone`, `/stonecutter` — were never granted and stay that way.
+
+Want it harsher still — strike `essentialcommands.randomteleport` and let new
+players walk out of spawn, or `essentialcommands.back` and let death cost the
+way home. Either is one line.
+
+Home limits. The numbers have to match the home_limit list in
+config/EssentialCommands.properties (it says 1,2,3 there):
+
+    lp group nowy           permission set essentialcommands.home.limit.1 true
+    lp group gracz          permission set essentialcommands.home.limit.2 true
+    lp group obywatel       permission set essentialcommands.home.limit.3 true
+
+Mistrz has no line of its own here and that is not an oversight: it inherits the
+three from Obywatel and at three the home ladder ends. A home is a free teleport
+on this server, so its count is the same decision as taking away `/spawn` a few
+paragraphs above. Mistrz pays for ground — twelve chunks and eight forceloads —
+not for shortcuts across the map. If you ever change your mind, go back to
+`home_limit` in the config first; the LuckPerms command alone does nothing,
+because the mod only knows the numbers written in that list.
+
+TRAP. Never grant a bare `essentialcommands.home`. LuckPerms reads it as a
+wildcard and the player gets every node below it — including limit.5. The whole
+home ladder stops existing, and it looks like it is working.
+
+
+7. Budowniczy
+-------------
+
+    lp group budowniczy     permission set minecraft.command.gamemode true
+    lp group budowniczy     permission set essentialcommands.top true
+    lp group budowniczy     permission set essentialcommands.spawn.tp true
+    lp group budowniczy     permission set xaero.pac_server_claims true
+
+The `minecraft.command.gamemode` node exists thanks to the Vanilla Permissions
+mod and covers every mode — including spectator, which is often handier than
+creative for looking at somebody else's build.
+
+`essentialcommands.spawn.tp` is `/spawn` — an ordinary player does not have it
+(section 6) and here is where it starts to exist. That is because spawn is a
+staff workplace: Budowniczy builds it, and Administrator sets it with `/spawn
+set` and needs some way of checking where they actually set it. Administrator
+and Architekt inherit it from Budowniczy. Moderator has to be given the same
+node separately (section 8), because it inherits from Obywatel and not from
+Budowniczy — the two staff branches only meet at Administrator.
+
+`xaero.pac_server_claims` is the right to work on spawn and on other server
+claims — without it Budowniczy will not place a single block there, because a
+server claim defends itself against everybody. The permission alone is not
+enough: you still have to turn on `/openpac-claims server-claim-mode` while
+building. Why it is like that and what exactly the mode opens — docs/claims.txt,
+section 2a. We deliberately do not give `xaero.pac_claims_admin_mode` here: that
+one would also let them onto players' claims, and Budowniczy is meant to build
+the server, not walk into people's houses.
+
+There is neither `worldedit.*` here nor `essentialcommands.fly.self`. The first
+by design (section 2), the second because creative already flies. If you ever
+want a builder who flies in survival and can still die, then instead of gamemode
+grant:
+
+    lp group budowniczy     permission set essentialcommands.fly.self true
+
+and do not grant `essentialcommands.invuln.self` — that is exactly the
+difference between "flies" and "cannot be killed".
+
+
+8. Moderator
+------------
+
+Moderation — kick and ban are vanilla, StaffSee gives the rest:
+
+    lp group moderator      permission set staffsee.moderate true
+    lp group moderator      permission set minecraft.command.kick true
+    lp group moderator      permission set minecraft.command.ban true
+    lp group moderator      permission set minecraft.command.pardon true
+    lp group moderator      permission set minecraft.command.banlist true
+    lp group moderator      permission set minecraft.command.tp true
+    lp group moderator      permission set essentialcommands.spawn.tp true
+
+The `minecraft.command.*` nodes exist thanks to the Vanilla Permissions mod.
+Without it the vanilla commands ask only about op level, and then Moderator
+would have to be given op — which is everything, immediately.
+
+The last line looks like a repeat from section 7 and is not. The ladder splits
+at Obywatel: Budowniczy and Moderator are two separate branches and they only
+meet at Administrator, which inherits from both. A node granted to Budowniczy
+therefore never reaches Moderator and has to be written out a second time here.
+`/tp` on its own is not enough — it takes coordinates or a player, and spawn is
+neither.
+
+Seeing and undoing damage:
+
+    lp group moderator      permission set vanish.command.vanish true
+    lp group moderator      permission set vanish.feature.view true
+    lp group moderator      permission set ledger.commands.root true
+    lp group moderator      permission set ledger.commands.inspect true
+    lp group moderator      permission set ledger.commands.search true
+    lp group moderator      permission set ledger.commands.preview true
+    lp group moderator      permission set ledger.commands.rollback true
+    lp group moderator      permission set ledger.commands.restore true
+
+Promoting players. This is where the nodes pile up and every one is needed —
+a missing one ends in a "no permission" message that does not say which:
+
+    lp group moderator      permission set luckperms.usecontext.global true
+    lp group moderator      permission set luckperms.user.info true
+    lp group moderator      permission set luckperms.user.info.view.others true
+
+    lp group moderator      permission set luckperms.user.promote true
+    lp group moderator      permission set luckperms.user.promote.modify.others true
+    lp group moderator      permission set luckperms.user.promote.rangi.nowy true
+    lp group moderator      permission set luckperms.user.promote.rangi.gracz true
+    lp group moderator      permission set luckperms.user.promote.rangi.obywatel true
+    lp group moderator      permission set luckperms.user.promote.rangi.mistrz true
+
+    lp group moderator      permission set luckperms.user.demote true
+    lp group moderator      permission set luckperms.user.demote.modify.others true
+    lp group moderator      permission set luckperms.user.demote.rangi.nowy true
+    lp group moderator      permission set luckperms.user.demote.rangi.gracz true
+    lp group moderator      permission set luckperms.user.demote.rangi.obywatel true
+    lp group moderator      permission set luckperms.user.demote.rangi.mistrz true
+
+Where the odd names come from: config/luckperms/luckperms.conf says
+argument-based-command-permissions = true, so a command's arguments become part
+of the node. Moderator has four groups from the `rangi` track written out and no
+others — and that is the entire mechanism keeping them away from staff. There is
+no `luckperms.user.parent.add`, so they cannot cut across the track either.
+
+Do not grant `luckperms.user.promote.rangi` without the last part in the hope
+that it behaves like a wildcard. It will — and it will cover every group you
+ever add to the track.
+
+What Moderator cannot do, and why. This list follows from no prohibition at all,
+only from the fact that the above is **everything** they get. A node you did not
+grant simply is not there:
+
+  * **promote themselves** — `promote` checks a separate permission when the
+    target is the sender (`luckperms.user.promote.modify.self`). Moderator has
+    only `.modify.others`, so `/lp user <own name> promote rangi` bounces off a
+    missing permission.
+  * **give anybody anything above Mistrz** — `promote` only walks the `rangi`
+    track, and on the track stand four player groups and not one staff group.
+    The four are additionally written out by name, so adding a new group to the
+    track later will not open it to Moderator by itself.
+  * **grant a group by hand** — there is no `luckperms.user.parent.add` or
+    `.parent.set`, so the shortcut around the track does not exist.
+  * **change permissions, groups, meta or weights** — there is no
+    `luckperms.group.*`, `luckperms.user.permission.*`, `luckperms.user.meta.*`,
+    `creategroup` or `deletegroup`.
+  * **open the web editor** — there is no `luckperms.editor`.
+  * **get around selector weights via /execute** — there is no
+    `minecraft.command.execute`.
+
+Check this rather than taking it on trust. On the Moderator account:
+
+    lp user <name> permission check luckperms.user.parent.add
+    lp user <name> permission check luckperms.editor
+    lp user <name> permission check minecraft.command.execute
+    lp user <name> permission check luckperms.user.promote.modify.self
+
+All four should answer `undefined`.
+
+We deliberately do NOT put explicit `false` here. Administrator inherits from
+Moderator, and an explicit `false` on a more specific node can beat the
+`luckperms.*` wildcard in the child group — you would be blocking the editor and
+/execute for Administrator without knowing when. An absent node is safer here
+than a prohibition.
+
+
+9. Administrator and Architekt
+------------------------------
+
+    lp group administrator  permission set luckperms.* true
+    lp group administrator  permission set worldedit.* true
+    lp group administrator  permission set essentialcommands.warp.set true
+    lp group administrator  permission set essentialcommands.warp.delete true
+    lp group administrator  permission set essentialcommands.warp.tp true
+    lp group administrator  permission set essentialcommands.spawn.set true
+    lp group administrator  permission set universal_shops.admin true
+    lp group administrator  permission set xaero.pac_claims_admin_mode true
+    lp group administrator  permission set xaero.pac_parties_admin_mode true
+
+    lp group administrator  permission set luckperms.user.parent.add.architekt false
+    lp group administrator  permission set luckperms.user.parent.set.architekt false
+    lp group administrator  permission set luckperms.group.permission.set.architekt false
+
+    lp group architekt      permission set * true
+
+Architekt is the only account in ops.json, level 4. The rest of the staff has no
+op and should not have any — op goes around LuckPerms in vanilla commands and
+this whole ladder stops meaning anything.
+
+Honestly about the limits of this arrangement. The three negations above are a
+lock in the door, not a wall — and they concern Administrator only, because
+Moderator has nothing to get around (section 8):
+
+  * `/lp editor` opens the web editor, which saves changes in bulk. Per-argument
+    control does not reach in there. If Administrator is to be genuinely
+    limited, add `lp group administrator  permission set luckperms.editor false`
+    — at the cost of convenience, because the editor is the best part of
+    LuckPerms.
+  * Whoever has console access or access to the server files has everything. No
+    permission changes that. Architekt is not a rank, it is the owner.
+
+Bans and kicks the other way round are already closed: Administrator (weight 90)
+is out of Moderator's reach (60) thanks to the selector weights in section 5.
+That works for every vanilla command naming a player, not just /ban.
+
+Administrator inherits the ordinary player ranks from Moderator and Budowniczy,
+so their claim limits are Obywatel's limits. Working on somebody else's ground
+is what admin mode is for (docs/claims.txt), not a limit of their own.
+
+
+10. Day-to-day
+--------------
+
+    lp user <name> promote rangi      one rung up
+    lp user <name> demote rangi       one rung down
+    lp user <name> info               what the player has and where from
+    lp user <name> parent add moderator     granting a staff rank (Architekt)
+    lp user <name> parent remove moderator  taking it away
+
+    playtime <name>                   hours logged and how far to the next rank
+    playtime reload                   after changing thresholds in the config
+
+Playtime Rewards manages only the groups it has in its own config — that is
+nowy, gracz and obywatel. It leaves Mistrz and every staff rank alone, so a
+promotion paid for in materials will not be undone overnight by the automation.
+
+
+11. Chat prefixes
+-----------------
+
+Prefixes for the three automatic ranks are set by Playtime Rewards on promotion,
+from the `luckPermsPrefix` field in its config. The manual ones have to be added
+yourself:
+
+    lp group mistrz         meta setprefix 40 "&6[Mistrz] "
+    lp group budowniczy     meta setprefix 50 "&2[Budowniczy] "
+    lp group moderator      meta setprefix 60 "&9[Moderator] "
+    lp group administrator  meta setprefix 90 "&c[Administrator] "
+    lp group architekt      meta setprefix 100 "&5[Architekt] "
+
+The `&` codes are fine here: the prefix reaches chat through the
+`%luckperms:prefix%` placeholder, which LuckPerms handles itself and converts to
+colour itself. Nothing needs rewriting into another syntax.
+
+The prefix will not show up in chat without config/styled-chat.json from the
+pack, though — Styled Chat writes `<Name> message` by default and does not ask
+about rank. If you set a prefix and chat is still white, start by checking that
+this file is in config/. Details in docs/staff.txt, section 10.

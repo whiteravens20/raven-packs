@@ -38,7 +38,7 @@ is new enough that a few of its mods are still pinned to beta builds.
 Its server half is a whole server setup rather than a mod list — a LuckPerms
 rank ladder wired to playtime, land claims with per-rank chunk limits, shops,
 moderation tooling and an in-game guide book. The operator handbook rides in
-the server zip under `dokumentacja/`.
+the server zip under `docs/`.
 
 ---
 

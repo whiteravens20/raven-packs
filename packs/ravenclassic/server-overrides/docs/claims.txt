@@ -1,0 +1,251 @@
+Claims and chunk loading
+========================
+
+Open Parties and Claims. One thing up front, because everything below depends on
+it: this mod has no cuboids. You do not mark corners, there are no rectangles of
+arbitrary size. The unit is a chunk — 16×16 blocks from bedrock to the world
+limit. You take them one at a time, standing inside.
+
+A rank's limit is the total number of chunks, not the number of claims. Four
+chunks can be a 32×32 square or four separate pieces on the far side of the map.
+F3+G draws the chunk grid — worth showing a player before they start building,
+because a house laid across four chunks eats a Nowy's entire allowance.
+
+
+1. The ordinary player
+----------------------
+
+    /openpac-claims claim          take the chunk you are standing in
+    /openpac-claims unclaim        release it
+    /openpac-claims forceload      keep this chunk loaded
+    /openpac-claims unforceload    stop
+    /openpac-claims about          how many taken of how many, how much forceload
+
+You can also give block coordinates instead of standing in the chunk — tab will
+suggest the syntax. Claiming only works within 5 chunks of yourself
+(maxClaimDistance in the toml), so nobody stakes out ground from the other end
+of the world.
+
+All of this has an equivalent in the mod's interface and on the Xaero maps —
+your claims in green, other people's in the owner's colour, without configuring
+anything. That is why the pack has Xaero and not JourneyMap.
+
+Parties:
+
+    /openpac-parties create <name>
+    /openpac-parties invite <name>
+    /opm <message>                 party chat
+
+A party can be given access to your claims. Note: partyOwnedClaims is turned off
+in the pack, meaning claims belong to a specific player and not to the party. A
+party grants access, not ownership — so a group falling apart takes nobody's
+ground away and does not multiply limits.
+
+
+2. Staff
+--------
+
+Admin mode — you enter somebody else's claim as if it were yours. For putting
+out fires, not for sightseeing:
+
+    /openpac-claims admin-mode
+
+Permission: xaero.pac_claims_admin_mode (Administrator has it).
+
+Server claims — spawn, market, arena. They count towards nobody's limit and do
+not expire:
+
+    /openpac-claims server-claim-mode
+
+Permission: xaero.pac_server_claims. With the mode on, an ordinary `claim` takes
+the chunk for the server, not for you. Remember to turn it off.
+
+Modes are switched with the pattern `<mode>-claim-mode`, where mode is
+`default`, `player`, `party` or `server`. Tab after `/openpac-claims` lists the
+full set.
+
+Looking at somebody else's limits:
+
+    /openpac-claims about <name>
+
+Every `/openpac...` command has to be typed by a player in game. From the
+console they bounce with an error about a missing player — unlike LuckPerms,
+which is precisely what you paste into the console.
+
+
+2a. Building on a server claim
+------------------------------
+
+A server claim is protected against everybody, including whoever placed it.
+There is no "server, therefore shared" here: the owner is an empty UUID and
+nobody's UUID matches it. Op does not help either — the mod never asks about op
+level, so Architekt bounces off spawn exactly like Nowy.
+
+The mod checks three doors in order and the first one open wins:
+
+  1. **Admin mode on** — lets you onto any claim, server claims included.
+  2. **Server mode on** + the `xaero.pac_server_claims` permission — lets you
+     onto server claims only.
+  3. **A fullAccess exception** in the server claim configuration names a group
+     you are in.
+
+Hence the most common surprise: you take spawn in server mode, turn the mode off
+as the paragraph above says — and from that moment you cannot place a block
+there. Nothing broke; you just closed door number 2 on yourself.
+
+Day to day, then, `/openpac-claims server-claim-mode` for the duration of the
+work is enough. Budowniczy gets the permission for it in docs/ranks.txt, section
+7 — and only that. Server mode does not let them onto somebody else's claim, so
+a builder builds spawn and never touches a player's house. There is one price
+and it needs knowing: in this mode `claim` and `unclaim` work on the server too,
+so a builder can add or release a spawn chunk.
+
+If you would rather not have to remember the mode, do it once and for good, with
+a group:
+
+    /openpac server-claims-config player-groups create ekipa
+    /openpac server-claims-config player-groups include-player ekipa <name>
+    /openpac server-claims-config set playerConfig.claims.protection.exceptions.fullAccess ekipa
+
+From then on everybody on that list builds on every server claim without
+switching anything. It is OPAC's own list of names, not a LuckPerms group — the
+mod asks LuckPerms only about limits and about the two permissions above. A new
+builder has to be added here by hand and that is the entire cost of this
+variant.
+
+
+2b. Mobs on server claims
+-------------------------
+
+On a server claim nothing spawns and nothing walks about. Two separate things do
+that, because one cannot do both.
+
+SPAWNING — OPAC. In world/serverconfig/openpartiesandclaims-server-claim-config.toml
+the pack turns off four exceptions the mod keeps on true by default:
+
+    naturalSpawnHostile  = false
+    naturalSpawnFriendly = false
+    spawnersHostile      = false
+    spawnersFriendly     = false
+
+From then on nothing spawns on chunks taken in server mode — not hostile, not
+friendly, not from a spawner block. Player claims are untouched by this: they
+run off openpartiesandclaims-default-player-config.toml, and the pack changes
+nothing there, because mob limits at home are the player's business.
+
+A TRAP when editing by hand. The [playerConfig] section must contain
+`version = 15`. Without that one line OPAC treats the file as foreign, deletes
+it and writes out its own defaults — quietly, without a word in the log. It
+looks exactly as though the change did not work, when in fact it worked and was
+reverted. The file from the pack has that line; the file the mod generated
+itself has it too, so editing it in place you have no way to get this wrong. The
+change takes effect after a restart.
+
+The `/opac server-claims-config set ...` commands do the same without a restart,
+but only from a player's hand — from the console they do not exist, because the
+mod demands a player as the executor and without one the whole command branch
+disappears.
+
+WALKING IN FROM OUTSIDE — the datapack. OPAC will not throw out a mob that
+walked onto a claim on its own legs, and it does not expose its claims to any
+command, so the datapack has no way of knowing by itself where they are. The
+zone is marked with a marker, placed where you stand:
+
+    /summon minecraft:marker ~ ~ ~ {Tags:["rc_nomobs"]}
+
+The ravenclassic-rules datapack kills hostile mobs once a second within 48
+blocks of every such marker. There can be as many markers as you like — one on
+spawn, one on the market, as many as it takes to cover the ground.
+
+    where they are    /execute as @e[type=minecraft:marker,tag=rc_nomobs] at @s run particle minecraft:end_rod ~ ~1 ~ 0 2 0 0 60
+    remove the nearest    /kill @e[type=minecraft:marker,tag=rc_nomobs,distance=..8]
+
+What dies is listed in data/ravenclassic/tags/entity_type/wrogie_moby.json. It
+contains #minecraft:undead and #minecraft:raiders, so new undead and new raiders
+join on their own when the game updates; the rest are named individually. Cows,
+villagers, armour stands and items on the ground stay — that is tested, not
+assumed.
+
+The radius is a sphere around the marker, not a square and not a claim: a marker
+near a boundary also kills mobs at the neighbour's. Place it in the middle of
+the ground it covers.
+
+One last thing that makes a test on an empty server look broken: with no players
+the server stops ticking after a minute (pause-when-empty-seconds in
+server.properties). The datapack loop then stands still and mobs do not die. It
+starts again by itself when somebody joins.
+
+
+3. What is protected
+--------------------
+
+Everything. By default a stranger in your claim will not place or break a block,
+will not open a chest, barrel, ender chest or shulker, will not use a furnace,
+anvil, crafting table, enchanting table, will not flip a lever, will not open a
+door or gate, will not kill your animals and will not trample your field. Yes —
+chests and doors too, that is not a separate option to switch on.
+
+The one exception left over from the mod's defaults is the crafting table.
+
+The pack adds three of its own, in
+world/serverconfig/openpartiesandclaims-server.toml:
+
+    anything$waystones:*                       every waystone
+    anything$universal_shops:trade_block       player shop
+    anything$universal_shops:admin_trade_block admin shop
+
+The point is that you can buy from a shop standing on somebody's claim and jump
+from a waystone standing in somebody else's village. This list is global and
+does not ask whose claim it is — it works the same on a player's ground and on a
+server claim, so the admin shops on spawn serve everybody.
+
+The exception covers the click only — a stranger still cannot break these
+blocks, and only the owner opens the shop's settings. An open shop is a till,
+not a back door.
+
+The `anything$` prefix is not decoration. Without it the mod lets the click
+through, but then separately checks what the player is holding — and blocks
+everything that does something when clicked, which includes every block. A
+client with a stack of dirt in hand bounced off the shop with no sensible
+message. `anything$` turns that into unambiguous consent. Sneaking (shift) is
+excluded from that consent on the mod's side, so placing blocks on somebody
+else's claim is still protected.
+
+A player can open up more themselves. The mod has ready-made groups to toggle in
+the claim settings: Controls, Doors, Chests, Barrels, Ender_Chests,
+Shulker_Boxes, Furnaces, Hoppers, Anvils, Stonecutters, Grindstones, Lecterns,
+Beds, Beacons, Enchanting_Tables, Crops and several others. They are set per
+player or per individual claim, through the mod's interface or
+`/openpac player-config`. Handy for a shared farm or a public forge.
+
+You can also switch exceptions on for chosen people — `/openpac player-config
+player-groups` creates your own lists of players, and the `...exceptions...`
+options say which list may do what. The same mechanism as in section 2a, only on
+your own claim.
+
+
+4. Chunk loading
+----------------
+
+Forceload keeps a chunk loaded when nobody is there. It is the only way for a
+farm to run in the owner's absence, and the only chunk loading on this server —
+there are no craftable chunk-loading blocks here. Because of that the load is
+bounded by a number you set, and not by how many blocks somebody has stacked up.
+
+You can only forceload your own, already claimed chunk. Limits: 0 / 2 / 4 / 8 up
+the ladder (docs/ranks.txt).
+
+What it costs. A chunk held open is a full tick of entities, redstone and
+machines, non-stop, including when nobody is on the server. Ten Mistrz accounts
+using their whole allowance is 80 chunks ground through twenty times a second.
+Before you raise the limits, look in /spark — the profiler will show how much of
+the tick the loaded chunks eat, and that is the only number that should decide
+this.
+
+You raise them with one command, e.g.:
+
+    lp group mistrz         meta set xaero.pac_max_forceloads 12
+
+A limit from permissions only takes effect after the player's first login since
+the server restarted. Do not panic that the command did not work — have them log
+back in.

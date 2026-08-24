@@ -1,0 +1,435 @@
+Staff tools
+===========
+
+1. WorldEdit
+------------
+
+It runs server-side, so a player does not have to install anything for somebody
+next to them to raise walls by command. The client pack does carry WorldEdit CUI
+— it draws the selection box, without which working blind is misery.
+
+Administrator and Architekt have WorldEdit. Budowniczy does not — the reason is
+below, in the paragraph marked IMPORTANT. Budowniczy builds in creative mode.
+
+The basics:
+
+    //wand                wooden axe for selecting
+    left / right click    first and second corner
+    //set <block>         fill the selection
+    //replace <a> <b>     swap one block for another
+    //copy  //paste       clipboard
+    //undo  //redo        undo, redo
+    //expand //contract   fix the selection without clicking again
+    //sel                 clear the selection
+
+Permissions. The simplest version is wholesale:
+
+    lp group administrator  permission set worldedit.* true
+
+Want it tighter — grant only what is needed and leave the rest:
+
+    worldedit.wand
+    worldedit.selection.*
+    worldedit.region.*
+    worldedit.clipboard.*
+    worldedit.history.*
+    worldedit.navigation.*
+    worldedit.brush.*
+
+Deliberately do NOT grant `worldedit.limit.unrestricted` to anybody but
+Architekt. The block limit per operation is the only thing standing between a
+typo in a radius and a fifteen-minute server freeze. The default limit is
+changed in config/worldedit/worldedit.properties (key `max-blocks-changed`, put
+a concrete number in place of -1) — the file appears on the first start.
+
+IMPORTANT. WorldEdit cannot see claims. It does not ask OPAC for permission and
+it never will: `//set air` at radius 50 levels everything, other people's houses
+included. There is no mod that would tie the two together on Fabric 26.2. Which
+means:
+
+  * WorldEdit sits with Administrator, not with Budowniczy. Budowniczy is a rank
+    for putting up pretty things; erasing terrain with one command is a
+    different responsibility and a different account,
+  * Ledger logs every block change together with who made it, so `//undo` has an
+    emergency backup in the form of `/lg rollback`,
+  * before large operations warn the hosting admin so they take a copy of the
+    world. You cannot order one from in game — the pack has no backup mod.
+
+
+2. Moderation
+-------------
+
+Kick and ban are vanilla commands. LuckPerms sees them thanks to the Vanilla
+Permissions mod (the `minecraft.command.*` nodes), so Moderator does not need
+op.
+
+    /kick <name> <reason>
+    /ban <name> <reason>
+    /pardon <name>
+    /banlist
+
+The rest comes from the StaffSee mod (node `staffsee.moderate`):
+
+    /mute <name> <30m|2h|1d|perm> <reason>
+    /unmute <name>
+    /warn <name> <reason>
+    /warns <name>
+    /freeze <name>      pins them in place — for a conversation, not as a penalty
+    /unfreeze <name>
+    /reports            reports from players
+
+Players report with `/report <name> <reason>` — the `staffsee.report` permission
+is held by everybody, it sits in the `nowy` group.
+
+Everything StaffSee does lands in text files in its config directory, split by
+player and by kind of action. No database, no panel — grep is enough.
+
+An honest note about StaffSee: it is the youngest mod in this pack, released in
+July 2026, with a few hundred downloads. It is here because `/mute` on Fabric
+26.2 has no alternative that could be used — the only other one is a mod with no
+public sources, on a closed licence, duplicating half of Essential Commands.
+StaffSee runs server-side only, so if it causes trouble it drops out of the pack
+without touching any client. Kick and ban remain.
+
+Moderator will not ban or kick an Administrator — the selector weights see to
+that (docs/ranks.txt, section 5). The block sits in the argument parsing, so it
+covers every vanilla command naming a player. The one known way around it is
+/execute, which Moderator does not get.
+
+To check on a live server: whether the StaffSee commands are covered too. That
+depends on whether the mod names the player with a vanilla argument, and there
+are no sources to read. The test takes a minute — try `/mute` on an
+Administrator from a Moderator account.
+
+
+3. Vanish
+---------
+
+    /vanish
+
+Disappear from the player list and from view. For checking whether somebody is
+really doing what you suspect them of.
+
+    lp group moderator      permission set vanish.command.vanish true
+    lp group moderator      permission set vanish.feature.view true
+
+The second node is the right to see others who are hidden — without it staff
+cannot see each other and they walk into one another in the dark.
+
+
+4. Ledger — logs and rollback
+-----------------------------
+
+    /lg inspect              inspection mode: click a block to see its history
+    /lg inspect <x> <y> <z>  history of one particular spot
+    /lg search <parameters>  search by player, time, block
+    /lg preview <parameters> see what a rollback would do
+    /lg rollback <parameters> roll back
+    /lg restore <parameters> undo the rollback
+
+Always `preview` before `rollback`. Ledger's parameters are powerful and it is
+easy to catch half the world with them instead of one house.
+
+
+5. The starter kit
+------------------
+
+The `Start` kit is stone tools (sword, pickaxe, axe, shovel, hoe), four loaves
+of bread and **the server guide** in the first slot. That last item is the most
+important thing here: Modonomicon has no command to open a book, so if nobody
+gave the player one, the whole guide would have been written for the drawer.
+
+File: config/starterkit/kits/Start.txt, the description in
+config/starterkit/descriptions/. The format is one line per slot, and the value
+goes straight through the ItemStack codec, so items with components work — that
+is exactly how the book is written down:
+
+    {count:1,id:"modonomicon:modonomicon",components:{"modonomicon:book_id":"ravenclassic:przewodnik"}}
+
+The easiest way to change the contents without touching the file: go into
+creative, arrange the inventory, run `/sk set Start`.
+
+When it arrives:
+
+  * **on first join** — the mod itself, nothing needed,
+  * **after every death** — the ravenclassic-rules datapack, function
+    `kit_smierc`. The inventory is empty then, because the belongings are in the
+    grave, so the kit overwrites nothing,
+  * **on request, once every 30 minutes** — the player calls `/trigger rc_kit`.
+
+Staff commands:
+
+    /sk give <name> <kit>  hand somebody a kit out of turn
+    /sk set <name>         save your current inventory as a kit
+    /sk list               what is active
+    /sk reload             after editing the files by hand
+
+How the cooldown works. `/trigger` is the only way built into Minecraft for a
+player without permissions to fire a datapack function — there is no timed-kit
+mod on Fabric 26.2, so the countdown is done by the datapack: the `rc_cd`
+objective loses a second per second, and at zero the `tick` function switches
+the trigger back on. Changing the time is one number in
+`kit_komenda.mcfunction` (1800 seconds).
+
+CAREFUL with `/trigger rc_kit` on a full inventory. Starter Kit clears the
+inventory, inserts the kit and only then gives back what the player had — and
+whatever does not fit lands at their feet. After a death that does not matter;
+mid-game it does.
+
+Repeating kits on a longer cycle (daily, weekly) cannot be done with this. The
+substitute is elsewhere: Playtime Rewards has a `rewards` field on every rank
+and hands out items on promotion, once, with duplicate control:
+
+    "rewards": [ { "item": "minecraft:diamond", "count": 4 } ]
+
+File: world/config/playtime-rewards/config.json, then `/playtime reload`.
+
+
+6. Backups and performance
+--------------------------
+
+    /spark profiler start   the profiler, when the server starts to drag
+    /spark tps
+
+The pack makes no backups and has no command to order one — backups are the
+host's side. From in game you have only Ledger: `/lg rollback` undoes block
+changes, but not inventories, not ender chests and not a corrupted world. It is
+a tool for grief, not a backup.
+
+A browser map (BlueMap and company) is deliberately absent from the pack. It
+renders for hours, takes several GB of disk, needs a separate port from the
+host, and shows the whole world without a login — including what cannot be seen
+from the ground. We keep MeowAntiXray here so the client cannot see ores through
+stone (section 8); a public map would expose the same information from the other
+side. Players have a map of their own: Xaero draws them the ground they actually
+explored, claims included.
+
+
+7. Disabled recipes
+-------------------
+
+The magnet upgrade from Traveler's Backpack has no recipe. The same
+ravenclassic-rules datapack that cuts the waystone recipes cuts it — the
+`filter.block` filter in its pack.mcmeta, a vanilla mechanism, not a mod. The
+entry names a namespace and a file path within it:
+
+    { "namespace": "travelersbackpack", "path": "recipe/magnet_upgrade\\.json" }
+
+World datapacks load after mod data, so the filter masks the mod's file and the
+recipe simply never comes into being. The server sends recipes out to clients,
+so it disappears from their book too — nobody has to install anything.
+
+Only the crafting is blocked. The item itself works, if somebody already had one
+or was given one by command; this is not disabling the mod, only closing the
+route to making it. Turning the magnet's effect off is done elsewhere — the mod
+has an `enableMagnetUpgrade` option in its server configuration.
+
+
+8. Anti-x-ray
+-------------
+
+Meow Anti-Xray obfuscates ores in chunk packets: underground, the client gets
+false block data, so x-ray sees noise instead of veins. It runs server-side only
+— nobody has to install anything, and in normal play there is no difference to
+see, because the real block appears the moment it is mined.
+
+This is blinding, not detection. The mod catches nobody and punishes nobody; it
+takes away x-ray's input. If detection and punishment for mining patterns ever
+arrive, that is a separate tool and a separate decision.
+
+What it will not cover: what happens outside the game. Reading world files from
+a copy, somebody else's map, a recording from a second account — the server
+takes no part in that. Against grief there is still Ledger.
+
+The configuration appears on the first start; the defaults correspond to
+engine-mode 1 from Paper. Turning obfuscation on costs some CPU for rewriting
+chunk packets — if TPS drops after adding it, `/spark profiler start` will show
+it immediately.
+
+An operational note: at startup the mod queries Modrinth's public API for a
+newer version (one GET, with no data about the server or the players) and there
+is no option to turn that off. If the server is to have zero outbound traffic,
+it has to be cut at the firewall.
+
+
+9. Appearance in the server list
+--------------------------------
+
+After installing the pack a player has the server on their Multiplayer list
+straight away — no address to type. The entry is created at build time from the
+`server` field in pack.json, so the address is written down in one place; the
+name on the list is `serverListName` and `§` codes render in it (hence the
+colour and the bold).
+
+The icon beside the name is sent by the server, not by the pack:
+`server-icon.png` in the server's root directory, exactly 64x64. The client
+downloads it on the first ping and caches it. Swapping the icon means swapping
+that one file and a restart — nobody has to reinstall anything.
+
+CAREFUL when changing the server address. `servers.dat` is an override, so the
+launcher will overwrite it for everybody when the pack changes it — together
+with the servers a player added themselves. When the server moves that is a
+price worth paying, but do not touch this file for cosmetics.
+
+
+10. Chat prefixes
+-----------------
+
+A rank in LuckPerms does not change chat by itself. Styled Chat has a default
+format of `<${player}> ${message}` and never asks about a prefix — which is why
+an Architekt with a correctly set `meta setprefix` still writes in white. The
+format is changed by config/styled-chat.json from the pack:
+
+    %luckperms:prefix%<gray>${player}:</gray> <white>${message}</white>
+
+The colours fall out like this: the prefix carries the rank's colour, the name
+is light grey, and the body is white. The name is deliberately darker than the
+message — in a busy chat the brightest thing should be what was said, not who
+said it.
+
+`%luckperms:prefix%` is registered by LuckPerms itself (through the Placeholder
+API) and it also parses `&` codes, so `&5[Architekt] ` from ranks.txt gives a
+purple label. There is no need to rewrite prefixes into any other syntax. A
+player without a prefix falls out of this gently — what is left is plain
+`Name: message`.
+
+Two things that are easy to trip over:
+
+  * **The prefix had to be granted.** `parent add architekt` does not grant it;
+    that is done by `meta setprefix` from section 11 in ranks.txt. What a player
+    actually has is shown by `lp user <name> info`.
+  * **Styled Chat rewrites this file on every start**, filling in missing fields
+    with its own defaults. After the first run the file is therefore longer than
+    the one from the pack, and that is as it should be — only `chat` is changed
+    in it.
+  * **`legacy_formatting` in `text_formatting` has nothing to do here.** The `&`
+    codes are converted by LuckPerms on its own side and handed to Styled Chat
+    as finished colour. If chat shows a literal "&5", the prefix is to blame,
+    not that switch.
+
+Why not the way the mod advises. The Styled Chat documentation shows a different
+road: a `styles` list where every entry has a `{"type": "permission",
+"permission": "group.<rank>"}` condition and its own chat format with the prefix
+written in by hand. That works, but it moves the prefixes out of LuckPerms and
+into the chat config — while Playtime Rewards sets them itself on promotion,
+from the `luckPermsPrefix` field (ranks.txt, section 11). Three automatic ranks
+would then be setting a prefix nobody reads, and nobody would notice. The
+placeholder leaves one source of truth: the prefix lies where the rest of the
+rank's description lies. If some rank ever needs more than a prefix — a
+different separator, a `display_name` of its own — that is when it is worth
+adding it an entry in `styles`.
+
+The emoji list (`:shrug:`, `:table:` and the rest) is in that file on purpose,
+even though we change nothing in it. Filling in missing fields covers everything
+except that one, so a `default` block without the emoji would delete them
+quietly.
+
+
+11. The player list (Tab)
+-------------------------
+
+The look of the list under Tab is drawn by Styled Player List. The configuration
+is two files from the pack:
+
+    config/styledplayerlist/config.json           the player row
+    config/styledplayerlist/styles/default.json   header and footer
+
+The player row is the same prefix as in chat:
+
+    %luckperms:prefix%<white>%player:displayname%</white>
+
+that is, one source of truth — the rank's description lies in LuckPerms and
+nowhere else (ranks.txt, section 11). `%player:displayname%` lets through a
+nickname from Styled Nicknames, so a player who set one appears on the list
+under it.
+
+The header carries the server name and the `%server:online%/%server:max_players%`
+counter, the footer `%server:tps_colored%` and `%player:ping_colored%`. The mod
+colours both numbers itself, by value, so a drop in TPS is visible without
+reading.
+
+There are no skin faces on this list and there is nothing to switch off. The
+client draws them only when the connection is encrypted or the game is
+singleplayer — and this server runs `online-mode=false`, so there is no
+encryption and vanilla skips the heads by itself. The same mechanism works the
+other way: if you ever move to online mode, the heads come back and no config
+will take them off. The ping bars on the right are drawn by vanilla regardless
+of everything.
+
+Refreshing happens in two places and at two different rhythms. Header and footer
+every 20 ticks — hence the by-the-second TPS and ping. The player row every 200
+ticks, because a name does not change by itself, but a promotion does, and
+Playtime Rewards switches the group mid-game. Ten seconds is the whole
+difference between "I got promoted and I can see it" and "I got promoted, log
+out and back in".
+
+`modify_visibility` is on false deliberately. Turned on, the mod decides for
+itself who is on the list — and that is exactly what Vanish does (section 3).
+Two mods on one knob ends with staff you can see one moment and not the next.
+
+Changes take effect with `/styledplayerlist reload`, no restart. Nobody on staff
+has the `styledplayerlist.reload` node and nobody needs it: the file has to be
+changed on disk first anyway, and whoever has the disk has the console. If you
+want to reload from chat regardless, it is one line — `lp group administrator
+permission set styledplayerlist.reload true`.
+
+The `styles/` directory can hold more than one file; each is a separate style,
+and a player switches with `/plstyle <file name without .json>`. The pack ships
+one, because one is enough.
+
+Sorting by rank (staff at the top) is off — `modify_list_order` on false. It is
+switched on with `sorting_index` entries in `player.styles`, but the direction —
+whether a higher number goes up or down — is vanilla's ordering, not the mod's.
+Check it on a live server before writing numbers for eight groups.
+
+
+12. Spawn
+---------
+
+There are two different spawns and confusing them costs half an hour.
+
+**The world spawn** — where a new player appears and where somebody without a
+bed respawns. It is held by level.dat, not by any text file, so it is set with a
+command:
+
+    /setworldspawn                 where you are standing
+    /setworldspawn 120 70 -340     at the given coordinates
+
+Vanilla scatters respawning players within `respawn_radius`, 10 blocks by
+default. If everybody is to land on one block:
+
+    /gamerule respawn_radius 0
+
+In 26.2 the gamerules have underscored names. The old `spawnRadius` will not
+work and will not say why.
+
+`spawn-protection` in server.properties is 0, so there is no zone around spawn
+where an ordinary player cannot place a block. If spawn is to be untouchable,
+take it with an admin claim (docs/claims.txt) instead of raising that number:
+spawn-protection measures a square from the world spawn, cannot see claims, and
+cannot be switched off for chosen people.
+
+**The /spawn spawn** — the Essential Commands teleport target, set separately:
+
+    /spawn set
+
+It saves the position, the facing and the dimension you are standing in; it
+takes no coordinates, so you simply have to go and stand there. The
+`essentialcommands.spawn.set` permission is held by Administrator and Architekt
+(ranks.txt, section 9).
+
+An ordinary player does not have `/spawn` itself.
+`essentialcommands.spawn.tp` is granted separately to Budowniczy and Moderator
+(ranks.txt, sections 7 and 8), and Administrator inherits it from both — so this
+spawn is a staff workplace, not a shortcut to the market for the whole server. A
+player returns to spawn like anywhere else: by waystone or on foot.
+
+The two spawns do not have to be in the same place and by default nothing
+connects them: `respawn_at_ec_spawn` in config/EssentialCommands.properties is
+`Never`, so after death a player goes where vanilla would send them. The other
+values are Always, NoBed, SameWorld and FirstJoin.
+
+Test both separately, because they are two different paths: join on a fresh name
+(world spawn), and check `/spawn` from a staff account (the EC spawn). On a
+fresh name `/spawn` will fail, and that is the correct result of the test, not a
+fault.

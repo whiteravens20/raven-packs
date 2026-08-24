@@ -1,0 +1,118 @@
+Shops
+=====
+
+Universal Shops. A block placed next to a chest, with a settings screen of its
+own. It runs server-side, so a player on a vanilla client sees it exactly like
+somebody with the full pack.
+
+
+1. The player shop
+------------------
+
+Craft: 4 planks of any kind + 1 wool + 1 iron ingot.
+
+You place it next to a container — a chest, a barrel, whatever the storage is to
+be. The settings screen opens by itself on placement. In it you choose:
+
+  * what the shop sells (clicking with an item in hand copies it into the
+    settings),
+  * what for (the price — also an item),
+  * whether it accepts hoppers,
+  * whether a price hologram floats above the block.
+
+A customer buys by opening the shop and taking the goods; shift+click drops
+straight into the inventory. Payment lands in the same chest the goods come
+from.
+
+There is no currency on this server. There is none because on Fabric 26.2 no mod
+provides the Common Economy API — Universal Shops has a ready "virtual balance"
+mode, but there is nothing to fill it with. You trade item for item and that
+suits players fine; usually one commodity gets settled on as an agreed currency,
+on a classic server a diamond or an emerald.
+
+Only the owner of the block opens the shop's settings. Anybody else sees the
+purchase screen only, including when the shop stands outside a claim.
+
+A piece of advice worth repeating to players: the shop sells from the chest you
+point it at. Do not hook it up to a chest you do not want emptied.
+
+
+2. The admin shop
+-----------------
+
+    /universal_shops get true      gives an admin shop block
+    /universal_shops get false     gives an ordinary shop block
+
+Permission: universal_shops.admin (Administrator has it). An ordinary player has
+no access to that command at all — they craft the block and that is that.
+
+The admin shop differs in two ways, both of them significant:
+
+  * it has infinite stock. It needs no chest and never sells out. Payment goes
+    nowhere either — it leaves circulation.
+  * it cannot be broken. The block has infinite hardness and does not drop. You
+    remove it in creative.
+
+Waystones are worth keeping exactly here. They cannot be made at a table, so the
+admin shop is — alongside villages and the Obywatel rank reward — the third way
+for a player to have a stone of their own at all. The price decides whether the
+travel network grows quickly or slowly.
+
+That means the admin shop is both the tap and the drain of the economy at once.
+The price you set in it becomes the players' ceiling and floor — nobody will
+sell higher than your tap and nobody will buy lower than your drain. Set them
+deliberately, ideally rarely, and on things whose supply you want to stabilise.
+
+
+3. What the shop cannot do
+--------------------------
+
+Purchases cannot be limited by rank. Universal Shops checks permissions only
+when a shop is being created and configured — whoever reaches the block, buys,
+whoever they are. The mod's code simply contains no question of "may this player
+trade here".
+
+The only rank gate that works automatically in this pack is the rank reward in
+Playtime Rewards: the `rewards` field on a rung, handed out once, with duplicate
+control. That is how a waystone reaches a player at Obywatel, and the same way
+you can let through anything else "from rank X upwards".
+
+The rest runs through a person: staff keeps goods for higher ranks outside the
+shop and hands them over on the spot (`/sk give <name> <kit>`), after checking
+the rank in `/lp user <name> info`. Less elegant, but predictable — and
+promotion to Mistrz works the same way.
+
+
+4. Shops and claims
+-------------------
+
+Universal Shops checks chest access through the Common Protection API, which
+OPAC does not implement. In practice it does not hurt: the shop reads the chest
+its block's owner points it at, and OPAC will not let a block be placed on
+somebody else's claim anyway. Do not add a second protection mod to plug this
+hole — two claim systems on one server are guaranteed trouble, bigger than the
+hole itself.
+
+So that buying from a shop standing on somebody's claim is possible, both shop
+blocks are added to the protection exceptions in
+world/serverconfig/openpartiesandclaims-server.toml. Details in docs/claims.txt,
+section 3.
+
+
+5. Ranks for materials
+----------------------
+
+Mistrz is the only rank you buy. The player pays staff the agreed price in the
+admin shop, and staff runs:
+
+    lp user <name> promote rangi
+
+There is no automation for this and there will not be in this version of the
+pack. On Fabric 26.2 no mod exists that would take items and grant a group in
+LuckPerms: KubeJS has no build, neither does Command Aliases, and a plain
+datapack cannot put a player's name into an `lp` command. If KubeJS ever turns
+up, this is the first thing to rework.
+
+We do not sell ranks for real money and we will not. Mojang's commercial
+guidelines forbid selling gameplay advantage, and a claim limit and chunk
+loading are exactly gameplay advantage.
