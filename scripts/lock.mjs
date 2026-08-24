@@ -74,8 +74,30 @@ async function getRequiredJava(mcVersion) {
   }
 }
 
-/** Resolve the Fabric server launcher so the server pack can be turnkey. */
+/**
+ * Resolve the server launcher so the server pack can be turnkey.
+ *
+ * The two loaders hand you different things, and the difference reaches all the
+ * way into the start script. Fabric serves a **ready jar** you run directly.
+ * NeoForge serves an **installer** that has to be run once against the server
+ * directory; it writes `libraries/` and an args file, and from then on the
+ * server is started with `java @user_jvm_args.txt @libraries/.../unix_args.txt`
+ * and never by running a jar. `kind` is what tells build.mjs which to write.
+ */
 async function getServerLauncher(pack) {
+  if (pack.loader.type === 'neoforge') {
+    const v = pack.loader.version;
+    return {
+      kind: 'installer',
+      installerVersion: v,
+      url: `https://maven.neoforged.net/releases/net/neoforged/neoforge/${v}/neoforge-${v}-installer.jar`,
+      fileName: `neoforge-${v}-installer.jar`,
+      // Where the installer leaves the file the start script points at.
+      argsFile: `libraries/net/neoforged/neoforge/${v}/unix_args.txt`,
+      argsFileWindows: `libraries/net/neoforged/neoforge/${v}/win_args.txt`,
+    };
+  }
+
   if (pack.loader.type !== 'fabric') return null;
 
   const installers = await (
@@ -89,6 +111,7 @@ async function getServerLauncher(pack) {
   if (!installer) return null;
 
   return {
+    kind: 'jar',
     installerVersion: installer.version,
     url: `https://meta.fabricmc.net/v2/versions/loader/${pack.minecraft}/${pack.loader.version}/${installer.version}/server/jar`,
     fileName: 'fabric-server-launch.jar',
