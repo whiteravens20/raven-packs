@@ -16,6 +16,10 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    # Dependency work belongs on dev, like every other change here. Without this
+    # Dependabot targets the default branch, and each bump lands on main alone —
+    # which is how main ended up seven CI commits ahead of dev in August 2026.
+    target-branch: dev
     schedule:
       interval: weekly
       day: monday
