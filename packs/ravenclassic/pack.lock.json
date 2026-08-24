@@ -11,12 +11,13 @@
     },
     "requiredJava": 25,
     "serverLauncher": {
+      "kind": "jar",
       "installerVersion": "1.1.2",
       "url": "https://meta.fabricmc.net/v2/versions/loader/26.2/0.19.3/1.1.2/server/jar",
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-24T16:45:54.982Z",
+  "generatedAt": "2026-08-24T23:20:06.622Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
