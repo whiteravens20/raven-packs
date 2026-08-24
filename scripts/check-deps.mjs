@@ -393,51 +393,54 @@ async function download(file) {
 }
 
 /**
- * Read one jar's mod metadata, whichever loader wrote it, and normalise it.
- *
- * Returns `{ id, version, deps }`, where each dep is
- * `{ id, range, maven, required }` — `maven: true` marks a NeoForge range so
- * `satisfiesDep` picks the right grammar. `required: false` covers Fabric's
- * `recommends`/`suggests` and NeoForge's `optional`, which are reported only
- * when they are also *present and wrong*, never as missing.
- *
- * NeoForge's `incompatible` and Fabric's `breaks` both become a dep with
- * `conflict: true`: satisfying the range is the failure, not the requirement.
+ * NeoForge lets a mod write `version="${file.jarVersion}"` in its TOML and have
+ * the loader substitute the real number from the jar manifest at runtime. Half
+ * the libraries in a tech pack do exactly that, and reading the placeholder as
+ * a version makes every dependency on them compare against nothing.
  */
-async function readModMeta(jarPath) {
-  const fabricRaw = await unzipEntry(jarPath, "fabric.mod.json");
-  const fabric = fabricRaw && parseModJson(fabricRaw);
-  if (fabric?.id) {
-    const deps = [];
-    for (const [id, range] of Object.entries(fabric.depends ?? {})) {
-      deps.push({ id, range, maven: false, required: true });
-    }
-    for (const [id, range] of Object.entries(fabric.breaks ?? {})) {
-      deps.push({ id, range, maven: false, required: true, conflict: true });
-    }
-    return {
-      id: fabric.id,
-      version: String(fabric.version ?? "0"),
-      provides: fabric.provides ?? [],
-      deps,
-    };
+async function manifestVersion(jarPath) {
+  const mf = await unzipEntry(jarPath, "META-INF/MANIFEST.MF");
+  if (!mf) return null;
+  // Manifests wrap long lines with a leading space; unfold before matching.
+  const line = mf
+    .replace(/\r?\n /g, "")
+    .match(/^Implementation-Version:\s*(.+)$/m);
+  return line ? line[1].trim() : null;
+}
+
+function fabricMeta(fabric) {
+  const deps = [];
+  for (const [id, range] of Object.entries(fabric.depends ?? {})) {
+    deps.push({ id, range, maven: false, required: true });
   }
+  for (const [id, range] of Object.entries(fabric.breaks ?? {})) {
+    deps.push({ id, range, maven: false, required: true, conflict: true });
+  }
+  return {
+    id: fabric.id,
+    version: String(fabric.version ?? "0"),
+    provides: fabric.provides ?? [],
+    deps,
+  };
+}
 
-  // NeoForge 1.20.5+ renamed the file; older jars still ship `mods.toml`, and a
-  // multiloader jar can carry both. Prefer the new name.
-  const tomlRaw =
-    (await unzipEntry(jarPath, "META-INF/neoforge.mods.toml")) ??
-    (await unzipEntry(jarPath, "META-INF/mods.toml"));
-  if (!tomlRaw) return null;
-
-  const toml = parseModsToml(tomlRaw);
+async function neoforgeMeta(toml, jarPath) {
   const mod = toml.mods[0];
   if (!mod?.modId) return null;
 
   const deps = [];
   for (const entry of toml.dependencies[mod.modId] ?? []) {
     if (!entry.modId) continue;
-    const type = String(entry.type ?? "required").toLowerCase();
+    // Forge's original key was `mandatory = true|false`; NeoForge replaced it
+    // with `type`. Jars in the wild still ship the old one — SodiumOptionsAPI
+    // does — and reading a `mandatory = false` as required would invent a
+    // dependency the pack does not have.
+    const type =
+      entry.type !== undefined
+        ? String(entry.type).toLowerCase()
+        : entry.mandatory === false
+          ? "optional"
+          : "required";
     if (type === "discouraged") continue;
     deps.push({
       id: entry.modId,
@@ -448,24 +451,54 @@ async function readModMeta(jarPath) {
     });
   }
 
-  return {
-    id: mod.modId,
-    // Gradle substitutes `${file.jarVersion}` at build time; an unsubstituted
-    // placeholder means a dev jar, and comparing against it would be noise.
-    version: /\$\{/.test(String(mod.version ?? ""))
-      ? "0"
-      : String(mod.version ?? "0"),
-    provides: [],
-    deps,
+  let version = String(mod.version ?? "0");
+  if (/\$\{/.test(version)) version = (await manifestVersion(jarPath)) ?? "0";
+
+  return { id: mod.modId, version, provides: [], deps };
+}
+
+/**
+ * Read one jar's mod metadata and normalise it.
+ *
+ * `preferred` is the pack's loader family. It matters: a multiloader jar ships
+ * `fabric.mod.json` *and* `neoforge.mods.toml` side by side — Collective,
+ * FallingTree, WorldEdit and Starter Kit all do — and reading the wrong one on
+ * a NeoForge pack reports `fabricloader` as a missing dependency of a mod that
+ * is running perfectly well.
+ *
+ * Each dep is `{ id, range, maven, required, conflict }`. `maven: true` marks a
+ * NeoForge range so `satisfiesDep` picks the right grammar. `required: false`
+ * covers Fabric's `recommends` and NeoForge's `optional`, reported only when
+ * present *and* wrong, never as missing. `conflict: true` covers NeoForge's
+ * `incompatible` and Fabric's `breaks`: satisfying the range is the failure.
+ */
+async function readModMeta(jarPath, preferred = "fabric") {
+  const wantsToml = preferred === "neoforge" || preferred === "forge";
+
+  const readFabric = async () => {
+    const raw = await unzipEntry(jarPath, "fabric.mod.json");
+    const parsed = raw && parseModJson(raw);
+    return parsed?.id ? fabricMeta(parsed) : null;
   };
+  const readToml = async () => {
+    // NeoForge 1.20.5+ renamed the file; older jars still ship `mods.toml`.
+    const raw =
+      (await unzipEntry(jarPath, "META-INF/neoforge.mods.toml")) ??
+      (await unzipEntry(jarPath, "META-INF/mods.toml"));
+    return raw ? neoforgeMeta(parseModsToml(raw), jarPath) : null;
+  };
+
+  return wantsToml
+    ? ((await readToml()) ?? (await readFabric()))
+    : ((await readFabric()) ?? (await readToml()));
 }
 
 /**
  * Every mod id a jar puts on the classpath: its own, whatever it `provides`,
  * and the same again for each jar nested inside it.
  */
-async function collectProvided(jarPath, into, depth = 0) {
-  const meta = await readModMeta(jarPath);
+async function collectProvided(jarPath, into, preferred, depth = 0) {
+  const meta = await readModMeta(jarPath, preferred);
   if (!meta) return null;
 
   into.set(meta.id, meta.version);
@@ -487,7 +520,7 @@ async function collectProvided(jarPath, into, depth = 0) {
       }).catch(() => null);
       if (!bytes) continue;
       await fs.writeFile(tmp, bytes.stdout);
-      await collectProvided(tmp, into, depth + 1);
+      await collectProvided(tmp, into, preferred, depth + 1);
       await fs.rm(tmp, { force: true });
     }
   }
@@ -541,7 +574,7 @@ async function checkPack(slug) {
 
   for (const f of mods) {
     const jar = await download(f);
-    const meta = await collectProvided(jar, provided);
+    const meta = await collectProvided(jar, provided, loaderType);
     if (!meta) {
       warn(`${f.name}: no readable mod metadata — skipped`);
       unreadable++;
