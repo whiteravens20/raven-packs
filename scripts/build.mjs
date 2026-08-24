@@ -60,6 +60,50 @@ const forServer = (file) => file.side === 'server' || file.side === 'both';
  */
 const crlf = (text) => text.replace(/\r?\n/g, '\r\n');
 
+// ── Summaries, in more than one language ───────────────────
+
+/**
+ * A pack's summary in every language it was written in.
+ *
+ * `pack.json` takes either a plain string or a `{ locale: text }` map. The map
+ * is why this exists: the launcher renders the pack list in the language the
+ * player chose, and the one line describing each pack should not be the part
+ * that ignores the setting.
+ *
+ * Everything downstream is handed a map, so there is one shape to handle. A
+ * bare string is read as English — a summary written without naming a language
+ * is the one that travels, and it is the .mrpack that carries it to Prism and
+ * the Modrinth app.
+ */
+function summaryMap(summary) {
+  if (!summary) return {};
+  if (typeof summary === 'string') return { en: summary };
+  return Object.fromEntries(
+    Object.entries(summary).filter(([, text]) => typeof text === 'string' && text.trim() !== ''),
+  );
+}
+
+/**
+ * One language out of that map, for a consumer that can hold only a string.
+ *
+ * Falls through to English and then to whatever exists, rather than returning
+ * nothing: a summary in the wrong language still says what the pack is, and an
+ * empty one says nothing at all.
+ */
+function summaryIn(summary, locale) {
+  const map = summaryMap(summary);
+  return map[locale] ?? map.en ?? Object.values(map)[0] ?? '';
+}
+
+/**
+ * The language a launcher too old to know `summaryI18n` will show.
+ *
+ * Those launchers read the flat `summary` and nothing else. Changing this
+ * constant changes what they display without anyone updating anything, so it
+ * tracks who is actually running them rather than what reads best to us.
+ */
+const LEGACY_SUMMARY_LOCALE = 'pl';
+
 /**
  * Collect override files for one side.
  *
@@ -287,7 +331,10 @@ function buildMrpackIndex(pack, lock) {
     game: 'minecraft',
     versionId: pack.version,
     name: pack.name,
-    summary: pack.summary ?? '',
+    // Modrinth's format has one summary field and no language beside it, and
+    // this file is read by Prism, ATLauncher and the Modrinth app rather than
+    // by us. English is the language that reaches most of them.
+    summary: summaryIn(pack.summary, 'en'),
     // `env` carries the real side, so an importing launcher installs a
     // server-only mod only when creating a server instance.
     files: lock.files.map((file) => ({
@@ -508,7 +555,8 @@ async function buildPack(slug, { withZip }) {
     slug: pack.slug,
     name: pack.name,
     version: pack.version,
-    summary: pack.summary ?? '',
+    summary: summaryIn(pack.summary, LEGACY_SUMMARY_LOCALE),
+    summaryI18n: summaryMap(pack.summary),
     minecraft: pack.minecraft,
     loader: pack.loader,
     recommendedRamMb: pack.recommendedRamMb ?? 4096,
@@ -745,7 +793,11 @@ async function writeIndex() {
       slug: meta.slug,
       name: meta.name,
       version: meta.version,
+      // Two fields on purpose. A launcher that predates `summaryI18n` reads
+      // `summary` and would fail its whole catalogue parse on an object there,
+      // taking the pack list with it — not just the description.
       summary: meta.summary,
+      summaryI18n: meta.summaryI18n,
       minecraft: meta.minecraft,
       loader: meta.loader,
       recommendedRamMb: meta.recommendedRamMb,

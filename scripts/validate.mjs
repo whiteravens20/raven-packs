@@ -76,6 +76,44 @@ async function validatePackMeta(slug) {
   }
 }
 
+/**
+ * `summary` is either a plain string or a `{ locale: text }` map.
+ *
+ * The map is the interesting case and it fails quietly in two ways the build
+ * cannot see. A blank value looks set in the file and is dropped on the way
+ * out, so the language it claimed to cover ends up served by the fallback. And
+ * a map with no `en` still builds: the .mrpack takes whatever language is
+ * first, which means somebody opening the pack in the Modrinth app reads
+ * Polish. Neither is an error anywhere downstream — they are just wrong.
+ */
+function validateSummary(slug, pack) {
+  const summary = pack.summary;
+  if (summary === undefined || typeof summary === 'string') return;
+  if (typeof summary !== 'object' || Array.isArray(summary)) {
+    fail(slug, 'summary must be a string or a { locale: text } object');
+    return;
+  }
+
+  const entries = Object.entries(summary);
+  if (entries.length === 0) {
+    fail(slug, 'summary is an empty object — give it a language or drop the field');
+    return;
+  }
+  for (const [locale, text] of entries) {
+    if (!/^[a-z]{2}(-[A-Z]{2})?$/.test(locale)) {
+      fail(slug, `summary key "${locale}" is not a locale code (expected e.g. "en" or "pt-BR")`);
+    }
+    if (typeof text !== 'string' || text.trim() === '') {
+      fail(slug, `summary.${locale} is empty — a blank string is dropped at build time, not shown`);
+    }
+  }
+  // Only absence — the loop above already covers an `en` that is present and
+  // blank, and two messages about one field read like two problems.
+  if (!('en' in summary)) {
+    fail(slug, 'summary needs "en" — it is what the .mrpack carries to other launchers');
+  }
+}
+
 async function validatePack(slug) {
   console.log(`\n\x1b[1m${slug}\x1b[0m`);
 
@@ -101,6 +139,7 @@ async function validatePack(slug) {
   if (pack.loader && !pack.loader.version) {
     fail(slug, 'loader.version is required — pin it so builds are reproducible');
   }
+  validateSummary(slug, pack);
   if (problems.length > 0) return;
 
   const entries = [

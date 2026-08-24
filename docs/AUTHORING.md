@@ -17,7 +17,7 @@ continue otherwise, since the slug becomes part of the published manifest URL.
 | `slug` | yes | Matches the directory name. Appears in URLs and filenames. |
 | `name` | yes | Display name. Becomes `serverName` in the launcher manifest. |
 | `version` | yes | Semver. Bump on every release; it names the artifacts. |
-| `summary` | no | One-line description. |
+| `summary` | no | One-line description. A string, or a `{ locale: text }` map — see below. |
 | `minecraft` | yes | Exact Minecraft version, e.g. `26.2`. |
 | `loader.type` | yes | `fabric`, `quilt`, `forge` or `neoforge`. |
 | `loader.version` | yes | Pin it — an unpinned loader makes builds irreproducible. |
@@ -84,6 +84,41 @@ review it after locking.
 The split is enforced everywhere: the launcher manifest and `.mrpack` omit
 `server`-only entries, and the server zip omits `client`-only ones. A client
 never downloads `server.properties`, and a server never gets a minimap.
+
+## Summaries in more than one language
+
+`summary` takes a plain string, or a map keyed by locale:
+
+```jsonc
+"summary": {
+  "pl": "Klasyczny Minecraft z kilkoma modami Quality of Life.",
+  "en": "Classic Minecraft with a handful of quality-of-life mods."
+}
+```
+
+The launcher renders whichever language the player selected in its settings,
+falling back to `en` and then to whatever the map has. That is the whole reason
+the map exists — a plain string is shown to everybody regardless of the
+setting, and is read as English.
+
+Give `en` whenever you give a map; `validate.mjs` insists on it. The `.mrpack`
+format has a single `summary` field with no language beside it, and it is read
+by Prism, ATLauncher and the Modrinth app rather than by us, so that is the
+language those readers get.
+
+Two fields come out the other side, and the duplication is deliberate:
+
+| in `packs.json` | value | who reads it |
+|---|---|---|
+| `summary` | one language, flat | launchers released before this field existed |
+| `summaryI18n` | the whole map | current launchers |
+
+A launcher that predates `summaryI18n` parses `summary` as a string and rejects
+the entire catalogue if it finds an object — the player gets an empty pack list,
+not merely a missing description. So the flat field stays a string forever. It
+is built from `LEGACY_SUMMARY_LOCALE` in `build.mjs`; changing that constant
+changes what those launchers show without anyone updating anything.
+
 
 ## Overrides
 
