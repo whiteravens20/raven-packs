@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-08-24T23:11:48.981Z",
+  "generatedAt": "2026-08-25T14:31:22.933Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1794,23 +1794,20 @@
       "requiredDependencies": []
     },
     {
-      "requestKey": "{\"slug\":\"luckperms\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "requestKey": "{\"slug\":null,\"url\":\"https://cdn.modrinth.com/data/Vebnzrzj/versions/PelnLFOJ/LuckPerms-NeoForge-5.4.149.jar\",\"version\":\"5.4.149\",\"allowPrerelease\":false,\"side\":\"server\"}",
       "kind": "mod",
       "side": "server",
-      "clientSide": "unsupported",
-      "serverSide": "required",
       "id": "luckperms",
       "name": "LuckPerms",
-      "source": "modrinth",
-      "projectId": "Vebnzrzj",
-      "versionId": "rnvg05YO",
-      "version": "v5.4.140-neoforge",
-      "fileName": "LuckPerms-NeoForge-5.4.140.jar",
-      "url": "https://cdn.modrinth.com/data/Vebnzrzj/versions/rnvg05YO/LuckPerms-NeoForge-5.4.140.jar",
-      "size": 1434674,
-      "sha1": "bd368d3254d81120a8c287f79c0467478ad2d73e",
-      "sha512": "50d94c5a9d2635a445a2bd4f2f16c22172678b93315e3d91fa0829349ccd2b02944354af7baa3e6ae0c7bfe19f497b09af461f84aacc93900b59b75a07cd0290",
-      "license": "MIT",
+      "source": "url",
+      "version": "5.4.149",
+      "fileName": "LuckPerms-NeoForge-5.4.149.jar",
+      "url": "https://cdn.modrinth.com/data/Vebnzrzj/versions/PelnLFOJ/LuckPerms-NeoForge-5.4.149.jar",
+      "size": 1433916,
+      "sha1": "b2c9998b51fe1dcfdff85caac58874c20fa9e6c0",
+      "sha512": "3ae4e5ab8aa0e819e4b9d4bb48c839a82abf40ad60f038df23c368bf009b8f3a9f8f8a86cb9b538760b9405f702319ceb8c1756de82449d0c6ce9b8cbd08ea46",
+      "sha256": "7cdee05d9d786ebe35a1253cbb90a1cc03ee20bc3900b49c612f99895fc13a28",
+      "license": "unknown",
       "requiredDependencies": []
     },
     {

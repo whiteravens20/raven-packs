@@ -113,7 +113,14 @@
     { "slug": "betterf3", "reason": "Readable debug screen", "side": "client" },
     { "slug": "no-chat-reports", "reason": "Keeps chat off Mojang's reporting pipeline" },
 
-    { "slug": "luckperms", "reason": "Permissions and the rank ladder", "side": "server" },
+    {
+      "url": "https://cdn.modrinth.com/data/Vebnzrzj/versions/PelnLFOJ/LuckPerms-NeoForge-5.4.149.jar",
+      "id": "luckperms",
+      "name": "LuckPerms",
+      "version": "5.4.149",
+      "reason": "Permissions and the rank ladder. Every 1.21.1 build crashes the first login: they reference net.neoforged.neoforge.capabilities, which NeoForge 21.1 removed. 5.4.149 is the earliest build without that package, and its neoforge.mods.toml declares no minecraft/neoforge version range, so 1.21.1 loads it. Carried as a url because resolveVersion filters on game_versions before applying a version pin, and this build is tagged 1.21.3",
+      "side": "server"
+    },
     { "slug": "open-parties-and-claims", "allowPrerelease": true, "reason": "Land claims and parties. FTB Chunks is not on Modrinth at all; beta is the only 1.21.1 build" },
     { "slug": "coreprotectneo", "reason": "Block and container logging with rollback. Ledger is Fabric-only", "side": "server" },
     { "slug": "anti-xray", "reason": "Ore obfuscation — the server sends fake block data underground. meowanti-xray is Fabric-only", "side": "server" },
