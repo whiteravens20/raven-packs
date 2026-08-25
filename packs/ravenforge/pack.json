@@ -127,6 +127,16 @@
     { "slug": "worldedit", "reason": "Map editing for builders and staff", "side": "server" },
     { "slug": "chunky", "reason": "World pregeneration — keeps first exploration from lagging", "side": "server" },
     { "slug": "spark", "reason": "Profiler. Worth having from day one under a core this heavy", "side": "server" },
-    { "slug": "starter-kit", "reason": "Join kit and staff handouts", "side": "server" }
+    { "slug": "starter-kit", "reason": "Join kit and staff handouts", "side": "server" },
+    { "slug": "saros-essentials", "reason": "Homes, warps, kits, chat formatting and moderation. The only NeoForge 1.21.1 candidate that documents its LuckPerms nodes, and chat formatting is what makes the rank ladder visible at all — corecommands has neither. Its own economy is switched off in config so it cannot collide with RavenCoin. All Rights Reserved without public source, accepted knowingly", "side": "server" },
+
+    {
+      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar",
+      "id": "ravencoin",
+      "name": "RavenCoin",
+      "version": "0.1.0-beta.1",
+      "reason": "The pack's economy: a currency that is also an item, an ATM, player and server shops, and ranks bought through the LuckPerms API. Written for this pack because no published mod combines them. Carried as a url because it is not on Modrinth",
+      "side": "both"
+    }
   ]
 }

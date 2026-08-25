@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-08-25T14:31:22.933Z",
+  "generatedAt": "2026-08-25T15:55:34.549Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1951,6 +1951,43 @@
       "requiredDependencies": [
         "e0M1UDsY"
       ]
+    },
+    {
+      "requestKey": "{\"slug\":\"saros-essentials\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "saros-essentials",
+      "name": "Saro´s Essentials",
+      "source": "modrinth",
+      "projectId": "yzEAtpJN",
+      "versionId": "NILxgoZw",
+      "version": "0.7.1-neoforge-1.21.1",
+      "fileName": "sarosessentialsmod-0.7.1.jar",
+      "url": "https://cdn.modrinth.com/data/yzEAtpJN/versions/NILxgoZw/sarosessentialsmod-0.7.1.jar",
+      "size": 191288,
+      "sha1": "7ba1d929ea6c63a2b96648c47f779f3323f84477",
+      "sha512": "19b88d7ca8b20b0577f2f055a96617d60296c62540117d8bf02fba4643f6f743a398a446d9823a1aa2db119afd32d86e43d3f377afae17224c2249f7d30e473d",
+      "license": "LicenseRef-All-Rights-Reserved",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar\",\"version\":\"0.1.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
+      "kind": "mod",
+      "side": "both",
+      "id": "ravencoin",
+      "name": "RavenCoin",
+      "source": "url",
+      "version": "0.1.0-beta.1",
+      "fileName": "ravencoin-1.21.1-0.1.0-beta.1.jar",
+      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar",
+      "size": 131278,
+      "sha1": "b6e1b3e2c380beef2c03a7553cb0e1e851b54ece",
+      "sha512": "3198d98e9ceb23910c1955cb05dc3059c6f1fd6f857c668f46f999ef87191833e014f4d8e420595edb32c2bebaba12d0dde22394e897834ca33cdbd09ae4be18",
+      "sha256": "e9400df389dbd2866ad4e105de02e8096d1eb58e2bdac80e8ac5837d93498066",
+      "license": "unknown",
+      "requiredDependencies": []
     }
   ]
 }
