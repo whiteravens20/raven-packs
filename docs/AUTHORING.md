@@ -28,9 +28,15 @@ continue otherwise, since the slug becomes part of the published manifest URL.
 | `resourcePacks` | no | Same shape as `mods`. |
 | `shaders` | no | Same shape as `mods`. |
 
-> Raven Forge can only install **Fabric** and **Quilt** today. A `forge` or
-> `neoforge` pack still builds a valid `.mrpack` and client zip, but the
-> launcher will refuse to install its loader.
+> All four loaders install. Fabric and Quilt are a profile JSON fetched over
+> HTTP; Forge and NeoForge ship a Java installer that has to be **run**, because
+> it patches and remaps the vanilla jar on the player's machine. That takes
+> minutes rather than seconds on a first install, and it needs a JVM — the
+> launcher downloads one if the player has none.
+>
+> For both of them `loader.version` is the **plain build number** —
+> `21.1.248`, not `1.21.1-21.1.248`. The launcher composes the Maven
+> coordinate itself, and prefixing it here produces a URL that does not exist.
 
 ## Entries
 
