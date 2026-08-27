@@ -13,7 +13,7 @@
     "type": "neoforge",
     "version": "21.1.248"
   },
-  "recommendedRamMb": 6144,
+  "recommendedRamMb": 10240,
   "mods": [
     { "slug": "architectury-api", "reason": "Required by SDM-family and several multiloader mods" },
     { "slug": "guideme", "reason": "Required by Applied Energistics 2 — carries its in-game guide" },
