@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-08-27T13:30:00.953Z",
+  "generatedAt": "2026-08-28T10:17:45.752Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -241,6 +241,26 @@
       "sha1": "b96d133a016dde480458d6102d66353c7eeacf6a",
       "sha512": "4da264d203d786efb638a6ecab0cb4f974436a72c84c0a9cdb2cb0eec5757dac294c1435deae048d44741098e6aaedb4def508a47d2bd4d010a3441921119806",
       "license": "Apache-2.0",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"silent-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "required",
+      "serverSide": "required",
+      "id": "silent-lib",
+      "name": "Silent Lib",
+      "source": "modrinth",
+      "projectId": "BQhuHQo4",
+      "versionId": "xavD8Lt3",
+      "version": "10.6.0",
+      "fileName": "silent-lib-1.21.1-neoforge-10.6.0.jar",
+      "url": "https://cdn.modrinth.com/data/BQhuHQo4/versions/xavD8Lt3/silent-lib-1.21.1-neoforge-10.6.0.jar",
+      "size": 268791,
+      "sha1": "991055113a165bef7d0b620c091165d55f7dbb24",
+      "sha512": "1a3ede879804303c01fbeff84d64ce94c811f6c2670d5b2cadb3260488d609bed4cf1fa5e9609e2b7287ecfe16400ec6c0c436bfbfad9c94234b95a44be0a702",
+      "license": "MIT",
       "requiredDependencies": []
     },
     {
@@ -835,6 +855,28 @@
       "license": "Apache-2.0",
       "requiredDependencies": [
         "gu7yAYhd"
+      ]
+    },
+    {
+      "requestKey": "{\"slug\":\"silent-gear\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "required",
+      "serverSide": "required",
+      "id": "silent-gear",
+      "name": "Silent Gear",
+      "source": "modrinth",
+      "projectId": "73mSSnCf",
+      "versionId": "VRVOMdub",
+      "version": "4.2.1.1",
+      "fileName": "silent-gear-1.21.1-neoforge-4.2.1.1.jar",
+      "url": "https://cdn.modrinth.com/data/73mSSnCf/versions/VRVOMdub/silent-gear-1.21.1-neoforge-4.2.1.1.jar",
+      "size": 3147675,
+      "sha1": "928064b09748d6e963077c114d65f5ce79aff581",
+      "sha512": "a9760a18eb1564c546376deb475cd84f668aa76f4b947420902949f5014b675292f7fd808fe51dcfcb915ccebbf4e55f77c9865a013b74034b827dafa7564a98",
+      "license": "MIT",
+      "requiredDependencies": [
+        "BQhuHQo4"
       ]
     },
     {

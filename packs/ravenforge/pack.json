@@ -26,6 +26,7 @@
     { "slug": "supermartijn642s-core-lib", "reason": "Required by Tesseract and Fusion" },
     { "slug": "supermartijn642s-config-lib", "reason": "Required by Tesseract" },
     { "slug": "scalable-cats-force", "reason": "Required by Additional Enchanted Miner" },
+    { "slug": "silent-lib", "reason": "Required by Silent Gear" },
     { "slug": "better-advanced-tooltips", "reason": "Required by KubeJS" },
     { "slug": "bookshelf-lib", "reason": "Required by Enchantment Descriptions" },
     { "slug": "prickle", "reason": "Required by Enchantment Descriptions" },
@@ -55,6 +56,7 @@
     { "slug": "additional-enchanted-miner", "reason": "Quarry — bulk mining without hand-digging" },
     { "slug": "cc-tweaked", "allowPrerelease": true, "reason": "In-game computers and Lua. Only alpha builds exist for 1.21.1" },
     { "slug": "advancedperipherals", "allowPrerelease": true, "reason": "Peripherals for CC: Tweaked, including an AE2 bridge. Alpha is the only 1.21.1 build" },
+    { "slug": "silent-gear", "reason": "Tools and armour built from named materials, and the pack's answer to Tinkers' Construct, which has no 1.21.x build at all. Truly Modular was the other candidate and lost on licence — PolyForm Shield, not open source. A server datapack blacklists the 19 materials at level_hint 1.5 or below, so a gear part starts at iron; that datapack has to be in place before the world is first generated, because this mod adds three ores and two plants to worldgen" },
 
     { "slug": "kubejs", "reason": "Server-side scripting — recipe gating, the rank ladder, and the shop hooks until raven-economy exists" },
     { "slug": "almostunified", "reason": "Collapses duplicate ingots and ores from different mods onto one canonical item" },
