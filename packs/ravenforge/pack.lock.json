@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-08-28T10:17:45.752Z",
+  "generatedAt": "2026-08-28T10:18:01.978Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1850,6 +1850,26 @@
       "sha512": "3ae4e5ab8aa0e819e4b9d4bb48c839a82abf40ad60f038df23c368bf009b8f3a9f8f8a86cb9b538760b9405f702319ceb8c1756de82449d0c6ce9b8cbd08ea46",
       "sha256": "7cdee05d9d786ebe35a1253cbb90a1cc03ee20bc3900b49c612f99895fc13a28",
       "license": "unknown",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"nedologin\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "required",
+      "serverSide": "required",
+      "id": "nedologin",
+      "name": "Nedologin",
+      "source": "modrinth",
+      "projectId": "fnP1u8PK",
+      "versionId": "VPxEDVP2",
+      "version": "3.0.0-rc3",
+      "fileName": "nedologin-3.0.0-rc3-1.21.1-fabric-neoforge.jar",
+      "url": "https://cdn.modrinth.com/data/fnP1u8PK/versions/VPxEDVP2/nedologin-3.0.0-rc3-1.21.1-fabric-neoforge.jar",
+      "size": 5631092,
+      "sha1": "61383468bf16841aca23b9a20c0e7fbb9569e8f7",
+      "sha512": "a88237398f1c3a159e8365839480725fe13d724acdff9b59014b7a7a78bfdf830862125c56bdca4415d37d5ccfc5ad3f4e6f707f86db819fe13de76737b5ceb7",
+      "license": "LicenseRef-Beerware",
       "requiredDependencies": []
     },
     {
