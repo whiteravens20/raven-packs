@@ -1,0 +1,14 @@
+# A mineral vein is meant to run out. Stock yield is 38 400 items, which no
+# player will ever exhaust, so the excavator becomes an infinite tap and moving
+# it never happens. At 4096 a vein lasts roughly 64 stacks — two to four veins
+# per 30-day mining cycle, so relocating the machine is part of the month.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+[machines.excavator]
+	#The maximum amount of yield one can get out of a chunk with the excavator. Set a number smaller than zero to make it infinite
+	yield = 4096
+	#The maximum depletion a vein can start with, as a decimal value. When a vein generates, a random percentage up to this value is depleted from it
+	initial_depletion = 0.35

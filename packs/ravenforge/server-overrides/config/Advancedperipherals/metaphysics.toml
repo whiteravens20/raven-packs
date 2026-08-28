@@ -1,0 +1,9 @@
+# The end automata core teleports a turtle, which is a way past every claim
+# boundary and every locked door in the pack.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+[Metaphysics]
+	enableEndAutomataCore = false

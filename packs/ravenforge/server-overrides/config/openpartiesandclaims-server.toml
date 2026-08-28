@@ -1,0 +1,26 @@
+# allowTouchingClaims = false is the one that matters: it forces a chunk of gap
+# between two players' claims. Every area machine in the pack tops out at a
+# 12-13 block radius (range_addon0..11), so that gap puts a neighbour's land out
+# of reach of a machine standing legally on your own.
+#
+# permissionSystem is named rather than auto-detected so a second permission mod
+# arriving later cannot quietly win the election.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+[serverConfig]
+	#The permission system to use for everything that requires permission checks (e.g. permission_api, ftb_ranks, luck_perms, prometheus). Non-built-in permission systems can be registered through the API with an addon.
+	permissionSystem = "luck_perms"
+
+[serverConfig.claims]
+	#Whether players should be able to claim chunks that are directly next to claimed chunks owned by another player/party.
+	#Disallowing it can prevent players from doing so without realizing that chunks next to claims can also be partially protected,
+	#e.g. from item use and mob griefing, making them not ideal for some purposes.
+	#Only affects claiming wilderness, so reclaimable claims can still work.
+	allowTouchingClaims = false
+	#For how long a player/party can stay completely inactive on the server until their claims are expired (in hours). This improves performance for servers running for years.
+	playerClaimsExpirationTime = 2160
+	#Whether to convert expired player chunk claims to "expired claims" instead of completely freeing them. This shouldn't be too bad for performance because it still reduces the number of unique claims.
+	playerClaimsConvertExpiredClaims = true

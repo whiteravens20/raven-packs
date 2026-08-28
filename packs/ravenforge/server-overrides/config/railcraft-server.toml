@@ -1,0 +1,10 @@
+# The tunnel bore must respect the same mining checks as a player, so that Open
+# Parties and Claims can refuse it. It already posts a BreakEvent; this keeps it
+# from being handed a blanket exemption.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+#Change to false to enable mining checks, use true setting with caution, especially on servers
+boreMinesAllBlocks = false

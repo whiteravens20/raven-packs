@@ -1,0 +1,31 @@
+# Computers are welcome; the peripherals that hand a script something no player
+# can do are not. The geo scanner reads ores straight out of the chunk and so
+# walks past anti-xray, the chunky turtle is a free chunk loader, the inventory
+# manager reaches into a player's own slots, the chat box can run commands, and
+# the player detector at range -1 is a server-wide radar.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+[Peripherals.Chat_Box]
+	#If true, the chat box cannot use 'run_command' action
+	chatBoxPreventRunCommand = true
+
+[Peripherals.Chunky_Turtle]
+	#Enable the Chunky Turtle or not.
+	enableChunkyTurtle = false
+
+[Peripherals.Geo_Scanner]
+	#Enable the geo scanner or not.
+	enableGeoScanner = false
+
+[Peripherals.Inventory_Manager]
+	#Enable items transfer methods for inventory manager
+	enableItemsTransfer = false
+
+[Peripherals.Player_Detector]
+	#The max range of the player detector functions. If anyone use a higher range, the detector will use this max range. -1 for unlimited
+	playerDetMaxRange = 64
+	#If true, the player detector can observe players which aren't in the same dimension as the detector itself. `playerDetMaxRange` needs to be infinite(-1) for it to work.
+	playerDetMultiDimensional = false
