@@ -10,7 +10,7 @@ fill ~-6 ~-1 ~-6 ~6 ~-1 ~6 minecraft:stone
 fill ~-6 ~-3 ~-6 ~6 ~-2 ~6 minecraft:stone replace minecraft:air
 fill ~-6 ~-3 ~-6 ~6 ~-2 ~6 minecraft:stone replace minecraft:water
 fill ~-6 ~-3 ~-6 ~6 ~-2 ~6 minecraft:stone replace minecraft:lava
-fill ~-2 ~-1 ~-2 ~2 ~-1 ~2 minecraft:mossy_stone_bricks
+fill ~-2 ~-1 ~-2 ~2 ~-1 ~2 minecraft:smooth_stone
 setblock ~-2 ~ ~-2 minecraft:lantern
 setblock ~2 ~ ~-2 minecraft:lantern
 setblock ~-2 ~ ~2 minecraft:lantern
