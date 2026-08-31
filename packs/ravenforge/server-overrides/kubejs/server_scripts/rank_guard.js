@@ -18,6 +18,10 @@
 //   - A parse that FAILED still reaches the event, and `getCommandName()` is
 //     then empty because there is no command node to name. The command has to
 //     be read out of the raw input.
+//   - A handler on ServerEvents.command that throws IS logged, as
+//     "Error in 'ServerEvents.command': ...". Commands registered through
+//     commandRegistry are not — Brigadier swallows those, which is why
+//     rtp.js wraps its body by hand and this file does not need to.
 //   - The source carries the actor, so `getPlayer()` is the player or null.
 //     Null is the console and command blocks, and both are left alone: the
 //     console is the owner's own channel, and a command block cannot be placed
@@ -47,7 +51,6 @@
 // and loop variables declared at function-body level rather than in the loop.
 (function () {
   const LuckPermsProvider = Java.loadClass('net.luckperms.api.LuckPermsProvider')
-  const ServerPlayerClass = Java.loadClass('net.minecraft.server.level.ServerPlayer')
 
   // Commands that act ON another person. Everything a staff member could turn
   // against another staff member belongs here; a command that only affects the
@@ -55,12 +58,36 @@
   //
   // `lp` and `luckperms` matter most — a rank edit outranks every ban in this
   // list, because it hands over everything else permanently.
+  //
+  // The second block is Henny Essentials, and it is the reason this guard is
+  // no longer theoretical. Moderation used to need op, so only the owner could
+  // ban anybody and there was nobody to protect; command.he.ban in the
+  // moderator group is what opened the hole. Henny's own Ban and Mute never
+  // ask what rank their target holds — measured, neither class touches
+  // LuckPermsIntegration — so every one of these is unguarded without this.
+  //
+  // The permission-editing family is listed even though no group holds it.
+  // Nothing should ever grant it, and if something one day does by mistake,
+  // this is the line that keeps a Moderator from writing themselves a rank.
+  //
+  // Self-only commands are deliberately absent: heal, feed, fly, vanish and
+  // repair have no ".other" node in Henny's jar, so they cannot reach anyone
+  // else and the self exemption below would wave them through anyway.
   const GUARDED = [
+    // vanilla
     'ban', 'ban-ip', 'kick', 'pardon', 'pardon-ip',
     'op', 'deop', 'whitelist',
     'tp', 'teleport', 'spectate',
     'gamemode', 'kill', 'clear', 'effect',
     'lp', 'luckperms', 'perms',
+    // Henny Essentials
+    'tempban', 'unban', 'banuuid', 'unbanuuid',
+    'mute', 'tempmute', 'unmute', 'muteuuid',
+    'invsee', 'viewechest', 'tpahere',
+    'adduserperm', 'removeuserperm', 'adduuidperm', 'removeuuidperm',
+    'addgroupperm', 'removegroupperm',
+    'adduserprefix', 'removeuserprefix', 'addusersuffix', 'removeusersuffix',
+    'addgroupprefix', 'removegroupprefix', 'addgroupsuffix', 'removegroupsuffix',
   ]
 
   let luckPermsHandle = null
@@ -88,8 +115,20 @@
     return highest
   }
 
-  const weightOfPlayer = player =>
-    weightOfHolder(luckPerms().getPlayerAdapter(ServerPlayerClass).getUser(player))
+  /**
+   * Everything resolves through the UserManager by uuid, online or not.
+   * getPlayerAdapter would be the obvious route and it is the wrong one: it
+   * computes from session contexts and answers for a player it has no session
+   * for by refusing, measured on the rig. The uuid comes off the GameProfile
+   * because KubeJS does not expose Entity.getUUID at all — "Cannot find
+   * function getUUID" — while GameProfile is plain authlib and is not remapped.
+   */
+  const weightOfUuid = uuid => {
+    const user = luckPerms().getUserManager().getUser(uuid)
+    return user == null ? -1 : weightOfHolder(user)
+  }
+
+  const weightOfPlayer = player => weightOfUuid(player.getGameProfile().getId())
 
   // A vanilla username: three to sixteen word characters. Tokens that cannot
   // be a name — coordinates, flags, durations — are skipped without a lookup,
@@ -127,8 +166,8 @@
     const uuid = uuidForName(name)
     if (uuid == null) return -1
 
-    const known = luckPerms().getUserManager().getUser(uuid)
-    if (known != null) return weightOfHolder(known)
+    const known = weightOfUuid(uuid)
+    if (known >= 0) return known
 
     // Blocking the server thread, deliberately. Storage is `yaml` (set in
     // config/luckperms/luckperms.conf), so this is a local file read, and
@@ -175,14 +214,20 @@
     if (actor == null) return
 
     const server = source.getServer()
+    // ORDER MATTERS AND IT IS NOT OBVIOUS. `event.cancel()` does not set a
+    // flag and return — KubeJS implements it by throwing a control-flow
+    // exception that unwinds the handler, so NOTHING after it runs. With the
+    // cancel first, this guard refused correctly and silently for an entire
+    // debugging session: the player was told nothing and the log recorded
+    // nothing. Say it, send it, then cancel.
+    //
     // sendFailure, not player.tell: `source.getPlayer()` hands back the raw
-    // ServerPlayer, which has no KubeJS `tell`. The log line goes first so a
-    // refusal is recorded even if the message itself cannot be delivered.
+    // ServerPlayer, which has no KubeJS `tell`.
     const refuse = reason => {
-      event.cancel()
       console.warn('[ravenforge] rank guard refused "' + typed + '" from '
         + actor.getGameProfile().getName() + ': ' + reason)
       source.sendFailure(Text.red(reason))
+      event.cancel()
     }
 
     let actorWeight = 0
