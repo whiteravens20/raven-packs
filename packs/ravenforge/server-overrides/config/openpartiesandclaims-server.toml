@@ -6,6 +6,10 @@
 # permissionSystem is named rather than auto-detected so a second permission mod
 # arriving later cannot quietly win the election.
 #
+# The claim and forceload limits here are the floor. The ladder that lifts them
+# lives in LuckPerms as meta (xaero.pac_max_claims, xaero.pac_max_forceloads) —
+# see docs/ranks.txt.
+#
 # Only the keys we change are listed. NeoForge fills the rest in from the mod's
 # own defaults on first load and rewrites the file with them, so this stays a
 # statement of intent rather than a copy that goes stale.
@@ -22,5 +26,17 @@
 	allowTouchingClaims = false
 	#For how long a player/party can stay completely inactive on the server until their claims are expired (in hours). This improves performance for servers running for years.
 	playerClaimsExpirationTime = 2160
+	#The base limits, deliberately set to the lowest rung of the ladder (nowy).
+	#
+	#The mod's own comment on maxPlayerClaimsPermission says a permission-supplied
+	#limit "will only take effect when the player logs in". Until that first login
+	#after a restart, whatever stands here is what every player gets — so the
+	#shipped defaults of 500 and 10 would hand out Technik limits and better to
+	#everyone, every restart, for as long as it took people to log back in.
+	#
+	#Keep these equal to nowy in config/luckperms/yaml-storage/groups/nowy.yml.
+	#The rest of the ladder is added on top, per rank, as LuckPerms meta.
+	maxPlayerClaims = 4
+	maxPlayerClaimForceloads = 0
 	#Whether to convert expired player chunk claims to "expired claims" instead of completely freeing them. This shouldn't be too bad for performance because it still reduces the number of unique claims.
 	playerClaimsConvertExpiredClaims = true
