@@ -1,6 +1,23 @@
 name: nowy
 permissions:
 - weight.10
+- command.he.home
+- command.he.sethome
+- command.he.delhome
+- command.he.listhomes
+- home.limit.1
+- command.he.back
+- command.he.afk
+- command.he.spawn
+- command.he.warp
+- command.he.warps
+- command.he.listwarps
+- command.he.kit
+- command.he.kits
+- command.he.rules
+- command.he.playtime
+- command.he.page
+- command.he.pcallback
 prefixes:
 - '&7[Nowy] ':
     priority: 10

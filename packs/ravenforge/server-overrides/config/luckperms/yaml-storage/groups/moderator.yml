@@ -1,0 +1,21 @@
+name: moderator
+permissions:
+- weight.60
+- command.he.ban
+- command.he.tempban
+- command.he.unban
+- command.he.banuuid
+- command.he.unbanuuid
+- command.he.mute
+- command.he.tempmute
+- command.he.unmute
+- command.he.muteuuid
+- command.he.vanish
+- command.he.invsee
+- command.he.viewechest
+- command.he.broadcsat
+parents:
+- obywatel
+prefixes:
+- '&9[Moderator] ':
+    priority: 60

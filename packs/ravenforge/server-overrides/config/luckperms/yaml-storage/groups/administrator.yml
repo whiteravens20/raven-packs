@@ -1,0 +1,26 @@
+name: administrator
+permissions:
+- weight.90
+- command.he.setspawn
+- command.he.createkit
+- command.he.delkit
+- command.he.editkit
+- command.he.setkitcategory
+- command.he.setkitdisplay
+- command.he.banitem
+- command.he.banhelditem
+- command.he.banneditems
+- command.he.listbanneditems
+- command.he.removebanneditem
+- command.he.givetoken
+- command.he.token
+- command.he.condition
+- command.he.reloadconfig
+- command.he.reloadannouncements
+- command.he.reloadtokens
+parents:
+- moderator
+- budowniczy
+prefixes:
+- '&c[Administrator] ':
+    priority: 90

@@ -1,0 +1,25 @@
+name: budowniczy
+permissions:
+- weight.50
+- command.he.fly
+- command.he.heal
+- command.he.feed
+- command.he.hat
+- command.he.repair
+- command.he.setwarp
+- command.he.delwarp
+- command.he.settempwarp
+- command.he.setwarpcategory
+- command.he.setwarpdisplay
+- command.he.anvil
+- command.he.craftingtable
+- command.he.ctable
+- command.he.smithingtable
+- command.he.smithtable
+- command.he.stonecutter
+- command.he.echest
+parents:
+- obywatel
+prefixes:
+- '&2[Budowniczy] ':
+    priority: 50

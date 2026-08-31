@@ -1,6 +1,7 @@
 name: obywatel
 permissions:
 - weight.30
+- home.limit.3
 parents:
 - gracz
 prefixes:

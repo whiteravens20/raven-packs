@@ -1,0 +1,8 @@
+name: architekt
+permissions:
+- weight.100
+parents:
+- administrator
+prefixes:
+- '&5[Architekt] ':
+    priority: 100

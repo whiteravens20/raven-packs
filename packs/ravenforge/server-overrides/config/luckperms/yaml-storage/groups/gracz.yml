@@ -1,6 +1,7 @@
 name: gracz
 permissions:
 - weight.20
+- home.limit.2
 parents:
 - nowy
 prefixes:
