@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-08-31T14:34:06.609Z",
+  "generatedAt": "2026-08-31T18:52:19.221Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -2132,25 +2132,25 @@
       "sourceUrl": "https://github.com/Serilum/Starter-Kit"
     },
     {
-      "requestKey": "{\"slug\":\"saros-essentials\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "requestKey": "{\"slug\":\"henny-essentials\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
       "kind": "mod",
       "side": "server",
       "clientSide": "unsupported",
       "serverSide": "required",
-      "id": "saros-essentials",
-      "name": "Saro´s Essentials",
+      "id": "henny-essentials",
+      "name": "Henny Essentials",
       "source": "modrinth",
-      "projectId": "yzEAtpJN",
-      "versionId": "NILxgoZw",
-      "version": "0.7.1-neoforge-1.21.1",
-      "fileName": "sarosessentialsmod-0.7.1.jar",
-      "url": "https://cdn.modrinth.com/data/yzEAtpJN/versions/NILxgoZw/sarosessentialsmod-0.7.1.jar",
-      "size": 191288,
-      "sha1": "7ba1d929ea6c63a2b96648c47f779f3323f84477",
-      "sha512": "19b88d7ca8b20b0577f2f055a96617d60296c62540117d8bf02fba4643f6f743a398a446d9823a1aa2db119afd32d86e43d3f377afae17224c2249f7d30e473d",
-      "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [],
-      "sourceUrl": null
+      "projectId": "lmZLNsi9",
+      "versionId": "DLIOYIKy",
+      "version": "1.0.4-H3+neoforge-1.21.1",
+      "fileName": "hennyessentials-neoforge-1.21.1-1.0.4-H3.jar",
+      "url": "https://cdn.modrinth.com/data/lmZLNsi9/versions/DLIOYIKy/hennyessentials-neoforge-1.21.1-1.0.4-H3.jar",
+      "size": 250786,
+      "sha1": "a272fcc475f841020488ce7ecf5681074021c993",
+      "sha512": "d0a7826b8f443615ffcfcf5ffa8394a8c421081168d0a169dfa03849fe455a31d25259bdd9ccfa3cc3b4e0457738ff5ea86625fad7cf9b33e0fc20e23015357f",
+      "license": "MIT",
+      "sourceUrl": null,
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar\",\"version\":\"0.1.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
