@@ -245,7 +245,7 @@ jobs:
 
       # Only main can deploy to Pages, so only main uploads the artifact — see
       # `deploy-pages` below for why the tag run does not.
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: github.ref == 'refs/heads/main'
         with:
           path: dist/
