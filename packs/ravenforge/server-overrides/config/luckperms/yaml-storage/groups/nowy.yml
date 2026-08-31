@@ -18,6 +18,7 @@ permissions:
 - command.he.playtime
 - command.he.page
 - command.he.pcallback
+- ravenforge.rtp
 prefixes:
 - '&7[Nowy] ':
     priority: 10
