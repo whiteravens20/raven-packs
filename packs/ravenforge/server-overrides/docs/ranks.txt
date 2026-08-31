@@ -16,12 +16,25 @@ as files, in config/luckperms/. Section 2 says what that costs you.
 1. The ladder
 -------------
 
-    rank        from            chunks   forceload   chat
-    ---------------------------------------------------------
-    Nowy        on arrival           4           0   [Nowy]
-    Gracz       10 h played          6           2   [Gracz]
-    Obywatel    40 h played          8           4   [Obywatel]
-    Technik     for RavenCoin       12           8   [Technik]
+    rank            from            weight  chunks  forceload  homes
+    ------------------------------------------------------------------
+    Nowy            on arrival          10       4          0      1
+    Gracz           10 h played         20       6          2      2
+    Obywatel        40 h played         30       8          4      3
+    Technik         for RavenCoin       40      12          8      3
+    Budowniczy      appointed           50       8          4      3
+    Moderator       appointed           60       8          4      3
+    Administrator   appointed           90       8          4      3
+    Architekt       appointed          100       8          4      3
+
+The first four are the player ladder and the only ones on the promotion track.
+The last four are staff, deliberately off the track, so `lp promote` can never
+carry anybody past Technik however many times it is run. Both halves and their
+prefix colours are ravenclassic's, unchanged.
+
+Weights are not decoration. They settle conflicts when a player sits in two
+groups, and they are what kubejs/server_scripts/rank_guard.js compares to decide
+who may act on whom — see section 6.
 
 A chunk is 16×16 blocks over the full height of the world — F3+G draws the grid.
 Four chunks in a square make a 32×32 claim. OPAC does not require chunks to
@@ -49,9 +62,11 @@ in openpartiesandclaims-server.toml together, see section 3.
 -------------------------
 
     config/luckperms/luckperms.conf                  storage-method = "yaml"
-    config/luckperms/yaml-storage/groups/*.yml       the four groups + default
+    config/luckperms/yaml-storage/groups/*.yml       the eight groups + default
     config/luckperms/yaml-storage/tracks/rangi.yml   the promotion track
     config/ravencoin-ranks.json                      what each rung costs
+    config/HennyEssentials/HennyEssentials.json      the two switches that
+                                                     hand permissions to LuckPerms
 
 LuckPerms defaults to H2, a binary database. The ladder would then exist only on
 whichever machine happened to run the setup commands, and no diff would ever show
@@ -101,15 +116,31 @@ Only two mods in this pack ask LuckPerms anything. Measured in the jars:
     WorldEdit     NO   NeoForge build ships only VanillaPermissionsProvider;
                        the LuckPerms-aware one exists for Fabric only
     Chunky        NO   hasPermission(2), a plain op check
-    Saros         NO   zero LuckPerms references anywhere in the jar
+    Henny         yes  command.he.<command> nodes, prefix and suffix from
+                       meta, and home.limit.<n> for the per-rank home ladder
 
-That is why the table in section 1 has a chunks column and a forceload column and
-nothing else. There is no homes-per-rank line here as there is in ravenclassic:
-Saro's Essentials has 93 boolean config values and 12 string ones, and not one
-number — there is no home limit in it to raise.
+Henny Essentials replaced Saro's Essentials for exactly this row. Saro's asked
+LuckPerms nothing — 93 boolean config values, 12 string ones and not one number,
+so every command was op-or-everyone and there was no home limit to raise. That
+is why section 1 has a homes column now and did not before.
 
-The upside of the same fact: **nothing can hang on `default` by accident**.
-WorldEdit, Chunky and Saros never consult LuckPerms, so no node of theirs can be
+TWO SWITCHES, BOTH REQUIRED. In HennyEssentials.json:
+
+    permissionConfigs.permissionsEnabled          true
+    permissionConfigs.luckPermsOverridePermissions true
+
+Both ship false. The jar reads them in this order: with permissions disabled it
+returns true for everything, and only with BOTH on does it ask LuckPerms. The
+home ladder sits behind the same pair — getMaxHomeLimit is not consulted unless
+both are set. Turn either off and every node in section 6 stops meaning anything,
+silently.
+
+There is no op fallback behind them either. Once LuckPerms is authoritative, an
+operator without the node is refused like anybody else, which is why Architekt
+holds the whole set by inheritance rather than by being op.
+
+The upside remains: **nothing can hang on `default` by accident**.
+WorldEdit and Chunky never consult LuckPerms, so no node of theirs can be
 granted or leaked there. Verified on a live server as well as in the jars —
 `lp group default permission info` answers that default has no permissions set,
 and a brand-new player resolves to exactly Nowy: prefix "[Nowy] ", 4 claims,
@@ -126,6 +157,13 @@ The prefix in section 1 reaches chat, the player list and the floating nameplate
 through **playername-styler**, which reads it from LuckPerms and expands
 %prefix% in its three format strings. Its defaults already do the right thing, so
 the pack ships no config for it.
+
+Henny Essentials would also format chat, from the same LuckPerms prefix, and it
+ships with that on. `chatConfigs.chatFormattingEnabled` is set to false in
+HennyEssentials.json for that reason: two mods writing the same prefix into the
+same line is how you get "[Nowy] [Nowy] Steve". playername-styler keeps the job
+because it is the only one of the two that also reaches the tab list and the
+nameplate.
 
 TRAP, and it costs an hour if you meet it cold. `lp meta setprefix` cannot set a
 prefix that ends in a space:
@@ -146,40 +184,73 @@ survives both `lp sync` and a full restart — measured. Do not try to fix it fr
 the console.
 
 
-6. There is no staff column yet
--------------------------------
+6. The staff column
+-------------------
 
-ravenclassic has one: Budowniczy, Moderator, Administrator, Architekt, each built
-out of `minecraft.command.*` nodes so that staff need no operator status. Those
-nodes come from Vanilla Permissions, which is Fabric-only.
+Four ranks, ravenclassic's, appointed rather than earned:
 
-Why one is needed at all, measured: NeoForge does ship a PermissionAPI, and
-LuckPerms registers as its handler — the log says so at boot. But vanilla
-commands never ask it. NeoForge's own patched `CommandSourceStack.hasPermission`
-is byte-for-byte the vanilla check, `permissionLevel >= level`, with no hook. So
-op status is the only thing gating /ban, /kick and /tp unless a mod puts
-something in front of them.
+    Budowniczy      ordinary player + building tools and warp management
+    Moderator       ordinary player + moderation
+    Administrator   Moderator + Budowniczy + kits, banned items, reloads
+    Architekt       everything, the only account with op
 
-**CustomPerm** does exactly that on NeoForge 1.21.1: it rewrites the Brigadier
-command tree and gates each root command behind `customperm.command.<name>`,
-resolved through LuckPerms when it is installed (declared as an optional
-dependency, versionRange [5.4,)). That is the missing half, and it means a
-Moderator here would not need op either.
+Inheritance is a diamond and it is deliberate: Budowniczy and Moderator both
+descend from Obywatel, not from Technik, so appointing somebody to staff never
+hands them a rung of the player ladder they did not earn. Administrator takes
+BOTH branches, Architekt takes Administrator. Verified live — Architekt resolves
+command.he.fly through Budowniczy and command.he.ban through Moderator, while
+Moderator does not inherit fly.
 
-What it does not carry over is the other half of ravenclassic's design. There,
-section 5 is `minecraft.selector.weight.*` — the rule that you can only target a
-player whose weight is at most your own, which is what stops a Moderator banning
-an Administrator. CustomPerm has no selector, weight or target-protection code in
-its jar at all, and no NeoForge equivalent of that mechanism turned up. A
-Moderator given /ban here could ban anybody, the owner included.
+What each one adds, by node, is in the group files themselves. The shape:
 
-So the staff column is a decision, not a gap in the search: it waits on whether
-that is acceptable, or on something else supplying target protection. CustomPerm
-itself is also small — 334 downloads, current 1.21.1 build on the beta channel,
-GPL-3.0-only, source on GitHub.
+    nowy          home / sethome / delhome / listhomes, home.limit.1,
+                  back, afk, spawn, warp, warps, listwarps, kit, kits,
+                  rules, playtime, page
+    gracz         home.limit.2
+    obywatel      home.limit.3
+    technik       nothing new — it pays for ground, not for shortcuts
+    budowniczy    fly, heal, feed, hat, repair, the warp-management set,
+                  and the bench commands (anvil, craftingtable, stonecutter…)
+    moderator     ban / tempban / unban, mute / tempmute / unmute, the uuid
+                  variants, vanish, invsee, viewechest, broadcsat
+    administrator setspawn, the kit-editing set, banned items, tokens,
+                  the three reloads
+    architekt     nothing of its own; it is the sum of the two branches
 
-For now the server owner is simply in ops.json at level 4, as Architekt is on
-ravenclassic, and moderation is done from that account.
+Three things worth knowing before editing any of it.
+
+**`command.he.broadcsat` is spelled that way in the jar.** It is the mod's typo
+for broadcast. Write the node as the jar spells it or the grant does nothing.
+
+**Nobody gets the permission-editing commands.** adduserperm, addgroupperm,
+addgroupprefix and their eleven relatives are granted to no group at all, not
+even Architekt. With luckPermsOverridePermissions on, they would write to a
+store nothing reads, and having two places that appear to set permissions is
+worse than having one. LuckPerms is the single source of truth. Checked live:
+`lp group architekt permission check command.he.adduserperm` answers that
+Architekt neither holds nor inherits it.
+
+**Never grant a bare `command.he.home` style prefix as a wildcard.** The same
+trap ravenclassic documents applies here: LuckPerms reads `home.limit.*` as
+every rung at once, the home ladder quietly stops existing, and it still looks
+like it is working.
+
+Two gaps against ravenclassic, neither invented away:
+
+  * **no /rtp.** Henny has no random-teleport node at all. On ravenclassic that
+    is how a new player finds somewhere to put a first claim. Here they walk.
+  * **no /nickname of Henny's own.** playername-styler ships one, but it is
+    gated at op level 2, so it is effectively staff-only until something grants
+    it otherwise.
+
+TARGET PROTECTION IS NOT IN THIS MOD. Henny's Ban and Mute never ask what rank
+their target holds — measured in the jar, neither class touches
+LuckPermsIntegration. So a Moderator with command.he.ban can ban the Architekt.
+Nothing stopped that before either, because moderation used to need op and only
+the owner had it; giving Moderator the node for the first time is what opens the
+hole. kubejs/server_scripts/rank_guard.js is what closes it, by comparing the
+weights in section 1 and refusing a command whose target ranks at or above the
+caller.
 
 
 7. Day-to-day
