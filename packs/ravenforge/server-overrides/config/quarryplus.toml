@@ -1,0 +1,10 @@
+# Chunk loading is a rank reward bought with RavenCoin, tracked through the
+# Open Parties and Claims forceload allowance. A machine that loads its own
+# chunk for free routes around that entirely.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+#Enable Chunk Loader in machines. Default: true
+enableChunkLoader = false

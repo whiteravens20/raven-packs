@@ -1,0 +1,14 @@
+# Saro's Essentials is in this pack for homes, warps, kits, moderation and chat
+# formatting — not for its money. It ships a bank system of its own, and two
+# economies on one server means two balances, two /pay commands fighting over
+# the same name in Brigadier, and players quite reasonably assuming the number
+# they can see is the number that buys things.
+#
+# RavenCoin owns the economy here. This file exists to say so.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+[Commands]
+	#Enable/disable the Bank-System
+	bankSystem = false

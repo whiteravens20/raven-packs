@@ -11,12 +11,13 @@
     },
     "requiredJava": 25,
     "serverLauncher": {
+      "kind": "jar",
       "installerVersion": "1.1.2",
       "url": "https://meta.fabricmc.net/v2/versions/loader/26.2/0.19.3/1.1.2/server/jar",
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-24T16:45:54.982Z",
+  "generatedAt": "2026-08-27T12:00:13.904Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -166,6 +167,26 @@
       "requiredDependencies": [
         "P7dR8mSH"
       ]
+    },
+    {
+      "requestKey": "{\"slug\":\"configured\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "kind": "mod",
+      "side": "client",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "configured",
+      "name": "Configured",
+      "source": "modrinth",
+      "projectId": "HlpEBg3R",
+      "versionId": "G2x2vImv",
+      "version": "v1.9.8mc26.2",
+      "fileName": "Configured-mc26.2-v1.9.8.jar",
+      "url": "https://cdn.modrinth.com/data/HlpEBg3R/versions/G2x2vImv/Configured-mc26.2-v1.9.8.jar",
+      "size": 102392,
+      "sha1": "a5e7c9a884510ea39bf1317d3a5a822bfbc2287a",
+      "sha512": "69912c6830563d47775c4036cc7f03828e49e901ca5a1c05aa5045bf2c35cf7f3ee6682445cb7e31ba56cf241de32c49974d932a3fb1a990805b145809058d62",
+      "license": "MIT",
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"placeholder-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",

@@ -1,0 +1,49 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "metal",
+      "basic"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "c:ingots/tin"
+    },
+    "part_substitutes": {
+      "silentgear:rod": {
+        "tag": "c:rods/tin"
+      }
+    }
+  },
+  "display": {
+    "color": "#FF89A5B4",
+    "main_texture_type": "HIGH_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.tin"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:rod": {
+      "attack_speed": {
+        "operation": "ADD",
+        "value": 0.2
+      },
+      "rarity": 15,
+      "traits": [
+        {
+          "conditions": [],
+          "level": 2,
+          "trait": "silentgear:malleable"
+        },
+        {
+          "conditions": [],
+          "level": 1,
+          "trait": "silentgear:soft"
+        }
+      ]
+    }
+  }
+}

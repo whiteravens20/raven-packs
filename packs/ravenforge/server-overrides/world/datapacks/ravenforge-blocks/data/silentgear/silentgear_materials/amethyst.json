@@ -1,0 +1,60 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "gem",
+      "intermediate"
+    ],
+    "gear_type_blacklist": [
+      "silentgear:all"
+    ],
+    "ingredient": {
+      "tag": "c:gems/amethyst"
+    },
+    "part_substitutes": {}
+  },
+  "display": {
+    "color": "#FFA31DE6",
+    "main_texture_type": "HIGH_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.amethyst"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:setting": {
+      "traits": [
+        {
+          "conditions": [],
+          "level": 4,
+          "trait": "silentgear:cursed"
+        }
+      ]
+    },
+    "silentgear:tip": {
+      "durability": {
+        "operation": "MULTIPLY_TOTAL",
+        "value": -0.25
+      },
+      "harvest_tier": {
+        "incorrect_blocks_for_tool": "silentgear:incorrect_for_amethyst_tools",
+        "level_hint": "1.5",
+        "name": "amethyst"
+      },
+      "traits": [
+        {
+          "conditions": [
+            {
+              "type": "silentgear:material_ratio",
+              "ratio": 0.66
+            }
+          ],
+          "level": 1,
+          "trait": "silentgear:silky"
+        }
+      ]
+    }
+  }
+}

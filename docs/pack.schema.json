@@ -105,6 +105,11 @@
         },
         "name": { "type": "string", "description": "Display name for URL entries." },
         "filename": { "type": "string", "description": "Override the derived filename for URL entries." },
+        "ignoreDependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Modrinth slugs to drop from this entry's required-dependency list. A multiloader project publishes one version for every loader it supports and Modrinth has no per-loader dependency granularity, so an entry can list a dependency that is real on one loader and absent on another. Use sparingly, and only after reading the jar."
+        },
         "side": {
           "enum": ["client", "server", "both"],
           "description": "Which pack(s) this belongs in. Omit to infer from Modrinth's client_side/server_side; set explicitly when the inference is wrong (e.g. a minimap marked server-optional)."

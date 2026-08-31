@@ -33,6 +33,11 @@
       "slug": "forge-config-api-port",
       "reason": "Config format used by Traveler's Backpack and Open Parties and Claims"
     },
+    {
+      "slug": "configured",
+      "side": "client",
+      "reason": "Edits Forge Config API Port settings in game — without it the settings button just says to install this. Modrinth tags it server-only, which is backwards: the jar declares environment \"*\" and the screen it adds is the client's"
+    },
     { "slug": "placeholder-api", "reason": "Text placeholders — Styled Chat and Mod Menu" },
     {
       "slug": "polymer",

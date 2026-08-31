@@ -1,0 +1,81 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "gem",
+      "intermediate"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "c:gems/lapis"
+    },
+    "part_substitutes": {}
+  },
+  "display": {
+    "color": "#FF224BAF",
+    "main_texture_type": "HIGH_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.lapis_lazuli"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:setting": {
+      "traits": [
+        {
+          "conditions": [
+            {
+              "type": "silentgear:material_ratio",
+              "ratio": 0.75
+            }
+          ],
+          "level": 3,
+          "trait": "silentgear:lucky"
+        }
+      ]
+    },
+    "silentgear:tip": {
+      "attack_speed": {
+        "operation": "ADD",
+        "value": 0.3
+      },
+      "harvest_speed": {
+        "operation": "MULTIPLY_TOTAL",
+        "value": -0.1
+      },
+      "harvest_tier": {
+        "incorrect_blocks_for_tool": "silentgear:incorrect_for_lapis_lazuli_tools",
+        "level_hint": "1.5",
+        "name": "lapis_lazuli"
+      },
+      "magic_damage": {
+        "operation": "ADD",
+        "value": 2
+      },
+      "traits": [
+        {
+          "conditions": [
+            {
+              "type": "silentgear:material_ratio",
+              "ratio": 0.75
+            }
+          ],
+          "level": 1,
+          "trait": "silentgear:holy"
+        },
+        {
+          "conditions": [
+            {
+              "type": "silentgear:material_ratio",
+              "ratio": 0.75
+            }
+          ],
+          "level": 4,
+          "trait": "silentgear:lucky"
+        }
+      ]
+    }
+  }
+}
