@@ -205,17 +205,33 @@ What each one adds, by node, is in the group files themselves. The shape:
 
     nowy          home / sethome / delhome / listhomes, home.limit.1,
                   back, afk, spawn, warp, warps, listwarps, kit, kits,
-                  rules, playtime, page
+                  rules, playtime, page, and ravenforge.rtp — the pack's own
+                  random teleport, kubejs/server_scripts/rtp.js
     gracz         home.limit.2
     obywatel      home.limit.3
     technik       nothing new — it pays for ground, not for shortcuts
-    budowniczy    fly, heal, feed, hat, repair, the warp-management set,
-                  and the bench commands (anvil, craftingtable, stonecutter…)
+    budowniczy    fly, heal, feed, hat, repair, and the bench commands
+                  (anvil, craftingtable, stonecutter…)
     moderator     ban / tempban / unban, mute / tempmute / unmute, the uuid
-                  variants, vanish, invsee, viewechest, broadcsat
-    administrator setspawn, the kit-editing set, banned items, tokens,
-                  the three reloads
+                  variants, vanish, invsee, viewechest, broadcsat, and tpa
+    administrator setspawn, warp management, the kit-editing set, banned
+                  items, tokens, the three reloads
     architekt     nothing of its own; it is the sum of the two branches
+
+Two of those placements are decisions rather than defaults.
+
+**Players use warps; only Administrator makes them.** warp and warps sit in
+nowy, so everybody travels the network — but setwarp, delwarp, settempwarp and
+the two display commands are Administrator's alone. A warp is a permanent hole
+in the map's distances, and Budowniczy building the place a warp points at is a
+different job from deciding the world should have one.
+
+**tpa starts at Moderator.** Ordinary players do not get it, and neither does
+Budowniczy, who sits on the other branch. It is consent-based — the target
+clicks ACCEPT or DENY — but consent does not change what it does to the world:
+two people meet instantly anywhere, and distance stops costing anything.
+ravenclassic refused it outright for that reason. Here it is a staff tool for
+reaching a player who needs help, which is the one use that justifies it.
 
 Three things worth knowing before editing any of it.
 

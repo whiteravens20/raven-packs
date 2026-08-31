@@ -14,6 +14,10 @@ permissions:
 - command.he.invsee
 - command.he.viewechest
 - command.he.broadcsat
+- command.he.tpa
+- command.he.tpaaccept
+- command.he.tpadeny
+- command.he.tpahere
 parents:
 - obywatel
 prefixes:

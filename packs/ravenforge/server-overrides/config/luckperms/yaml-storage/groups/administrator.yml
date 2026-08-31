@@ -2,6 +2,11 @@ name: administrator
 permissions:
 - weight.90
 - command.he.setspawn
+- command.he.setwarp
+- command.he.delwarp
+- command.he.settempwarp
+- command.he.setwarpcategory
+- command.he.setwarpdisplay
 - command.he.createkit
 - command.he.delkit
 - command.he.editkit
