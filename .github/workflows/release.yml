@@ -201,7 +201,7 @@ jobs:
           ' "${{ steps.meta.outputs.slug }}" "${{ github.ref_name }}"
 
       - name: Publish release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
         with:
           files: |
