@@ -15,6 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { listFiles } from './lib/download.mjs';
+import { isCopyleft } from './lib/licences.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -217,6 +218,24 @@ async function validatePack(slug) {
     if (file.kind !== 'url' && !file.sha1 && file.source === 'modrinth') missing.push('sha1');
     if (missing.length > 0) fail(slug, `locked file "${file.id}" is missing: ${missing.join(', ')}`);
   }
+
+  // The zips carry real jars, so shipping one is conveying compiled code. For a
+  // copyleft mod that comes with an obligation to say where the source is, and
+  // the only honest way to meet it is to name the project's own repository.
+  //
+  // This is a hard failure rather than a warning because the case it catches is
+  // invisible otherwise: a mod whose published jar contains classes that were
+  // never released as source. Nothing downstream would notice, and by then the
+  // binary is already inside an archive somebody has downloaded.
+  const unsourced = lock.files.filter((f) => isCopyleft(f.license) && !f.sourceUrl);
+  if (unsourced.length > 0) {
+    for (const f of unsourced) {
+      fail(slug, `"${f.id}" is ${f.license} but publishes no source URL — the zips would convey it with no way to obtain the source`);
+    }
+    return;
+  }
+  const copyleft = lock.files.filter((f) => isCopyleft(f.license));
+  console.log(`  \x1b[32m✓\x1b[0m ${copyleft.length} copyleft component(s) name where their source lives`);
 
   const prereleases = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version));
   if (prereleases.length > 0) {
