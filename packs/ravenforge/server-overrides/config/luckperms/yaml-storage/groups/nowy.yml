@@ -1,0 +1,11 @@
+name: nowy
+permissions:
+- weight.10
+prefixes:
+- '&7[Nowy] ':
+    priority: 10
+meta:
+- xaero.pac_max_claims:
+    value: '4'
+- xaero.pac_max_forceloads:
+    value: '0'

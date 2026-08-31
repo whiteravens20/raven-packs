@@ -1,0 +1,13 @@
+name: gracz
+permissions:
+- weight.20
+parents:
+- nowy
+prefixes:
+- '&a[Gracz] ':
+    priority: 20
+meta:
+- xaero.pac_max_claims:
+    value: '6'
+- xaero.pac_max_forceloads:
+    value: '2'

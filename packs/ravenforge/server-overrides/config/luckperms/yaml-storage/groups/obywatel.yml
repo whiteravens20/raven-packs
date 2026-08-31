@@ -1,0 +1,13 @@
+name: obywatel
+permissions:
+- weight.30
+parents:
+- gracz
+prefixes:
+- '&b[Obywatel] ':
+    priority: 30
+meta:
+- xaero.pac_max_claims:
+    value: '8'
+- xaero.pac_max_forceloads:
+    value: '4'

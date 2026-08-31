@@ -1,0 +1,26 @@
+{
+  "ranks": [
+    {
+      "id": "gracz",
+      "group": "gracz",
+      "price": 0,
+      "name": "Gracz",
+      "playtimeMinutes": 600
+    },
+    {
+      "id": "obywatel",
+      "group": "obywatel",
+      "price": 0,
+      "name": "Obywatel",
+      "requires": "gracz",
+      "playtimeMinutes": 2400
+    },
+    {
+      "id": "technik",
+      "group": "technik",
+      "price": 100000,
+      "name": "Technik",
+      "requires": "obywatel"
+    }
+  ]
+}
