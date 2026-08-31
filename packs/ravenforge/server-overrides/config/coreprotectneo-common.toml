@@ -1,0 +1,13 @@
+# CoreProtectNeo defaults to Russian on a fresh install — the first boot test
+# logged "CoreProtectNeo language set to ru". It ships only ru and en, so this
+# is the whole of the choice; there is no Polish to pick.
+language = "en"
+
+[database]
+	purge_enabled = true
+	# Rolling back grief needs history, and this is a small trusted server where
+	# the log will not grow the way a public one does. Three months beats the
+	# default 20 days for the case this mod exists for: somebody noticing a
+	# missing build weeks later.
+	purge_retention_days = 90
+	purge_interval_days = 7

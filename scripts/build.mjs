@@ -528,7 +528,9 @@ async function buildPack(slug, { withZip }) {
       if (launcher) {
         const jar = await fetchFile(launcher.url);
         serverZip.add(launcher.fileName, jar.data, { store: true });
-        ok(`bundled ${launcher.fileName} (Fabric installer ${launcher.installerVersion})`);
+        ok(
+          `bundled ${launcher.fileName} (${pack.loader.type} ${launcher.kind === 'installer' ? 'installer' : `installer ${launcher.installerVersion}`})`,
+        );
       } else {
         warn(`no server launcher for loader "${pack.loader.type}" — admins must install it manually`);
       }
@@ -630,6 +632,32 @@ fi
 `
     : '';
 
+  // NeoForge ships an installer, not a runnable jar. It has to be run once
+  // against this directory; afterwards the server starts from the args file the
+  // installer wrote, and the jar is never executed again. Doing it inside the
+  // start script keeps the server pack turnkey, which is the whole point.
+  const neoInstall =
+    launcher?.kind === 'installer'
+      ? `
+if [ ! -f "${launcher.argsFile}" ]; then
+  echo "First run: installing ${pack.loader.type} ${pack.loader.version}…"
+  java -jar "${jar}" --install-server . || {
+    echo "The ${pack.loader.type} installer failed. See the output above." >&2
+    exit 1
+  }
+fi
+`
+      : '';
+
+  const launch =
+    launcher?.kind === 'installer'
+      ? `exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
+  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
+  @"${launcher.argsFile}" nogui`
+      : `exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
+  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
+  -jar "${jar}" nogui`;
+
   return `#!/usr/bin/env sh
 # ${pack.name} ${pack.version} — Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}
 set -e
@@ -647,9 +675,8 @@ if [ ! -f eula.txt ]; then
   exit 1
 fi
 
-exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
-  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
-  -jar "${jar}" nogui
+${neoInstall}
+${launch}
 `;
 }
 
@@ -667,6 +694,26 @@ if errorlevel 1 (
 )
 `
     : '';
+
+  // Same installer dance as the shell script; see the comment there.
+  const neoInstall =
+    launcher?.kind === 'installer'
+      ? `
+if not exist "${launcher.argsFileWindows}" (
+  echo First run: installing ${pack.loader.type} ${pack.loader.version}...
+  java -jar "${jar}" --install-server .
+  if errorlevel 1 (
+    echo The ${pack.loader.type} installer failed. See the output above.
+    pause
+    exit /b 1
+  )
+)
+
+`
+      : '';
+
+  const launchArgs =
+    launcher?.kind === 'installer' ? `@"${launcher.argsFileWindows}"` : `-jar "${jar}"`;
 
   return `@echo off
 REM ${pack.name} ${pack.version} — Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}
@@ -687,7 +734,7 @@ if not exist eula.txt (
   exit /b 1
 )
 
-java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -jar "${jar}" nogui
+${neoInstall}java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M -XX:+UseG1GC -XX:MaxGCPauseMillis=50 ${launchArgs} nogui
 pause
 `;
 }
@@ -708,8 +755,9 @@ function serverInstructions(pack, serverFiles, launcher, requiredJava) {
     '3. Run start.sh (Linux/macOS) or start.bat (Windows).',
     '   The first run stops and asks you to accept the Minecraft EULA:',
     '   create a file named eula.txt containing exactly:  eula=true',
-    '4. Run the start script again. Fabric downloads the Minecraft server and',
-    '   its libraries on first launch, so allow a few minutes and keep it online.',
+    `4. Run the start script again. ${pack.loader.type} downloads the Minecraft`,
+    '   server and its libraries on first launch, so allow a few minutes and',
+    '   keep it online.',
     '',
     `RAM: the scripts allocate ${ram} MB. Edit start.sh / start.bat to change it.`,
     'Do not raise it far beyond this — oversized heaps cause longer GC pauses,',
@@ -718,7 +766,9 @@ function serverInstructions(pack, serverFiles, launcher, requiredJava) {
     'WHAT IS IN HERE',
     '',
     `  mods/     ${serverFiles.filter((f) => f.kind === 'mod').length} server-side mods`,
-    launcher ? `  ${launcher.fileName}  Fabric server launcher` : '  (no launcher bundled)',
+    launcher
+      ? `  ${launcher.fileName}  ${launcher.kind === 'installer' ? `${pack.loader.type} installer, run once by the start script` : `${pack.loader.type} server launcher`}`
+      : '  (no launcher bundled)',
     '  start.sh / start.bat',
     '',
     'Client-only mods are deliberately absent — installing them here would waste',

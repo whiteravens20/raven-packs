@@ -1,0 +1,35 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "rock",
+      "basic"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "c:sandstone/uncolored_blocks"
+    },
+    "part_substitutes": {}
+  },
+  "display": {
+    "color": "#FFE3DBB0",
+    "main_texture_type": "LOW_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.sandstone"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:rod": {
+      "traits": [
+        {
+          "conditions": [],
+          "level": 1,
+          "trait": "silentgear:brittle"
+        }
+      ]
+    }
+  }
+}

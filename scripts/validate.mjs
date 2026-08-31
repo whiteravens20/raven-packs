@@ -44,7 +44,17 @@ const fail = (slug, msg) => problems.push(`${slug}: ${msg}`);
  * The right numbers for a given Minecraft version are not guessable; read them
  * from `version.json` in that version's client jar (`pack_version.resource_major`
  * for resource packs, `pack_version.data_major` for data packs).
+ *
+ * Which keys are correct depends on the version, so this cannot be a blanket
+ * rule. A pack for a Minecraft old enough to predate the changeover has to use
+ * `pack_format`, and `min_format`/`max_format` mean nothing to it — ravenforge
+ * is on 1.21.1, data format 48, and its datapack loads only with the old key.
+ * So the test is the declared number, not the key: below the changeover the old
+ * key is required, at or above it the new pair is.
  */
+
+/** `PackFormat.lastPreMinorVersion` — the last format before the key change. */
+const LAST_PRE_MINOR = { resource: 64, data: 81 };
 async function validatePackMeta(slug) {
   const metas = (await listFiles(path.join(PACKS_DIR, slug))).filter((f) =>
     f.relative.endsWith('pack.mcmeta'),
@@ -61,18 +71,35 @@ async function validatePackMeta(slug) {
     }
 
     const section = meta.pack ?? {};
+    const kind = file.relative.includes('datapacks/') ? 'data' : 'resource';
+    const threshold = LAST_PRE_MINOR[kind];
     const legacy = ['pack_format', 'supported_formats'].filter((k) => k in section);
-    if (legacy.length > 0) {
-      fail(slug, `${file.relative} still uses ${legacy.join(' and ')} — replace with min_format/max_format`);
-    }
-    const missing = ['min_format', 'max_format'].filter((k) => !(k in section));
-    if (missing.length > 0) {
-      fail(slug, `${file.relative} is missing ${missing.join(' and ')} — the game cannot read its metadata`);
+    const modern = ['min_format', 'max_format'].filter((k) => k in section);
+
+    // The highest format the file claims, whichever key it used to claim it.
+    const claimed = Math.max(
+      ...[section.pack_format, section.max_format, ...(section.supported_formats?.max ? [section.supported_formats.max] : [])]
+        .filter((n) => typeof n === 'number'),
+      -1,
+    );
+
+    if (claimed < 0) {
+      fail(slug, `${file.relative} declares no pack format at all — the game cannot read its metadata`);
+    } else if (claimed > threshold) {
+      if (legacy.length > 0) {
+        fail(slug, `${file.relative} claims ${kind} format ${claimed}, past ${threshold}, while still using ${legacy.join(' and ')} — replace with min_format/max_format`);
+      }
+      const missing = ['min_format', 'max_format'].filter((k) => !(k in section));
+      if (missing.length > 0) {
+        fail(slug, `${file.relative} is missing ${missing.join(' and ')} — the game cannot read its metadata`);
+      }
+    } else if (modern.length > 0) {
+      fail(slug, `${file.relative} uses ${modern.join(' and ')} at ${kind} format ${claimed}, which predates them — use pack_format`);
     }
   }
 
   if (metas.length > 0 && problems.length === before) {
-    console.log(`  \x1b[32m✓\x1b[0m ${metas.length} pack.mcmeta declare min_format/max_format`);
+    console.log(`  \x1b[32m✓\x1b[0m ${metas.length} pack.mcmeta declare a format the game can read`);
   }
 }
 
