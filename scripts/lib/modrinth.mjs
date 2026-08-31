@@ -46,6 +46,11 @@ export async function getProject(slug) {
     clientSide: p.client_side,
     serverSide: p.server_side,
     license: p.license?.id ?? 'unknown',
+    // Where the corresponding source is published. Copyleft licences require it
+    // to reach whoever receives the binary, and the pack's zips carry real jars
+    // rather than links — so this travels into the lockfile and out again in
+    // LICENSES.txt. Modrinth leaves it null for projects that publish none.
+    sourceUrl: p.source_url ?? null,
   };
 }
 

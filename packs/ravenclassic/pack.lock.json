@@ -17,7 +17,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-08-27T12:00:13.904Z",
+  "generatedAt": "2026-08-31T14:32:38.111Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -37,7 +37,8 @@
       "sha1": "7d0fb560579d28b933bdbc36b47449efe78d3bda",
       "sha512": "4c2c1ebe74ffd54875a01ff371b53ba3d8674ac98d561f7dae02a96d3d37fbdbc5f5abc6e820f73b6154d6f873ddd05a442b0998ed2d456863dc0ad972e040a6",
       "license": "Apache-2.0",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/FabricMC/fabric"
     },
     {
       "requestKey": "{\"slug\":\"fabric-language-kotlin\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -57,7 +58,8 @@
       "sha1": "620cb137a9dc69ce86f3114f19d9eedab16366f5",
       "sha512": "9a63c35a550b0362b7b25ff045d93709c7b0dae08c89076cba422813fdfb9e5f5dd021ed3afac9f82e74e95b88c249e8f68b240717151540ca3e88cc27fb9c77",
       "license": "Apache-2.0",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/FabricMC/fabric-language-kotlin/"
     },
     {
       "requestKey": "{\"slug\":\"yacl\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -79,7 +81,8 @@
       "license": "LGPL-3.0-or-later",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/isXander/YetAnotherConfigLib"
     },
     {
       "requestKey": "{\"slug\":\"libipn\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -102,7 +105,8 @@
       "requiredDependencies": [
         "P7dR8mSH",
         "Ha28R6CL"
-      ]
+      ],
+      "sourceUrl": "https://github.com/blackd/libIPN"
     },
     {
       "requestKey": "{\"slug\":\"searchables\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -124,7 +128,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/jaredlll08/searchables"
     },
     {
       "requestKey": "{\"slug\":\"cloth-config\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -144,7 +149,8 @@
       "sha1": "babcf16dbd15e09d326e21ffe85ab3f7d843ef9e",
       "sha512": "37b1e402f0df5a383656e21a38ee18cdd15cb4ba3fb62fbeba82ef4b959a4479fc32718ac0d9d154a7d9104c5f7315bfa67dbeced0b8ff240b8039d4848d5df1",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/shedaniel/ClothConfig/"
     },
     {
       "requestKey": "{\"slug\":\"forge-config-api-port\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -166,7 +172,8 @@
       "license": "MPL-2.0",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Fuzss/forgeconfigapiport"
     },
     {
       "requestKey": "{\"slug\":\"configured\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -186,7 +193,8 @@
       "sha1": "a5e7c9a884510ea39bf1317d3a5a822bfbc2287a",
       "sha512": "69912c6830563d47775c4036cc7f03828e49e901ca5a1c05aa5045bf2c35cf7f3ee6682445cb7e31ba56cf241de32c49974d932a3fb1a990805b145809058d62",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/fooeyround/Configured"
     },
     {
       "requestKey": "{\"slug\":\"placeholder-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -206,7 +214,8 @@
       "sha1": "99b57ccc1d4323c4ef71887828dac25ce4ce2103",
       "sha512": "07b6fc802559d54ec6577f6e2788926ef391d755206c2bfb0528280977885cae4bc0c517d8a53eb6f34092015ebe6c41210627d255aa6504662daefa8fb76397",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Patbox/TextPlaceholderAPI"
     },
     {
       "requestKey": "{\"slug\":\"polymer\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -226,7 +235,8 @@
       "sha1": "6a7a4a0f5d8bf2ee17434d3f0f5acfeddfced056",
       "sha512": "1459edf99834bbbb2eff5f7df2e7159688ad88e20e8704bc473752e81a755963bb96c511641d53c9f7b4e5867436f7b49ef839e3b857c48ca54af93627c2a110",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Patbox/polymer"
     },
     {
       "requestKey": "{\"slug\":\"balm\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -248,7 +258,8 @@
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/TwelveIterations/Balm"
     },
     {
       "requestKey": "{\"slug\":\"shogi\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -270,7 +281,8 @@
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/TwelveIterations/Shogi"
     },
     {
       "requestKey": "{\"slug\":\"fabric-permissions-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -290,7 +302,8 @@
       "sha1": "8c536967c417676af59b4574fc079444a19c87fd",
       "sha512": "fd1961a4496cdc6cf22fbac0627a331407e97d3131f222641c1e370824adb3179e530e33e9e03adff1843e5556750edbb7abe0be7a241c7f0e3ca3ddc8b78ab7",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/lucko/fabric-permissions-api"
     },
     {
       "requestKey": "{\"slug\":\"sodium\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -310,7 +323,8 @@
       "sha1": "14f3388694fa77f870d28262f74562de67eabcbe",
       "sha512": "627fbf9625a4b94693c789c84a0686ffe558c0b1ecbeccf2602a903caafa9e126548b644282aa9c391dc798930d378724a383bea6b4397c5294d59ba5c0a6936",
       "license": "LicenseRef-Polyform-Shield-1.0.0",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/CaffeineMC/sodium"
     },
     {
       "requestKey": "{\"slug\":\"sodium-extra\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -332,7 +346,8 @@
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
         "AANobbMI"
-      ]
+      ],
+      "sourceUrl": "https://github.com/FlashyReese/sodium-extra-fabric"
     },
     {
       "requestKey": "{\"slug\":\"reeses-sodium-options\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -354,7 +369,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "AANobbMI"
-      ]
+      ],
+      "sourceUrl": "https://github.com/FlashyReese/reeses-sodium-options"
     },
     {
       "requestKey": "{\"slug\":\"iris\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -376,7 +392,8 @@
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
         "AANobbMI"
-      ]
+      ],
+      "sourceUrl": "https://github.com/IrisShaders/Iris"
     },
     {
       "requestKey": "{\"slug\":\"lithium\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -396,7 +413,8 @@
       "sha1": "435ad0289209bb72195e7a423756a03f5dfa5a9a",
       "sha512": "148b638f3c6229fbaf487120a2344a0af5e411a5aa6533d5db9d75da0a8c0d8304f63eb4cca13f4d03b2c9b4c23d559dd74c1d832422ef8a3087bd005e62a8bd",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/caffeinemc/lithium-fabric"
     },
     {
       "requestKey": "{\"slug\":\"ferrite-core\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -416,7 +434,8 @@
       "sha1": "eac76ff0f3753422c61b2c44487d0d195d88d4bc",
       "sha512": "d81fa97e11784c19d42f89c2f433831d007603dd7193cee45fa177e4a6a9c52b384b198586e04a0f7f63cd996fed713322578bde9a8db57e1188854ae5cbe584",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/malte0811/FerriteCore"
     },
     {
       "requestKey": "{\"slug\":\"krypton\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -436,7 +455,8 @@
       "sha1": "c83ed92c0f9f8523d7e6096151e74222fea91e96",
       "sha512": "b8d9af34cd0050493afb8a6232cb8f785daa9d8887b7045f6e6a53c6bb9b5ffc4318fd9b0347a940eacfeba4773f10cb80ae0be1e79ce4c1888f96eda21e564e",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/astei/krypton"
     },
     {
       "requestKey": "{\"slug\":\"entityculling\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -458,7 +478,8 @@
       "license": "LicenseRef-tr7zw-Protective-License",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/tr7zw/EntityCulling"
     },
     {
       "requestKey": "{\"slug\":\"immediatelyfast\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -478,7 +499,8 @@
       "sha1": "3a9fe02bbfdecd6af9ab418b55d4ebc9f0f1f5d3",
       "sha512": "79321f00b73755ae54f08120e81fd559dc5d7a34ef7bedddd1e9e467de0daebec885b377db5fffd4aa190d81ce44c66af38fbef82ad49f661da5ddd2ef3fc49e",
       "license": "LGPL-3.0-or-later",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/RaphiMC/ImmediatelyFast"
     },
     {
       "requestKey": "{\"slug\":\"dynamic-fps\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -500,7 +522,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/juliand665/Dynamic-FPS"
     },
     {
       "requestKey": "{\"slug\":\"bobby\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -520,7 +543,8 @@
       "sha1": "7acb26634632894b95ef09c06503c7cc8f04b90b",
       "sha512": "25261b02b2db7f969de5c7013b7e223508a9e6005d61f287911af30c0fecd06c40df1e3cb4d6f7b714093f6b8ecffb5dfba25726c370ef3a0a74dcebf7711631",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Johni0702/bobby"
     },
     {
       "requestKey": "{\"slug\":\"xaeros-minimap\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -542,7 +566,8 @@
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": null
     },
     {
       "requestKey": "{\"slug\":\"xaeros-world-map\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -564,7 +589,8 @@
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": null
     },
     {
       "requestKey": "{\"slug\":\"jei\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":\"client\"}",
@@ -584,7 +610,8 @@
       "sha1": "1a5157411c54897e6aeb535807283426c6d84350",
       "sha512": "75048257380c6cd83f4fc70b54f1727444eab33b85449e6497627fdc9b1263c13049eac459815c0ad4b61af69278a476347b52152a5de81d529488a1d3378945",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/mezz/JustEnoughItems"
     },
     {
       "requestKey": "{\"slug\":\"jade\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -606,7 +633,8 @@
       "license": "CC-BY-NC-SA-4.0",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Snownee/Jade"
     },
     {
       "requestKey": "{\"slug\":\"appleskin\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -628,7 +656,8 @@
       "license": "Unlicense",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/squeek502/AppleSkin"
     },
     {
       "requestKey": "{\"slug\":\"mouse-tweaks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -650,7 +679,8 @@
       "license": "BSD-3-Clause",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/YaLTeR/MouseTweaks"
     },
     {
       "requestKey": "{\"slug\":\"inventory-profiles-next\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -674,7 +704,8 @@
         "onSQdWhM",
         "P7dR8mSH",
         "Ha28R6CL"
-      ]
+      ],
+      "sourceUrl": "https://codeberg.org/Inventory-Profiles-Next-Mod/IPNentory-Profiles"
     },
     {
       "requestKey": "{\"slug\":\"controlling\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -697,7 +728,8 @@
       "requiredDependencies": [
         "fuuu3xnx",
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/jaredlll08/Controlling"
     },
     {
       "requestKey": "{\"slug\":\"zoomify\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -721,7 +753,8 @@
         "1eAoo2KR",
         "P7dR8mSH",
         "Ha28R6CL"
-      ]
+      ],
+      "sourceUrl": "https://github.com/isXander/Zoomify"
     },
     {
       "requestKey": "{\"slug\":\"no-chat-reports\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -743,7 +776,8 @@
       "license": "WTFPL",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Aizistral-Studios/No-Chat-Reports"
     },
     {
       "requestKey": "{\"slug\":\"not-enough-animations\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -765,7 +799,8 @@
       "license": "LicenseRef-tr7zw-Protective-License",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/tr7zw/NotEnoughAnimations"
     },
     {
       "requestKey": "{\"slug\":\"lambdynamiclights\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -787,7 +822,8 @@
       "license": "LicenseRef-Lambda-License",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/LambdAurora/LambDynamicLights"
     },
     {
       "requestKey": "{\"slug\":\"continuity\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -809,7 +845,8 @@
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/PepperCode1/Continuity"
     },
     {
       "requestKey": "{\"slug\":\"betterf3\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -829,7 +866,8 @@
       "sha1": "f3e0c3dc93a2c5fba86f8796bd127076df6287b4",
       "sha512": "5da2f586b32b133f3098abca62905d9e2eecb8a6723bea5902def879dca17443b4dcf767d1ac48b28c77af3e0a13e80d445120c68c9e0c03e0b9ae2c8048dc4b",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/TreyRuffy/BetterF3"
     },
     {
       "requestKey": "{\"slug\":\"modmenu\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -852,7 +890,8 @@
       "requiredDependencies": [
         "P7dR8mSH",
         "eXts2L7r"
-      ]
+      ],
+      "sourceUrl": "https://github.com/TerraformersMC/ModMenu"
     },
     {
       "requestKey": "{\"slug\":\"modonomicon\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -872,7 +911,8 @@
       "sha1": "15c3dbcd2d41786675a3a44c85c3b373fb7bb5ca",
       "sha512": "537fcffa6533b39b7856c0df98ffce558037e5fb05ddf7b71180c4faa15a04a267d329cbabbe5ac7cd3c7ab4d8561534364de9e514fe4480414fd34c73e7ea35",
       "license": "MIT AND CC-BY-4.0",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/klikli-dev/modonomicon"
     },
     {
       "requestKey": "{\"slug\":\"travelersbackpack\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -895,7 +935,8 @@
       "requiredDependencies": [
         "P7dR8mSH",
         "ohNO6lps"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Tiviacz1337/Travelers-Backpack"
     },
     {
       "requestKey": "{\"slug\":\"waystones\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -919,7 +960,8 @@
         "MBAkmtvl",
         "bi4iCmsw",
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/TwelveIterations/Waystones"
     },
     {
       "requestKey": "{\"slug\":\"fallingtree\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -939,7 +981,8 @@
       "sha1": "b094d747558653554ffb9e883bb42b4df7542833",
       "sha512": "b47a93c6fed4bfc9da70881d6eea5df771c79a679fc2473b0c987935736a3c85b1a5c7ab1a2580d0833413ddc6ca02aa5d5996e9e88bd7b0387a3ff74f049130",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/RakambdaOrg/FallingTree"
     },
     {
       "requestKey": "{\"slug\":\"universal-graves\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -961,7 +1004,8 @@
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
         "xGdtZczs"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Patbox/UniversalGraves"
     },
     {
       "requestKey": "{\"slug\":\"open-parties-and-claims\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -984,7 +1028,8 @@
       "requiredDependencies": [
         "ohNO6lps",
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/thexaero/open-parties-and-claims"
     },
     {
       "requestKey": "{\"slug\":\"luckperms\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1004,7 +1049,8 @@
       "sha1": "a1afe63434a37a4b25c29e49e0388044aa60f222",
       "sha512": "6fedf31ff4d17710394463b7bfc97f2beba90eaa0327d6e718aab3195ec748bfba2835a9af804593fc1788e256dba79534da7f249411c8daec47b6e1e70e6f42",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/lucko/LuckPerms"
     },
     {
       "requestKey": "{\"slug\":\"vanilla-permissions\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1024,7 +1070,8 @@
       "sha1": "4de07ac050d7ba8c2faff0f6ac549d2052425282",
       "sha512": "f541fcb459e6b315c87b8de446a1c6bbb3ddf7b06317c5fe1e64a8bd26460dd7e206545beaeb565c5036fb321398c986462cd5913305068bdd9190ead367ce93",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/DrexHD/VanillaPermissions"
     },
     {
       "requestKey": "{\"slug\":\"metadatawildcard4fabric-permissions-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1044,7 +1091,8 @@
       "sha1": "e06bc30f14243e48e3cfbaf441d6bed546d7eaaf",
       "sha512": "2b104ad91b256059013562a67f4d2bb42fd3d02a55b65058e866cd10b1f4aafe359d1d08f48fc34545975f9f8cfd0b26fa8f8b8e8273a29ab65428ed46a1f615",
       "license": "Apache-2.0",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/qwertycxz/MetadataWildcard4fabric-permissions-api"
     },
     {
       "requestKey": "{\"slug\":\"playtime-ranks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1066,7 +1114,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "Vebnzrzj"
-      ]
+      ],
+      "sourceUrl": null
     },
     {
       "requestKey": "{\"slug\":\"staffsee-moderation\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1088,7 +1137,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": null
     },
     {
       "requestKey": "{\"slug\":\"worldedit\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1108,7 +1158,8 @@
       "sha1": "7d909b53f5fb76756bca1db08113151304cc173a",
       "sha512": "611ff7cc00d78c63a284ef26b6fbc806af295c469375e5e71e4d7e993aa6ea3fa90945e46511c99b6157a01ed5c3868a2a6419b47a38114cc1e67b32c20f7ca3",
       "license": "GPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/EngineHub/WorldEdit/"
     },
     {
       "requestKey": "{\"slug\":\"worldedit-cui\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1128,7 +1179,8 @@
       "sha1": "2bd0e35d25f0841a785199d9c30561fa216f3af1",
       "sha512": "9f682e0170da8b56ff4753ea71bbf5b339e8a52b43e078851f86427097853c208c91fc94e3db5801c552b989efd73f9f7994b6ee6c9b8bcc13e98abc797b2f93",
       "license": "EPL-2.0",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/EngineHub/WorldEditCUI"
     },
     {
       "requestKey": "{\"slug\":\"universal-shops\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1150,7 +1202,8 @@
       "license": "LGPL-3.0-only",
       "requiredDependencies": [
         "xGdtZczs"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Patbox/UniversalShops"
     },
     {
       "requestKey": "{\"slug\":\"essential-commands\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1172,7 +1225,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/John-Paul-R/Essential-Commands"
     },
     {
       "requestKey": "{\"slug\":\"ledger\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1192,7 +1246,8 @@
       "sha1": "a650ccbd03c436c217cb243d7d8e278b2b6fef09",
       "sha512": "d5df460ccb86f130fac83af9c6fec3ff3a36d071af01c7d2d49c5a9abc915938fc172782e2762d857f1a3e7f5b2c78c68f7e62dc416d6eed907570a176977763",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/QuiltServerTools/Ledger"
     },
     {
       "requestKey": "{\"slug\":\"meowanti-xray\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1214,7 +1269,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/xiaoyiluck666/MeowAnti-Xray"
     },
     {
       "requestKey": "{\"slug\":\"easyauth\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1236,7 +1292,8 @@
       "license": "MIT",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/NikitaCartes/EasyAuth"
     },
     {
       "requestKey": "{\"slug\":\"chunky\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1258,7 +1315,8 @@
       "license": "GPL-3.0-only",
       "requiredDependencies": [
         "P7dR8mSH"
-      ]
+      ],
+      "sourceUrl": "https://github.com/pop4959/Chunky"
     },
     {
       "requestKey": "{\"slug\":\"spark\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1278,7 +1336,8 @@
       "sha1": "fab7a3fec7dd01936fa21c88af40f8093b714dd2",
       "sha512": "1dcbf2b76ceacf07523afaeaf63d3625b0318077cc6ce588bb701aea4a494bc2a5179fd2ca5aeda9513c6a2248c2ec590387e8aec6ac9fd8e3d01760bbc3dbfb",
       "license": "GPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/lucko/spark"
     },
     {
       "requestKey": "{\"slug\":\"servercore\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1298,7 +1357,8 @@
       "sha1": "43eda9e44e32e0e736ada0ff125f83cb87cbd59a",
       "sha512": "aa4cfc93f8e02172910302444330e37713dfcf2047d28e55eb7323a3cd5d51493374a0959aa3e626ec2bf43fc707a755508b83454bb34b6d57d65c069929074b",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Wesley1808/ServerCore"
     },
     {
       "requestKey": "{\"slug\":\"styled-chat\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1318,7 +1378,8 @@
       "sha1": "1b29da288b42b129a0f9d74cf80a053106e28649",
       "sha512": "1d11214389acd0299a83803305b592da2782113b52ec0d228f91d5bc1205390333a6ccdcb6d72d3de455566c9d30ff34d922a2ca6d43816a10aed80a8ff7b4ff",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Patbox/StyledChat"
     },
     {
       "requestKey": "{\"slug\":\"styled-nicknames\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1338,7 +1399,8 @@
       "sha1": "2996c88aec6f186af02367477dced329a1a5909a",
       "sha512": "94f9088433c44634de5ff600bec5d7532c9b97abdf49c731e55e4a1d8ed71bf4e82596114d5d3bc7caa78a84adc62c9fd355a5a2dd7f74d13240942d2409b020",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Patbox/StyledNicknames"
     },
     {
       "requestKey": "{\"slug\":\"styledplayerlist\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1358,7 +1420,8 @@
       "sha1": "789f9956407ab94f959922790eabed79b54eec20",
       "sha512": "3e768c12a56a4fcd34bb5c22719e8b7f5581e19640de74af716b36d8feac23921be8120a6066b13efe620a4cb6135538357723d64062656321196596346d65ca",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Patbox/StyledPlayerList"
     },
     {
       "requestKey": "{\"slug\":\"vanish\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1378,7 +1441,8 @@
       "sha1": "b63f7b86de54853631fa8a465d0b9aefa292f8ea",
       "sha512": "39392abede4575195d3733a90e217bab13e4636ff88d4d20caf0c8c48b17d20d6f34777a5251935de324104eceb8a34dc3efc6fbb246963beefef653dbaf969e",
       "license": "MIT",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/DrexHD/Vanish"
     },
     {
       "requestKey": "{\"slug\":\"collective\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1398,7 +1462,8 @@
       "sha1": "f051fdc1037548a00eea700d0df9d777edf19cd7",
       "sha512": "e27620080ae53460b00cabacaff409a960e0d6c6811b7e3519d5461cb62654e0016161eed914352171af56191b70a97c79320b3ef29c0636b74a0471c2398055",
       "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/Serilum/Collective"
     },
     {
       "requestKey": "{\"slug\":\"starter-kit\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1420,7 +1485,8 @@
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [
         "e0M1UDsY"
-      ]
+      ],
+      "sourceUrl": "https://github.com/Serilum/Starter-Kit"
     },
     {
       "requestKey": "{\"slug\":\"complementary-reimagined\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1440,7 +1506,8 @@
       "sha1": "5a021081f0178ed91dd911194071465ab0a4348b",
       "sha512": "6bd95215755d25812556ce790d976221f7d677d63112e3e4d3e70b08a62ed41348fa3792dd31bbe720d1e46fe2d525cadb4f66e6358118e1f4aa8e0d11f25c39",
       "license": "LicenseRef-Custom",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined"
     },
     {
       "requestKey": "{\"slug\":\"complementary-unbound\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1460,7 +1527,8 @@
       "sha1": "af656a33be2cbd217ea08986ad2cdd76f6bbfe1c",
       "sha512": "9098dd9e0c18b80f7aba2839cea33ce9a614d97665bbfcac87ccce6e4771667c41602d99088852cb1642ccab20b2ceff9b98af8f2e795bd0d3b90b7c9cbab914",
       "license": "LicenseRef-Custom",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "sourceUrl": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined"
     }
   ]
 }

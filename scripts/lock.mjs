@@ -155,7 +155,11 @@ async function lockEntry(entry, kind, pack) {
       sha1: file.sha1,
       sha512: file.sha512,
       sha256: file.sha256,
-      license: 'unknown',
+      // A url entry has no Modrinth project to read metadata from, so the
+      // pack states these itself. Left out, the licence notice would tell a
+      // reader "unknown" about a mod whose licence is perfectly well known.
+      license: entry.license ?? 'unknown',
+      sourceUrl: entry.sourceUrl ?? null,
       requiredDependencies: [],
     };
   }
@@ -206,6 +210,7 @@ async function lockEntry(entry, kind, pack) {
     // lets the whole pipeline avoid downloading jars.
     sha512: version.file.sha512,
     license: project.license,
+    sourceUrl: project.sourceUrl,
     requiredDependencies: (version.dependencies ?? [])
       .filter((d) => d.dependency_type === 'required' && d.project_id)
       .map((d) => d.project_id)
@@ -252,10 +257,34 @@ async function lockPack(slug, { update }) {
 
   for (const [kind, entry] of entries) {
     const cached = previous.get(entryKey(entry));
-    if (cached) {
+    // A cached entry is reused as-is, which is the point — versions must not
+    // drift just because something else in the pack changed. The exception is a
+    // field the lockfile did not used to carry: reusing verbatim would mean it
+    // never appears for anything already locked, so it is backfilled from the
+    // project without touching the resolved version.
+    if (cached && cached.source !== 'modrinth') {
+      keep(`${cached.name} ${cached.version} (locked)`);
+      // Licence and source are authored in pack.json for a url entry, not
+      // resolved from anywhere, so they follow the pack rather than the cache.
+      files.push({ ...cached, license: entry.license ?? 'unknown', sourceUrl: entry.sourceUrl ?? null });
+      continue;
+    }
+    if (cached && cached.sourceUrl !== undefined) {
       keep(`${cached.name} ${cached.version} (locked)`);
       files.push(cached);
       continue;
+    }
+    if (cached) {
+      try {
+        const project = await getProject(cached.id);
+        keep(`${cached.name} ${cached.version} (locked, source url added)`);
+        files.push({ ...cached, sourceUrl: project.sourceUrl });
+        continue;
+      } catch {
+        keep(`${cached.name} ${cached.version} (locked, source url unavailable)`);
+        files.push({ ...cached, sourceUrl: null });
+        continue;
+      }
     }
     try {
       files.push(await lockEntry(entry, kind, pack));

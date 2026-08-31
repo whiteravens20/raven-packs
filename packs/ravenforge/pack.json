@@ -120,6 +120,8 @@
       "id": "luckperms",
       "name": "LuckPerms",
       "version": "5.4.149",
+      "license": "MIT",
+      "sourceUrl": "https://github.com/lucko/LuckPerms",
       "reason": "Permissions and the rank ladder. Every 1.21.1 build crashes the first login: they reference net.neoforged.neoforge.capabilities, which NeoForge 21.1 removed. 5.4.149 is the earliest build without that package, and its neoforge.mods.toml declares no minecraft/neoforge version range, so 1.21.1 loads it. Carried as a url because resolveVersion filters on game_versions before applying a version pin, and this build is tagged 1.21.3",
       "side": "server"
     },
@@ -143,6 +145,8 @@
       "id": "ravencoin",
       "name": "RavenCoin",
       "version": "0.1.0-beta.1",
+      "license": "Apache-2.0",
+      "sourceUrl": "https://github.com/pavlojs/raven-economy",
       "reason": "The pack's economy: a currency that is also an item, an ATM, player and server shops, and ranks bought through the LuckPerms API. Written for this pack because no published mod combines them. Carried as a url because it is not on Modrinth",
       "side": "both"
     }
