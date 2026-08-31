@@ -36,6 +36,7 @@ import { fetchFile, sha1, sha256, listFiles } from './lib/download.mjs';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { ZipWriter } from './lib/zip.mjs';
 import { buildServersDat, serverAddress } from './lib/servers-dat.mjs';
+import { isCopyleft } from './lib/licences.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -490,6 +491,7 @@ async function buildPack(slug, { withZip }) {
     for (const file of overrideContents) clientZip.add(file.relative, file.data);
     // Most players opening this are on Windows, reading it in Notepad.
     clientZip.add('INSTALL.txt', crlf(clientInstructions(pack, clientFiles)));
+    clientZip.add('LICENSES.txt', crlf(licenceNotice(pack, clientFiles)));
 
     const zipName = `${slug}-${pack.version}.zip`;
     const zipBuffer = clientZip.toBuffer();
@@ -540,6 +542,7 @@ async function buildPack(slug, { withZip }) {
       serverZip.add('start.sh', startScriptUnix(pack, launcher, requiredJava), { mode: 0o755 });
       serverZip.add('start.bat', crlf(startScriptWindows(pack, launcher, requiredJava)));
       serverZip.add('SERVER-INSTALL.txt', crlf(serverInstructions(pack, serverFiles, launcher, requiredJava)));
+      serverZip.add('LICENSES.txt', crlf(licenceNotice(pack, serverFiles)));
 
       const serverZipName = `${slug}-${pack.version}-server.zip`;
       const serverBuffer = serverZip.toBuffer();
@@ -780,8 +783,51 @@ function serverInstructions(pack, serverFiles, launcher, requiredJava) {
     '  25565/tcp must be reachable for players to connect.',
     '  Edit server.properties after the first run to change it.',
     '',
-    'Every mod keeps its own license.',
+    'Every mod keeps its own license — see LICENSES.txt.',
   ].join('\n');
+}
+
+/**
+ * The third-party notice that travels inside the zips.
+ *
+ * This exists because of what the zips actually are. The `.mrpack` only names
+ * files and lets the launcher fetch them, but the client and server archives
+ * carry the real jars — so handing someone a zip is handing them the binaries,
+ * and roughly a quarter of them are copyleft. Those licences ask that whoever
+ * receives a binary can also get its source; naming where each one is published
+ * is how that is answered without hosting anything ourselves.
+ *
+ * Nothing here relicenses anything. Every mod keeps its own terms.
+ */
+function licenceNotice(pack, files) {
+  const copyleft = files.filter((f) => isCopyleft(f.license));
+  const lines = [
+    `${pack.name} ${pack.version} — third-party components`,
+    '',
+    `Minecraft ${pack.minecraft} — ${pack.loader.type} ${pack.loader.version}`,
+    '',
+    `This archive redistributes the ${files.length} files listed below. Each keeps its`,
+    'own licence and copyright holders; being packaged together changes neither.',
+    '',
+    `${copyleft.length} of them are copyleft (GPL / LGPL / AGPL family). Those licences`,
+    'ask that anyone given the compiled form can also obtain the source, so the',
+    'source line below says where each is published.',
+    '',
+    'Licence identifiers are the ones the projects publish on Modrinth. Where a',
+    'file was not resolved through Modrinth, its licence is stated as unknown and',
+    "the project's own page is the reference.",
+    '',
+    ''.padEnd(70, '-'),
+    '',
+  ];
+  for (const file of [...files].sort((a, b) => a.name.localeCompare(b.name))) {
+    lines.push(`${file.name} ${file.version}`);
+    lines.push(`  file     ${file.fileName}`);
+    lines.push(`  licence  ${file.license ?? 'unknown'}`);
+    lines.push(`  source   ${file.sourceUrl ?? 'not published by the project'}`);
+    lines.push('');
+  }
+  return lines.join('\n');
 }
 
 function clientInstructions(pack, clientFiles) {
@@ -807,7 +853,7 @@ function clientInstructions(pack, clientFiles) {
     `Contents: ${clientFiles.length} files (client-side only — server-only mods`,
     'are excluded, and are shipped in the separate server pack instead).',
     '',
-    'Every mod keeps its own license — see pack.json for the list.',
+    'Every mod keeps its own license — see LICENSES.txt.',
   ].join('\n');
 }
 
