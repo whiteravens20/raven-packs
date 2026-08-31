@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-08-28T10:18:01.978Z",
+  "generatedAt": "2026-08-31T14:02:52.307Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1850,6 +1850,26 @@
       "sha512": "3ae4e5ab8aa0e819e4b9d4bb48c839a82abf40ad60f038df23c368bf009b8f3a9f8f8a86cb9b538760b9405f702319ceb8c1756de82449d0c6ce9b8cbd08ea46",
       "sha256": "7cdee05d9d786ebe35a1253cbb90a1cc03ee20bc3900b49c612f99895fc13a28",
       "license": "unknown",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"playername-styler\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "playername-styler",
+      "name": "PlayerName Styler",
+      "source": "modrinth",
+      "projectId": "YeqRouX2",
+      "versionId": "grQoBXOC",
+      "version": "2.0.3+mc1.21.1",
+      "fileName": "playernamestyler-2.0.3-mc1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/YeqRouX2/versions/grQoBXOC/playernamestyler-2.0.3-mc1.21.1.jar",
+      "size": 113800,
+      "sha1": "39575a2c6a580a7722e200e834329a8c3f0595f2",
+      "sha512": "8f3dbfb65b616afed2da07d975f0a16a4a009d1726490be91d96c4a18c18be920c3cfd8cf3968ce907e41516f85b9a15e1e6ea2f60d180538d2b4b53e2d2abd5",
+      "license": "MIT",
       "requiredDependencies": []
     },
     {
