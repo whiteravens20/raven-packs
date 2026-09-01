@@ -1,0 +1,243 @@
+The server shop
+===============
+
+The operator's shop block never runs out, has no owner and keeps no chest. The
+payment it takes leaves the economy entirely — it is not a shop so much as an
+incinerator with a counter. That is the whole point: it is the other end of the
+money supply from the minting recipe, and the only thing holding RavenCoin's
+value up.
+
+An entry is N of one item for M of another. The price does not have to be coins,
+and an entry can be gated on a rank. You configure each block in game by picking
+the two items out of your own inventory, so this file is a list of decisions,
+not a list of commands.
+
+
+1. The exchange rate
+--------------------
+
+Minting is GGG / DAD / GGG — six gold ingots, two diamonds, one amethyst shard,
+for one coin block, which is nine RavenCoin.
+
+Two of those three are effectively unlimited. Gold and diamond come out of a
+quarry through Mekanism's five-times ore processing and nobody counts them.
+
+Amethyst is the one that is not, and that was audited rather than assumed:
+every recipe, loot table and worldgen file in all ninety-nine mods was read,
+looking for anything that outputs amethyst. What came back:
+
+  * the compression mod's crates and compressed blocks — all forty recipes are
+    exactly 9:1 and 1:9, so they store amethyst, they do not make it
+  * Immersive Engineering's and Railcraft's crushers — one amethyst block into
+    four shards, which is what the vanilla crafting grid already does
+  * everything else that mentions amethyst takes it as an INPUT: tinted glass,
+    EnderIO's fused quartz, the nucleosynthesizer's echo shards, allay
+    duplication, and our own minting recipe
+  * ONE REAL PRODUCER, now closed. Immersive Engineering's Excavator had an
+    "amethyst crevasse" mineral vein at weight 10, in every overworld biome. At
+    the pack's configured yield of 4096 that is roughly 1 475 amethyst blocks,
+    or 5 900 shards, or 53 000 RavenCoin out of a single vein — a third of the
+    top rank, dug up by a machine. The pack's datapack drops that vein.
+
+Two more routes were closed before this audit and belong in the same list. The
+gold and diamond laser lenses are banned from ever being sold — section 5. And
+Mekanism's cardboard box is blocked from picking up budding amethyst, which
+otherwise let a player carry a whole geode home for the price of four sawdust.
+
+So the real rate, and the sentence to price everything against, is:
+
+    ONE AMETHYST SHARD = NINE RAVENCOIN
+
+Before quoting a price, convert it. "450 coin" says nothing. "Fifty shards of
+amethyst" says everything.
+
+The supply is throttled by something already in the pack and worth knowing
+about: a claimed geode only grows while its owner is online, because forceload
+only runs then (decision D17). Amethyst production is proportional to time at
+the keyboard, not to time on the calendar. A geode with about twenty usable
+budding blocks is worth roughly 900 RavenCoin an hour, and the same player still
+has to feed the recipe 600 gold and 200 diamonds an hour to turn it into money.
+
+One measured leak, left open deliberately: Mekanism's Antiprotonic
+Nucleosynthesizer turns one coal and 4 mB of antimatter into a diamond in fifty
+seconds. It has no recipe for gold and none for amethyst. Diamond was never the
+binding input, the machine sits behind the deepest gate in the pack, and it is
+slow — so this is recorded rather than closed. If the SPS ever gets cheaper,
+revisit it.
+
+
+2. Where the shop sits in a season
+----------------------------------
+
+Worth saying plainly, because it looks like a flaw until you see it whole: a
+player can reach Technik without buying anything here except the rank.
+
+That cannot be fixed, and it should not be. The road to 150 000 is limited by
+amethyst, and amethyst is the currency. Nothing the shop could sell makes
+amethyst grow faster. The only two items that would genuinely shorten the road
+are the gold and diamond lenses, and those are banned forever for exactly that
+reason.
+
+So the shape is:
+
+    before Technik    small conveniences, nothing more
+    Technik           the one real money goal
+    the finale        the shop is the only thing left to do
+
+That last line is what makes the six-week finale work. Three players hold the
+top rank, the ladder is finished, the income keeps coming and there is nowhere
+for it to go but here. The brown lens at 100 000 stops being an expensive toy
+and becomes the finish line.
+
+
+3. What the shop sells
+----------------------
+
+Laser Drill lenses. Every one of the sixteen is banned from crafting, so this
+shop is their only source in the world, which is what makes this list part of
+the currency balance rather than a convenience.
+
+A lens is NOT consumed. It is a one-off payment for an endless stream of ore,
+and the prices reflect that.
+
+The colours below are the ones that produce anything in THIS pack. The full
+table in Industrial Foregoing lists ores from mods that are not here.
+
+    lens         what it yields here                          price
+    ---------------------------------------------------------------------
+    brown        ANCIENT DEBRIS (weight 1/46), iron,         100 000
+                 aluminium, nickel                           + Technik only
+    lime         emerald, uranium                              8 000
+    light_gray   osmium, tin, fluorite                         8 000
+    red          redstone (weight 32)                          5 000
+    white        nether quartz                                 2 500
+    purple       lead                                          2 500
+    gray         silver                                          800
+    orange       copper                                          800
+    blue         lapis                                           800
+    black        coal                                            400
+
+    green        nothing — peridot is not in this pack       do not list
+    magenta      nothing — arcane is not in this pack        do not list
+
+    yellow       GOLD                                        NEVER SELL
+    light_blue   DIAMOND                                     NEVER SELL
+
+Brown is not really a lens, it is a netherite tap, and it is priced with the
+rank rather than with the other lenses. Behind the Technik gate the whole thing
+costs 250 000 — rank plus lens — and that is the intended end of the road.
+
+The cheap end is priced for a player who has not reached Obywatel yet. Four
+hundred coin for a coal lens is not meant to burn money; it is meant to get a
+new player through the door so they find out the shop exists.
+
+
+4. What the shop buys
+---------------------
+
+This is the dangerous half. Every buy-back entry turns an item's crafting chain
+into a money printer running at the speed of that chain — and in a pack with AE2
+autocrafting, anything craftable eventually becomes infinite. The prices below
+are deliberately lower than the build feels like it deserves. We are not paying
+for effort; we are paying little enough that the printer stays slower than the
+mint.
+
+Two parallel ladders, one on each tech tree, so a player can earn in whichever
+one they have built.
+
+    early endgame — a fission reactor, or basic AE2
+    ---------------------------------------------------------------
+    QIO Hyper Dense Drive     mekanism:qio_drive_hyper_dense    1 500
+    MEGA 16M Item Cell                                          1 500
+    MEGA 64M Item Cell                                          6 000
+    QIO Time Dilating Drive   mekanism:qio_drive_time_dilating  8 000
+
+    deep endgame — the SPS, or full AE2
+    ---------------------------------------------------------------
+    MEGA Bulk Item Cell       megacells:bulk_item_cell         20 000
+    MEGA 256M Item Cell       megacells:item_storage_cell_256m 25 000
+    MEGA 256M Fluid Cell      megacells:fluid_storage_cell_256m 25 000
+    Supermassive QIO Drive    mekanism:qio_drive_supermassive  50 000
+
+Both ladders pay MORE THAN FOUR TIMES the rung below. That is not decoration: a
+tier costs three or four of the tier under it, so if the price were merely
+proportional a player would be indifferent, and would then farm the cheapest
+rung because it needs no deep automation. Superlinear pricing makes crafting
+upward always the better move, and that is the only thing keeping the ladder
+from collapsing into spam.
+
+Measured, so the prices are not guesses. One MEGA 256M cell is 243 AE2 256k
+components and 121 accumulation processors, each of those needing its own sky
+steel print, plus 16 matter balls. The item and fluid versions differ only in
+the housing metal — sky steel against sky bronze, which is iron against copper —
+so they cost the same and are priced the same. One Supermassive QIO Drive
+expands to 256 ultimate control circuits, 256 lead, 80 plutonium, 8 polonium,
+16 teleportation cores, 64 ender pearls and one antimatter pellet, and the
+antimatter means an SPS.
+
+The Bulk Item Cell needs three netherite ingots, which closes a loop with the
+brown lens. It also needs ae2:spatial_cell_component_2 — note that the pack's
+spatial ban covers the finished cells, the IO port, the pylon and the anchor,
+but NOT the components. That is what keeps MEGA Bulk cells working, and it is
+deliberate.
+
+
+5. Four rules that must not break
+---------------------------------
+
+NEVER SELL THE YELLOW OR LIGHT BLUE LENS, at any price, behind any rank. They
+are the gold and diamond taps, which is to say they are the mint's own inputs.
+Sell one and the exchange rate in section 1 stops meaning anything.
+
+NEVER LIST THE SAME ITEM AS BOTH A PRODUCT AND A PRICE. Buy low, sell high, in
+two clicks, forever. This is the only way the shop itself can loop.
+
+NO MACHINE MAY PRODUCE AN INPUT OF THE CURRENCY. It is the rule the three
+closures in section 1 have in common, and it is the one to apply to anything
+added later. A geode is effort — it only grows while its owner is online. An
+excavator is capital — it runs whenever it has power. The moment a machine
+makes amethyst, gold or diamond at scale, the exchange rate is set by whoever
+built the largest factory rather than by anybody's time, and every price in
+this file is a guess again.
+
+NEVER BUY A RAW MACHINE OUTPUT. Buy assembled items only. A polonium pellet has
+no crafting step — it is simply whatever the reactor produces, and a Mekanism
+fission reactor scales with how large it is built, so the rate is set by capital
+rather than by effort. Any flat price on a scaling output eventually breaks:
+priced for a modest reactor, a maximal one earns ten times as much. Worse,
+polonium is an ingredient in the drives above, so if raw pellets ever pay better
+per pellet than the assembled drive, nobody assembles anything again. The safe
+version of that idea is already in section 4: buy the drives that eat the
+pellets.
+
+
+6. The money supply
+-------------------
+
+The catalogue costs one fully equipped player 288 000 once — 150 000 for
+Technik, 100 000 for brown, 38 000 for the rest of the lenses. Ten of them is
+2.9 million of lifetime sink, and spread over a season of roughly 3 000
+player-hours that needs about 960 RavenCoin an hour of faucet. A committed
+player earns around 800. The two numbers meeting is the whole calibration: over
+one season, a dedicated player can buy the catalogue almost exactly once.
+
+    total supply, target        300 000 - 600 000
+    median active player         15 000 -  40 000
+    the richest                  up to   400 000
+
+Three alarms:
+
+  * under 100 000 total — deflation. Nobody can afford anything, the shop is
+    scenery and players go back to barter. Raise the buy-back.
+  * over 1 500 000 total — somebody found a printer. Work out which buy-back
+    entry is being farmed.
+  * ONE PLAYER HOLDING OVER HALF THE SUPPLY — the buy-back is automated. This
+    is the single number worth watching, and the only one that means the design
+    has failed rather than drifted.
+
+None of this is measurable yet. There is no command for the total supply, and
+/baltop only sees banked balances — coins sitting in a chest are invisible. Add
+/rc eco total in the next release of the mod; the balance store is already
+there and it is a sum over a map. Until then the proxy is the sum of the /baltop
+top ten, read once a week, which will not see the chests but will show the trend
+and will show anybody pulling away from the rest.

@@ -1,0 +1,110 @@
+Seasons
+=======
+
+A modded server without an ending drifts. The map fills up, three mega-bases do
+everything, nobody new can find unclaimed ground, and the server does not so
+much finish as go quiet. A season gives the world a shape: it starts, it is
+climbed, it ends, and the next one starts clean.
+
+The ladder in ranks.txt and the price list in shop.txt are both written for one
+season. They are calibrated so that a committed player can buy the catalogue
+almost exactly once — see shop.txt section 6 — and that calibration only holds
+if the money and the ladder reset with the world.
+
+
+1. How a season ends
+--------------------
+
+Two triggers. Whichever fires first.
+
+    THREE PLAYERS HOLD TECHNIK
+        the finale opens: six weeks on the clock, then the season ends
+
+    TEN MONTHS HAVE PASSED
+        the season ends regardless — the backstop for a quiet season
+
+The six weeks are not a formality. Without them the third player buys the rank
+one evening and the server ends the same night, for everybody, with no warning.
+With them the ending is announced, the players who are close have time to also
+reach Technik and earn the mark, and the last stretch is the busiest part of the
+season instead of a wall.
+
+Three, not five, because this server runs fifteen slots. Set this number against
+the people actually playing: if half the regulars can never realistically get
+there, the season never ends and the backstop does all the work.
+
+Check it with a command that already exists:
+
+    lp group technik listmembers
+
+
+2. Why the finale is when the shop matters
+------------------------------------------
+
+A player can reach Technik without buying anything in the shop except the rank,
+and that is not a flaw to be patched. The road to 150 000 is limited by
+amethyst, amethyst is the currency, and nothing the shop could sell makes
+amethyst grow faster.
+
+So the shop's real job starts at the top of the ladder, not below it. During the
+finale three players hold Technik, the ladder is finished, income keeps arriving
+and there is nowhere for it to go. The brown lens at 100 000 stops being an
+expensive toy and becomes the finish line — at the rates in shop.txt, six weeks
+is enough to afford it if you push, and not if you do not.
+
+
+3. What carries over
+--------------------
+
+The world, the ladder, the claims and the balances all go. What survives is a
+mark.
+
+Each finished season leaves a LuckPerms group with no powers at all — no
+permissions, no claim allowance, nothing but a suffix. Everybody who held
+Technik when the season ended is put in it, and it follows them into every
+season after.
+
+One detail that is easy to get backwards. LuckPerms shows one suffix, the one
+with the highest priority. Give the priority to the OLDEST season, not the
+newest. A player who was here in the first season and is still playing in the
+fourth should show [S1], because "I was here at the start" is the thing worth
+displaying; if the newest wins, that player is indistinguishable from someone
+who arrived last week. The full list is in `lp user <name> info` either way.
+
+An optional second grade, if you want the finale to reward spending rather than
+only earning: a stronger mark for anyone who also bought the brown lens before
+the season closed. Then the last achievement of a season is a purchase, not a
+balance — which is the right way round, because a competition for who ends up
+richest is a competition for who used the shop least.
+
+
+4. Closing a season
+-------------------
+
+In order. Some of these cannot be undone, so do them in this one.
+
+    1.  Announce the finale when the third Technik is bought. Six weeks.
+    2.  At the end: `lp group technik listmembers`, and put every one of them
+        into the new season group.
+    3.  Take a backup of the whole server directory. Not a world save — the
+        directory, including config/luckperms/.
+    4.  Wipe world/. Remember that world/datapacks/ lives inside it: keep a copy
+        of ravenforge-mining and ravenforge-blocks, or restore them from the
+        pack, or the mining dimension comes back missing.
+    5.  Reset the ladder: every player back to `nowy`, balances to zero. The
+        season groups stay.
+    6.  New world. Then docs/world.txt from the top — set spawn, set the border,
+        pregenerate. Pregeneration has to be redone; it is per world.
+    7.  Server claim and the warp on the mining platform, as in the mine notes.
+
+
+5. Numbers to watch during a season
+-----------------------------------
+
+    lp group technik listmembers      how close the finale is
+    /baltop                           who is pulling away from the rest
+
+The second one matters more than it looks. A single player holding more than
+half the money in the world does not mean they are good at the game; it means a
+buy-back entry is being automated, and shop.txt section 6 says what to do about
+it. Look at it weekly, not at the end.
