@@ -43,7 +43,9 @@
 // the server thread is a visible hitch. The pack ships Chunky for exactly this
 // — pregenerate to the radius and the probes read from disk instead of
 // generating. Until that is done, expect the first calls into untouched terrain
-// to stutter.
+// to stutter. The radii below assume the world is set up as docs/world.txt
+// describes: spawn near the border centre, and the border at least a thousand
+// blocks wider than the largest radius here.
 // Wrapped in a function because KubeJS runs every server script in one shared
 // scope: two files declaring the same `const` is a redeclaration error, and it
 // takes the second file down entirely rather than just the name. Measured —
@@ -80,10 +82,22 @@
   // whole answer and the script needs no dimension API at all. The mining
   // dimension takes the open-sky path because its dimension_type declares
   // has_skylight true and has_ceiling false — checked in the datapack.
+  // `originScale` turns world spawn into this dimension's coordinates.
+  // getSharedSpawnPos() answers with the OVERWORLD spawn in every dimension —
+  // a non-overworld level wraps the same ServerLevelData in DerivedLevelData,
+  // so there is no per-dimension spawn to read. Left unscaled that is a live
+  // fault rather than a rounding error: with the border at ±5000 and spawn
+  // moved to 3000,3000 the nether ring would centre on nether 3000,3000, which
+  // is overworld 24000 and outside the border — every candidate would be
+  // rejected and /rtp would fail there permanently. 1/8 is the nether's
+  // coordinate_scale read backwards: overworld coordinates divided by eight.
   const RTP_WORLDS = {
-    'minecraft:overworld': { radius: 4000, min: 500, ceiling: false },
-    'ravenforge:mining': { radius: 3000, min: 200, ceiling: false },
-    'minecraft:the_nether': { radius: 800, min: 100, ceiling: true, top: 120, bottom: 32 },
+    'minecraft:overworld': { radius: 4000, min: 500, originScale: 1, ceiling: false },
+    'ravenforge:mining': { radius: 3000, min: 200, originScale: 1, ceiling: false },
+    'minecraft:the_nether': {
+      radius: 800, min: 100, originScale: 0.125,
+      ceiling: true, top: 120, bottom: 32,
+    },
   }
 
   // The End is absent on purpose, not by oversight. It is one island over a
@@ -254,19 +268,36 @@
     const spawn = level.getSharedSpawnPos()
     const border = level.getWorldBorder()
     const protection = RtpPac.get(level.getServer()).getChunkProtection()
+    const originX = spawn.getX() * waiting.world.originScale
+    const originZ = spawn.getZ() * waiting.world.originScale
+    // Squared, because the distance is drawn uniformly over AREA and not over
+    // radius. `min + random * (max - min)` puts the same number of landings in
+    // every ring of equal width, and the ring at 500 blocks is eight times
+    // smaller in area than the ring at 4000 — so per square metre a player
+    // lands eight times more often next to spawn. On a server built on claims
+    // that is everybody fighting over the same near ground while the outer ring
+    // stays empty, and it wastes most of the pregenerated disc. Taking the
+    // square root of a uniform pick between the two squared radii spreads the
+    // landings evenly across the disc instead.
+    const nearSq = waiting.world.min * waiting.world.min
+    const farSq = waiting.world.radius * waiting.world.radius
     let x = 0
     let z = 0
     let angle = 0
     let distance = 0
     let y = null
+    let outside = 0
 
     for (let attempt = 0; attempt < RTP_ATTEMPTS; attempt++) {
       angle = Math.random() * Math.PI * 2
-      distance = waiting.world.min + Math.random() * (waiting.world.radius - waiting.world.min)
-      x = Math.round(spawn.getX() + Math.cos(angle) * distance)
-      z = Math.round(spawn.getZ() + Math.sin(angle) * distance)
+      distance = Math.sqrt(nearSq + Math.random() * (farSq - nearSq))
+      x = Math.round(originX + Math.cos(angle) * distance)
+      z = Math.round(originZ + Math.sin(angle) * distance)
 
-      if (!border.isWithinBounds(x, z)) continue
+      if (!border.isWithinBounds(x, z)) {
+        outside++
+        continue
+      }
       // Somebody else's ground. hasChunkAccess answers true for an unclaimed
       // chunk, so this costs nothing in open country and only bites where the
       // landing would be inside a claim this player may not use.
@@ -285,6 +316,21 @@
       // throughout, which is all this form supports and all this command does.
       player.teleportTo(x + 0.5, y, z + 0.5)
       player.sendSystemMessage(Text.green('Przeniesiono: ' + x + ', ' + y + ', ' + z))
+      return
+    }
+    // Two failures that look the same to the player and are not. Terrain the
+    // search would not accept is ordinary and clears on a retry. A ring lying
+    // entirely outside the border never clears, and "try again" would send the
+    // player round that loop forever — it is a server misconfiguration, either
+    // spawn moved far from the border centre or a border smaller than the
+    // radius in the table above. So it says something different and leaves the
+    // numbers in the log for whoever has to fix it.
+    if (outside === RTP_ATTEMPTS) {
+      console.warn('[ravenforge] rtp: every candidate in ' + String(level.dimension)
+        + ' fell outside the world border. Ring is ' + waiting.world.min + '-'
+        + waiting.world.radius + ' blocks around ' + Math.round(originX) + ', '
+        + Math.round(originZ) + '; widen the border or move spawn back to its centre.')
+      player.sendSystemMessage(Text.red('Losowa teleportacja jest źle ustawiona na tym serwerze. Zgłoś to administracji.'))
       return
     }
     player.sendSystemMessage(Text.red('Nie znaleziono bezpiecznego miejsca. Spróbuj ponownie.'))
