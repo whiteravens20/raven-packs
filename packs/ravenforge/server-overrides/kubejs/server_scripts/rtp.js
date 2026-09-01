@@ -347,6 +347,29 @@
       uuid = uuids[i]
       waiting = rtpPending[uuid]
 
+      // A pending jump belongs to somebody who is still standing there, and
+      // three things end that. Measured on a real client, not reasoned about:
+      // a player who suffocated during the warm-up was teleported anyway eight
+      // seconds later, entity already marked KILLED, and the cooldown went with
+      // it. isAlive() is false for a dead player AND for a removed one, so the
+      // single call covers dying and logging out — a logout is the worse of the
+      // two, because nothing else here would ever drop the entry and the tick
+      // handler would go on reading position() off a removed entity forever.
+      // The dimension is a separate test: a player walking through a portal
+      // keeps the same entity, stays alive, and would land on a search written
+      // against the dimension they left. Silent for the first case, because a
+      // message on the death screen is noise, and said out loud for the second,
+      // where the player is standing somewhere new wondering what happened.
+      if (!waiting.player.isAlive()) {
+        delete rtpPending[uuid]
+        continue
+      }
+      if (String(waiting.player.level.dimension) !== String(waiting.level.dimension)) {
+        delete rtpPending[uuid]
+        waiting.player.sendSystemMessage(Text.red('Zmieniłeś wymiar — teleportacja anulowana.'))
+        continue
+      }
+
       // Movement cancels, which is the whole point of the wait: it has to cost
       // something to stand still. Compared against the position the command was
       // typed at, so a step in any direction counts, not only a net one.
