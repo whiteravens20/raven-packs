@@ -2,9 +2,27 @@
 # Open Parties and Claims forceload allowance. A machine that loads its own
 # chunk for free routes around that entirely.
 #
-# Only the keys we change are listed. NeoForge fills the rest in from the mod's
-# own defaults on first load and rewrites the file with them, so this stays a
-# statement of intent rather than a copy that goes stale.
+# The marker ranges are the only bound on how much ground one quarry — or one
+# Chunk Destroyer, which reads the same markers — can be pointed at. The mod
+# ships 256 for both, so a single machine could be given a 256-block edge.
+# 64 keeps one machine to sixteen chunks, which is a night's work rather than a
+# region, and it is the cap the Chunk Destroyer is gated on being allowed into
+# the mine at all (`kubejs/server_scripts/mining_gate.js`).
+#
+# Only the keys we change are listed. QuarryPlus reads this TOML itself
+# (`QuarryConfigLoader`, NightConfig) rather than through NeoForge's
+# ConfigTracker, but it still rewrites the file: on the first use of one of its
+# machines it logs `Config loaded from` and then `Config saved to`, filling in
+# every remaining default and keeping the values written here. Measured — the
+# file grew from 27 lines to 110 and all three of ours survived. A value out of
+# range is corrected and logged as `Config corrected '<key>'`; 64 is inside both
+# ranges (min 8 and 16).
 
 #Enable Chunk Loader in machines. Default: true
 enableChunkLoader = false
+
+#Range of Marker Plus. Default: 256, Min: 8, Max: 1048576
+markerPlusRange = 64
+
+#Range of Flexible Marker. Default: 256, Min: 16, Max: 16777216
+flexibleMarkerRange = 64
