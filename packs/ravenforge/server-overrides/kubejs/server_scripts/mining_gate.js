@@ -52,6 +52,19 @@
 
   const DENIED = 'Tylko w wymiarze kopalnianym.'
 
+  // Told and logged. A gate that only whispers to the player leaves an operator
+  // with nothing to look at when someone spends an evening probing it, and the
+  // dispenser path has no player to whisper to at all.
+  //
+  // Tell before `cancel()`, always: `cancel()` unwinds the handler, so a line
+  // written after it never runs. Measured — the refusal worked and the player
+  // was never told why.
+  const refuse = (player, what, where, dim) => {
+    console.info('[ravenforge] mining gate: ' + what + ' refused for ' +
+      (player == null ? '<no player>' : player.username) + ' at ' + where + ' in ' + dim)
+    if (player != null) player.tell(Text.red(DENIED))
+  }
+
   // `event.cancel()`, never `set('air')` plus `give`: the rebuild-and-refund
   // variant duplicates the machine. `BlockItem.place` ends in an unconditional
   // `consume(1)` on the stack it captured before the event, and KubeJS's `give`
@@ -60,13 +73,14 @@
   BlockEvents.placed(event => {
     if (GATED_BLOCKS.indexOf(String(event.block.id)) < 0) return
     if (String(event.level.dimension) === MINING) return
+    refuse(event.player, event.block.id, event.block.pos, event.level.dimension)
     event.cancel()
-    if (event.player != null) event.player.tell(Text.red(DENIED))
   })
 
   GATED_ENTITIES.forEach(type => {
     EntityEvents.spawned(type, event => {
       if (String(event.level.dimension) === MINING) return
+      refuse(null, type, event.entity.blockPosition(), event.level.dimension)
       event.cancel()
     })
   })
@@ -74,7 +88,7 @@
   BlockEvents.rightClicked(event => {
     if (GATED_ITEMS.indexOf(String(event.item.id)) < 0) return
     if (String(event.level.dimension) === MINING) return
+    refuse(event.player, event.item.id, event.block.pos, event.level.dimension)
     event.cancel()
-    if (event.player != null) event.player.tell(Text.red(DENIED))
   })
 })()
