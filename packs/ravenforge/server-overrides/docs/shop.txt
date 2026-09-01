@@ -323,3 +323,54 @@ answer.
 Twenty lines are kept per player, which is two pages on the screen. They live in
 the same saved file as the balances, so a world backup carries them and a world
 wipe ends them with the season.
+
+
+9. Market stalls
+----------------
+
+A server shop can be put on the market and rented by a player. Config, under
+[shops]:
+
+    rentEnabled     true
+    rentPrice       100     RavenCoin per period, from the renter's account
+    rentDays        7       what one payment buys
+    rentGraceDays   7       how long a closed stall waits before it lapses
+
+HOW TO BUILD ONE. Place a server shop, put a barrel against it, open the
+settings as an operator and press "Wynajem: tak". Claim the ground: the barrel
+must NOT be openable by players, and that is the point — the stall's own
+Zaopatrz button is the only way its renter reaches the goods, and nobody else
+has one.
+
+A stall with no container refuses to be rented at all rather than after the
+money has changed hands.
+
+WHAT THE RENTER GETS. The same settings screen as their own shop: they choose
+the goods, the price, the amounts, the sign, and any rank gate. Takings go to
+their account like any other coin-priced shop, so the stall trades while they
+are offline.
+
+WHAT HAPPENS WHEN THE RENT STOPS. Charged from the account, checked every 30
+seconds against a clock measured in days:
+
+    paid          sells normally
+    unpaid        SHUT, stock untouched, retried every check — paying up
+                  reopens it exactly as it was
+    +7 days       the rental lapses; owner, goods and price are cleared, and
+                  the BARREL IS LEFT ALONE
+
+That last line is deliberate. Scattering somebody's stock over a server claim
+while they are asleep is how a market becomes a way to lose a double chest. An
+operator empties the barrel by hand, which costs a minute and cannot go wrong.
+
+WHY THIS IS GOOD FOR THE ECONOMY. Rent is a sink and a recurring one, which the
+price list does not otherwise have — every other sink in this pack is a one-off
+purchase. Ten stalls at 100 a week is 1 000 RavenCoin a week leaving the world
+for as long as the season runs, and it is paid by exactly the players who are
+earning most.
+
+Set the price against section 6, not against what feels fair. At 100 a week it
+is a rounding error next to a 5 000 lens and will not restrain anybody; that is
+the right level for a first season, where the point is to see whether stalls get
+used at all. Raise it once they do.
+
