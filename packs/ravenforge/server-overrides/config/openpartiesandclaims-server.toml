@@ -40,3 +40,16 @@
 	maxPlayerClaimForceloads = 0
 	#Whether to convert expired player chunk claims to "expired claims" instead of completely freeing them. This shouldn't be too bad for performance because it still reduces the number of unique claims.
 	playerClaimsConvertExpiredClaims = true
+
+	[serverConfig.claims.protection]
+		#The market stalls stand on a server claim, and a server claim refuses
+		#every right-click inside it — measured: a renter standing at their own
+		#stall got "You are not allowed to interact with this block
+		#(ravencoin:server_shop)!" and could neither restock nor sell, and no
+		#customer could buy. The three RavenCoin blocks are the exception, so
+		#that the counter, the settings and the bank work inside a claim while
+		#everything else stays protected. The barrel behind a stall is
+		#deliberately NOT here: the shop opens it server-side for its renter,
+		#which is the whole point of the "Zaopatrz" button.
+		#"anything$" because a player walks up holding something.
+		forcedBlockProtectionExceptionList = ["minecraft:crafting_table", "anything$ravencoin:shop", "anything$ravencoin:server_shop", "anything$ravencoin:atm"]
