@@ -125,6 +125,15 @@
     // Blast strength 6, stronger than TNT, and its only real use is summoning
     // the dragon — which is the server's job, not a player's (D20).
     'minecraft:end_crystal',
+
+    // The one ban here that is not about balance. RavenCoin keeps the ATM
+    // craftable, because a mod that only works inside one pack is a worse mod;
+    // the pack is what decides there is a single bank, and that it is at spawn.
+    // Shops take coins out of your pockets and ranks come out of the account,
+    // so the ATM is the only bridge between the two — which makes the walk to
+    // spawn the price of converting, and spawn somewhere players go. Give one
+    // with `/give <player> ravencoin:atm` when you build the bank.
+    'ravencoin:atm',
   ])
 
   const BANNED_ID = [

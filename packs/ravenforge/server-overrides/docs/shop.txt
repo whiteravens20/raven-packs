@@ -256,3 +256,28 @@ on disk. Section 7 is why that gap is wider here than it would be elsewhere.
 so a player who never walks to the bank does not appear on it at all. Rank the
 season by /rc eco worth, not by /baltop.
 
+7. The bank is at spawn
+-----------------------
+
+The ATM is craftable in the mod and banned in this pack. That is deliberate, and
+it is the pack's decision rather than the mod's: RavenCoin is meant to work in
+somebody else's world too, where one bank at spawn is nobody's idea of a
+feature.
+
+It works because the two halves of the money are separate. A shop takes coins
+out of your pockets. A rank comes out of your account. The ATM is the only thing
+that moves value between them — so with one ATM, at spawn, the walk is the price
+of every conversion, and spawn is somewhere players have a reason to be.
+
+Give the block to yourself and place it:
+
+    /give <player> ravencoin:atm
+
+Two consequences to expect rather than discover:
+
+  * More of the money sits in chests than it otherwise would, because banking
+    costs a journey. That is exactly the money /rc eco total cannot see, which
+    is why the total is a floor and why the trend matters more than the value.
+  * Killing a player near spawn is worth more than killing one anywhere else.
+    They are carrying coins precisely because they came to bank them. Claim the
+    spawn area and keep PvP off inside it.
