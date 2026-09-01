@@ -18,10 +18,18 @@
 
   // QuarryPlus's other quarries — mini_quarry, mining_well, solid_fuel_quarry,
   // filler — are absent on purpose: they have no recipe in 21.1.162, so they
-  // cannot enter a survival world at all. The Chunk Destroyer (`adv_quarry`) is
-  // banned outright rather than gated.
+  // cannot enter a survival world at all.
+  //
+  // The Chunk Destroyer (`adv_quarry`) is gated rather than banned. It reaches
+  // no further than the quarry does — both read the same markers, and both are
+  // capped by `markerPlusRange` / `flexibleMarkerRange`, which the pack sets to
+  // 64. Without markers it takes the single chunk it stands in. What it adds is
+  // speed, and speed is only a problem where the terrain is kept, so the mine
+  // is exactly where it belongs. Its recipe wants a dragon head and a nether
+  // star, so it arrives late on its own.
   const GATED_BLOCKS = [
     'quarryplus:quarry',
+    'quarryplus:adv_quarry',
     'quarryplus:adv_pump',
     'minecraft:tnt',
     'ae2:tiny_tnt',

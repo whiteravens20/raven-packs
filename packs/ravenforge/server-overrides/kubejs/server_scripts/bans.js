@@ -63,9 +63,11 @@
     'enderio:weather_obelisk',
     'enderio:staff_of_levity',
 
-    // QuarryPlus. The quarry itself stays; these are the parts that make it
-    // ignore bedrock, place blocks remotely, or run at an unbounded rate.
-    'quarryplus:adv_quarry',
+    // QuarryPlus. Both quarries stay — they are gated to the mining dimension
+    // instead, in `mining_gate.js`. These are the parts that make one ignore
+    // bedrock, place blocks remotely, or run at an unbounded rate; the last is
+    // the one axis a dimension gate does not bound, which is why it is here and
+    // not there.
     'quarryplus:remove_bedrock_module',
     'quarryplus:placer_plus',
     'quarryplus:remote_placer',
