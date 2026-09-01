@@ -1,0 +1,194 @@
+World setup
+===========
+
+Three jobs, and the order matters: set spawn, set the border, then pregenerate.
+Spawn is what /rtp measures its distances from and what the border is normally
+centred on; Chunky can read the border and size its own job from it. Done out of
+order you pregenerate ground that nothing points at, and pregeneration is the
+expensive step — you do not want to run it twice.
+
+None of this ships in the pack. The border and the spawn point live in
+world/level.dat, which the server writes, so server-overrides/ cannot deliver
+them. They are commands you run once on the live world, and they survive
+restarts.
+
+
+1. Spawn
+--------
+
+Run both of these, standing where spawn should be:
+
+    /setworldspawn
+    /setspawn
+
+They are not the same thing. The first sets the level spawn in level.dat — the
+point a player without a bed respawns at, and the point kubejs/server_scripts/
+rtp.js centres its ring on. The second is Henny Essentials' own spawn, the one
+/spawn sends people to. Setting only the second leaves /rtp measuring from
+wherever the world was first created.
+
+Keep spawn at or near 0, 0. If you want it somewhere else, move the border
+centre with it — section 2 — because /rtp draws a ring around spawn and expects
+that ring to be inside the border.
+
+
+2. The border
+-------------
+
+    /worldborder set 10000
+
+That is the DIAMETER, not the radius. 10000 gives ±5000 from the centre, which
+is what the rest of this file assumes.
+
+If spawn is not at 0, 0:
+
+    /worldborder center <x> <z>
+
+Worth setting once, so players see the wall coming instead of walking into it:
+
+    /worldborder warning distance 50
+
+Three things about the border that are not obvious and were checked in the
+game's own bytecode rather than assumed:
+
+  * THERE IS ONE BORDER FOR THE WHOLE SERVER. Every dimension other than the
+    overworld gets a listener wired to the overworld's border at world load, so
+    the nether and ravenforge:mining both inherit whatever you set here.
+
+  * IT IS NOT SCALED FOR THE NETHER. The listener copies the size verbatim, with
+    no division by coordinate_scale. A border of 10000 is ±5000 in the nether
+    too — and a nether block is eight overworld blocks wide, so that is ±40000
+    of overworld ground. You cannot fix this from vanilla: /worldborder always
+    targets the overworld's border, hardcoded, so
+    `execute in minecraft:the_nether run worldborder set …` does nothing
+    different. Section 3 works around it where it matters.
+
+  * NOBODY ESCAPES THROUGH A PORTAL ANYWAY. A nether portal multiplies the
+    player's coordinates by the scale and then clamps the result to the
+    destination's border. Someone standing at nether 5000 and lighting a portal
+    comes out at the edge of the overworld border, not at 40000. So the nether's
+    oversized border is a pregeneration question, not a containment hole.
+
+
+3. Pregeneration
+----------------
+
+Chunky 1.4.23, server side. Run it with nobody online: it saturates disk and CPU
+and the server will feel terrible while it works.
+
+Overworld — Chunky can take the border's centre and radius directly:
+
+    chunky world minecraft:overworld
+    chunky worldborder
+    chunky shape circle
+    chunky start
+
+Circle rather than Chunky's default square. It is 21% less work for the same
+reach, and it matches /rtp, which picks its landings on a disc.
+
+The mining dimension. Its border is the same ±5000, but /rtp only reaches 3000
+there and the rest is walked to, so 3500 is enough — the outer ring generates on
+demand, and a hitch in a resource dimension costs less than a hitch at spawn.
+Raise it to 5000 if the disk is free.
+
+    chunky world ravenforge:mining
+    chunky center 0 0
+    chunky radius 3500
+    chunky shape circle
+    chunky start
+
+The nether, and this is the one you must NOT run `chunky worldborder` on. It
+would hand Chunky the border's 5000, which is correct for the border and eight
+times more than any player can reach: the furthest portal anybody can build
+inside the overworld border lands at nether 625.
+
+    chunky world minecraft:the_nether
+    chunky center 0 0
+    chunky radius 1000
+    chunky shape circle
+    chunky start
+
+While it runs:
+
+    chunky progress          how far along
+    chunky pause             stop and save progress
+    chunky continue          resume, including after a restart
+    chunky cancel            stop and discard, asks to confirm
+    chunky quiet 30          console update every 30 s instead of every 1 s
+
+Chunky estimates the disk space the task needs before it starts and refuses if
+the free space looks short, asking you to confirm to override. That estimate is
+a better number than anything in section 4 — it knows this pack's terrain.
+
+Leave the pattern alone. The default is `region`, which walks region file by
+region file and is the kindest to the disk.
+
+
+4. What it costs
+----------------
+
+    dimension              radius   chunks (circle)
+    -------------------------------------------------
+    minecraft:overworld      5000           306 796
+    ravenforge:mining        3500           150 318
+    minecraft:the_nether     1000            12 272
+
+Measured on a near-vanilla 1.21 world, counting region + entities + poi: 4.2 KiB
+per chunk. That is a FLOOR, not this pack's number — ninety mods add ores and
+structures. Plan for 8-12 KiB per chunk, so roughly 2.5-5 GB for all three, and
+trust Chunky's own estimate over this paragraph.
+
+Time is the part not worth guessing. Run the overworld job, note how long the
+first 1% takes, and multiply.
+
+
+5. Growing the world later
+--------------------------
+
+The border is a valve, not a ceiling. To open it up:
+
+    /worldborder add 2000 600
+
+That widens it by 2000 blocks over ten minutes, so nobody is standing outside a
+wall that suddenly moved. Then rerun the Chunky commands from section 3 with the
+larger radius — the already-generated part goes past quickly, because there is
+nothing there to generate.
+
+Shrinking is the dangerous direction. `chunky trim` deletes every chunk outside
+the current selection, permanently, and it says so and demands confirmation.
+Take a backup first, and expect to restart the server fully afterwards.
+
+
+6. What /rtp depends on
+-----------------------
+
+The numbers in kubejs/server_scripts/rtp.js are written against the setup above:
+
+    dimension              /rtp ring    needs a border of at least
+    ---------------------------------------------------------------
+    minecraft:overworld     500-4000                        ±5000
+    ravenforge:mining       200-3000                        ±4000
+    minecraft:the_nether    100- 800                        ±1000
+
+Two rules keep them honest:
+
+  * The border radius must be comfortably larger than the largest ring — a
+    thousand blocks of margin is what the table assumes. Land a player exactly
+    on the border and they are boxed in the moment they arrive.
+  * Spawn must sit at or near the border's centre, because the ring is drawn
+    around spawn and the border is drawn around its own centre. Move one without
+    the other and part of the ring falls outside.
+
+Break either and /rtp does not fail quietly. Every candidate lands out of
+bounds, the player is told the command is misconfigured rather than told to try
+again, and the console gets the numbers:
+
+    [ravenforge] rtp: every candidate in minecraft:the_nether fell outside the
+    world border. Ring is 100-800 blocks around 375, 375; widen the border or
+    move spawn back to its centre.
+
+Changing a radius means editing RTP_WORLDS in that file. The nether row also
+carries originScale 0.125, which converts the overworld spawn into nether
+coordinates — getSharedSpawnPos() answers with the overworld's spawn in every
+dimension, so without it a spawn moved away from 0, 0 would put the nether ring
+eight times too far out.
