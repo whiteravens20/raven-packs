@@ -264,16 +264,30 @@ it is the pack's decision rather than the mod's: RavenCoin is meant to work in
 somebody else's world too, where one bank at spawn is nobody's idea of a
 feature.
 
-It works because the two halves of the money are separate. A shop takes coins
-out of your pockets. A rank comes out of your account. The ATM is the only thing
-that moves value between them — so with one ATM, at spawn, the walk is the price
-of every conversion, and spawn is somewhere players have a reason to be.
-
 Give the block to yourself and place it:
 
     /give <player> ravencoin:atm
 
-Two consequences to expect rather than discover:
+WHAT THE WALK IS ACTUALLY FOR. Not paying: a shop priced in RavenCoin can be
+paid straight out of the account, and the buy screen has a switch for it. It has
+to be able to, because the catalogue in section 3 does not fit in a player's
+inventory — a 35 000 entry is 3 889 coin blocks and 36 slots hold 2 304. The
+whole price list was unpayable in coins before that switch existed.
+
+What still needs the bank is the other direction. Coin comes out of the ground
+and out of the mint as a physical thing, and the only way it becomes account
+money is a deposit. So:
+
+    minting, mob drops, chests           -> physical coin
+    the ATM, at spawn                    -> the only way in
+    ranks, shops, transfers              -> account
+
+which means the walk is the price of turning what you earned into what you can
+spend at range. A player who never visits the bank can still trade, hand to
+hand, in coin. They just cannot buy a rank, and they cannot pay a shop that is
+nowhere near them.
+
+Three consequences to expect rather than discover:
 
   * More of the money sits in chests than it otherwise would, because banking
     costs a journey. That is exactly the money /rc eco total cannot see, which
@@ -281,3 +295,31 @@ Two consequences to expect rather than discover:
   * Killing a player near spawn is worth more than killing one anywhere else.
     They are carrying coins precisely because they came to bank them. Claim the
     spawn area and keep PvP off inside it.
+  * A player shop's takings go to the OWNER'S ACCOUNT, not into its chest, when
+    the price is RavenCoin. A shop therefore keeps selling while its owner is
+    offline and can never jam with a full till — and the owner never has to walk
+    to their own shop to empty it. Any other price is still a physical thing in
+    a physical container, and still fills up.
+
+
+8. The bank terminal
+--------------------
+
+The ATM is a menu, not a form. Five pages:
+
+    Wplata i wyplata    coins in and out of your pockets
+    Przelew             pay another player by name
+    Historia            the last 20 movements on your account
+    Rangi               the ladder, with a Buy button on the rung you can afford
+    Ranking             the eight richest accounts
+
+The statement is the one worth knowing about. It records deposits, withdrawals,
+transfers both ways, shop purchases, sales by your own shops, ranks, and
+operator corrections — with how long ago each was. It exists because on this
+server money moves while you are logged out: your shop sells something, someone
+pays you, an operator fixes a mistake. Without it, "I had more yesterday" has no
+answer.
+
+Twenty lines are kept per player, which is two pages on the screen. They live in
+the same saved file as the balances, so a world backup carries them and a world
+wipe ends them with the season.
