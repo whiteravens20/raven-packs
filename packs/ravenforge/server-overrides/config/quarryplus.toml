@@ -26,3 +26,23 @@ markerPlusRange = 64
 
 #Range of Flexible Marker. Default: 256, Min: 16, Max: 16777216
 flexibleMarkerRange = 64
+
+# The four parts that must never reach a survival world. `bans.js` already takes
+# their recipes out; this closes the other half, because it works on the machine
+# rather than on the way to get one — so a stray `/give`, a creative-mode slip
+# or a recipe we failed to match cannot arm one.
+#
+# Measured, so nobody expects more than it does: the block can still be PLACED.
+# What it cannot do is work. Right-clicking it answers `Placer Plus is disabled.
+# Please enable it in config.` on the action bar and nothing else happens. So
+# the recipe ban stays as well — without it the item is craftable, just inert,
+# and people would waste a nether star finding that out.
+[enableMap]
+    #remove_bedrock_module Default: true
+    remove_bedrock_module = false
+    #repeat_tick_module Default: true
+    repeat_tick_module = false
+    #placer_plus Default: true
+    placer_plus = false
+    #remote_placer Default: true
+    remote_placer = false
