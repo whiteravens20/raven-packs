@@ -102,9 +102,14 @@ In order. Some of these cannot be undone, so do them in this one.
 -----------------------------------
 
     lp group technik listmembers      how close the finale is
-    /baltop                           who is pulling away from the rest
+    /rc eco total                     the supply, and who is pulling away
 
 The second one matters more than it looks. A single player holding more than
 half the money in the world does not mean they are good at the game; it means a
 buy-back entry is being automated, and shop.txt section 6 says what to do about
-it. Look at it weekly, not at the end.
+it. /rc eco total says that share outright and warns when it passes half. Look
+at it weekly, not at the end.
+
+Do not rank the season on /baltop. It sees banked balances only, and with the
+bank at spawn a player can finish the season rich and absent from it. The
+per-player figure that counts is /rc eco worth <player>.

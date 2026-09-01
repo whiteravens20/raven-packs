@@ -235,9 +235,24 @@ Three alarms:
     is the single number worth watching, and the only one that means the design
     has failed rather than drifted.
 
-None of this is measurable yet. There is no command for the total supply, and
-/baltop only sees banked balances — coins sitting in a chest are invisible. Add
-/rc eco total in the next release of the mod; the balance store is already
-there and it is a sum over a map. Until then the proxy is the sum of the /baltop
-top ten, read once a week, which will not see the chests but will show the trend
-and will show anybody pulling away from the rest.
+Two commands measure it. Both are operator-only, and both are slow enough to be
+weekly rather than routine — the census decompresses one player file per offline
+account.
+
+    /rc eco total          the whole supply, and who holds most of it
+    /rc eco worth <player> one player: banked and carried, online or off
+
+/rc eco total prints the banked half, the carried half, the sum, and the largest
+holder's share — which is the third alarm above, computed rather than eyeballed,
+and called out in the open when it passes fifty per cent.
+
+Read the total as a FLOOR, not as the supply. It counts the ledger, every
+online player's inventory and ender chest, and every offline player's saved
+inventory and ender chest. It does not count a chest, a drawer, an ME network, a
+shulker box or a dropped stack, and it cannot without walking every region file
+on disk. Section 7 is why that gap is wider here than it would be elsewhere.
+
+/baltop stays useful and stays wrong on its own: it ranks banked balances only,
+so a player who never walks to the bank does not appear on it at all. Rank the
+season by /rc eco worth, not by /baltop.
+
