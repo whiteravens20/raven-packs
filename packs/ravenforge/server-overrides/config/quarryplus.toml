@@ -3,11 +3,20 @@
 # chunk for free routes around that entirely.
 #
 # The marker ranges are the only bound on how much ground one quarry — or one
-# Chunk Destroyer, which reads the same markers — can be pointed at. The mod
-# ships 256 for both, so a single machine could be given a 256-block edge.
-# 64 keeps one machine to sixteen chunks, which is a night's work rather than a
-# region, and it is the cap the Chunk Destroyer is gated on being allowed into
-# the mine at all (`kubejs/server_scripts/mining_gate.js`).
+# Chunk Destroyer, which reads the same markers — can be pointed at. These are
+# distances in BLOCKS, not chunks: the value goes straight into
+# `BlockPos.relative(axis, i)` as the furthest a marker will look for its
+# partner, so it is the longest edge an area can have. The mod ships 256, which
+# is a 16-chunk edge — 256 chunks of ground for one machine.
+#
+# 16 is one chunk. That is deliberate and it is the whole shape of the deal:
+# every quarry is a one-chunk machine, the Chunk Destroyer included, and a
+# player who wants more ground places more machines rather than one machine that
+# eats a region. It also means markers add nothing to the Chunk Destroyer, which
+# already takes the chunk it stands in for free — they stay useful for the
+# normal quarry, which has no default area at all and cannot work without them.
+# This cap is the condition the Chunk Destroyer was let into the mine on
+# (`kubejs/server_scripts/mining_gate.js`).
 #
 # Only the keys we change are listed. QuarryPlus reads this TOML itself
 # (`QuarryConfigLoader`, NightConfig) rather than through NeoForge's
@@ -22,10 +31,10 @@
 enableChunkLoader = false
 
 #Range of Marker Plus. Default: 256, Min: 8, Max: 1048576
-markerPlusRange = 64
+markerPlusRange = 16
 
 #Range of Flexible Marker. Default: 256, Min: 16, Max: 16777216
-flexibleMarkerRange = 64
+flexibleMarkerRange = 16
 
 # The four parts that must never reach a survival world. `bans.js` already takes
 # their recipes out; this closes the other half, because it works on the machine

@@ -21,12 +21,12 @@
   // cannot enter a survival world at all.
   //
   // The Chunk Destroyer (`adv_quarry`) is gated rather than banned. It reaches
-  // no further than the quarry does — both read the same markers, and both are
-  // capped by `markerPlusRange` / `flexibleMarkerRange`, which the pack sets to
-  // 64. Without markers it takes the single chunk it stands in. What it adds is
-  // speed, and speed is only a problem where the terrain is kept, so the mine
-  // is exactly where it belongs. Its recipe wants a dragon head and a nether
-  // star, so it arrives late on its own.
+  // no further than the quarry does — both read the same markers, and the pack
+  // caps `markerPlusRange` / `flexibleMarkerRange` at 16 blocks, which is one
+  // chunk. Without markers it takes the single chunk it stands in anyway. What
+  // it adds is speed, and speed is only a problem where the terrain is kept, so
+  // the mine is exactly where it belongs. Its recipe wants a dragon head and a
+  // nether star, so it arrives late on its own.
   const GATED_BLOCKS = [
     'quarryplus:quarry',
     'quarryplus:adv_quarry',
