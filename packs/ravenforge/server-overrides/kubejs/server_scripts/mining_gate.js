@@ -22,8 +22,8 @@
   //
   // The Chunk Destroyer (`adv_quarry`) is gated rather than banned. It reaches
   // no further than the quarry does — both read the same markers, and the pack
-  // caps `markerPlusRange` / `flexibleMarkerRange` at 16 blocks, which is one
-  // chunk. Without markers it takes the single chunk it stands in anyway. What
+  // caps `markerPlusRange` / `flexibleMarkerRange` at 32 blocks, which is four
+  // chunks. Without markers it takes the single chunk it stands in. What
   // it adds is speed, and speed is only a problem where the terrain is kept, so
   // the mine is exactly where it belongs. Its recipe wants a dragon head and a
   // nether star, so it arrives late on its own.

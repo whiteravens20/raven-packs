@@ -9,12 +9,12 @@
 # partner, so it is the longest edge an area can have. The mod ships 256, which
 # is a 16-chunk edge — 256 chunks of ground for one machine.
 #
-# 16 is one chunk. That is deliberate and it is the whole shape of the deal:
-# every quarry is a one-chunk machine, the Chunk Destroyer included, and a
-# player who wants more ground places more machines rather than one machine that
-# eats a region. It also means markers add nothing to the Chunk Destroyer, which
-# already takes the chunk it stands in for free — they stay useful for the
-# normal quarry, which has no default area at all and cannot work without them.
+# 32 is a two-chunk edge: four chunks of ground for one machine. It is set one
+# step above the obvious floor on purpose. The floor is 16, one chunk — but the
+# Chunk Destroyer already takes the chunk it stands in for free and without any
+# markers, so a 16-block cap would leave markers doing nothing for it at all.
+# 32 keeps them worth placing while still costing a player four machines to
+# cover what one machine covered at the mod's default of 256.
 # This cap is the condition the Chunk Destroyer was let into the mine on
 # (`kubejs/server_scripts/mining_gate.js`).
 #
@@ -31,10 +31,10 @@
 enableChunkLoader = false
 
 #Range of Marker Plus. Default: 256, Min: 8, Max: 1048576
-markerPlusRange = 16
+markerPlusRange = 32
 
 #Range of Flexible Marker. Default: 256, Min: 16, Max: 16777216
-flexibleMarkerRange = 16
+flexibleMarkerRange = 32
 
 # The four parts that must never reach a survival world. `bans.js` already takes
 # their recipes out; this closes the other half, because it works on the machine
