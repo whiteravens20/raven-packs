@@ -4,8 +4,8 @@
   "name": "White Ravens Forge",
   "version": "0.1.0",
   "summary": {
-    "pl": "Techniczny serwer modowany — Mekanism, Immersive Engineering i AE2 jako trzon, z własną walutą.",
-    "en": "A modded tech server built on Mekanism, Immersive Engineering and AE2, with a currency of its own."
+    "pl": "Techniczny serwer modowany z własną walutą oraz autorskimi modami i skryptami.",
+    "en": "A modded tech server with a currency, mods and scripts of our own."
   },
   "author": "White Ravens",
   "minecraft": "1.21.1",
