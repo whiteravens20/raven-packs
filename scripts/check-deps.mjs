@@ -227,9 +227,13 @@ function satisfiesMaven(version, range) {
     buf += ch;
   }
   parts.push(buf);
-  return parts
-    .filter((p) => p.trim())
-    .some((p) => satisfiesMavenSingle(version, p));
+  const real = parts.filter((p) => p.trim());
+  // An absent or blank `versionRange` means "any version" — it is how a mod
+  // says it needs another mod present without caring which build. Leaving it
+  // to `[].some()` would read as "nothing satisfies it" and fail every such
+  // dependency.
+  if (real.length === 0) return true;
+  return real.some((p) => satisfiesMavenSingle(version, p));
 }
 
 /** One dependency, whichever loader declared it. */
