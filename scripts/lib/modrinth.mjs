@@ -55,6 +55,18 @@ export async function getProject(slug) {
 }
 
 /**
+ * Modrinth's release/beta/alpha for one already-resolved version.
+ *
+ * Only used to backfill lockfile entries written before the field existed. It
+ * takes the opaque version id, so it reports on the exact build already locked
+ * and cannot move anything.
+ */
+export async function getVersionType(versionId) {
+  const v = await apiFetch(`/version/${versionId}`);
+  return v.version_type ?? null;
+}
+
+/**
  * Pick the version of a project to ship.
  *
  * With `pin` set, matches `version_number` first and the opaque version `id`

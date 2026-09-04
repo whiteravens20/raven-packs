@@ -16,7 +16,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getProject, resolveVersion, findMissingDependencies } from './lib/modrinth.mjs';
+import { getProject, resolveVersion, getVersionType, findMissingDependencies } from './lib/modrinth.mjs';
 import { fetchFile } from './lib/download.mjs';
 import { readLockfile, writeLockfile, entryKey, LOCKFILE_VERSION } from './lib/lockfile.mjs';
 
@@ -202,6 +202,10 @@ async function lockEntry(entry, kind, pack) {
     projectId: project.id,
     versionId: version.versionId,
     version: version.versionNumber,
+    // Modrinth's own release/beta/alpha, recorded because the version string is
+    // not a reliable stand-in: Advanced Loot Info ships betas numbered plainly
+    // as "1.21.1-1.12.0", and a check that reads the name misses them.
+    versionType: version.versionType,
     fileName: version.file.filename,
     url: version.file.url,
     size: version.file.size,
@@ -269,9 +273,20 @@ async function lockPack(slug, { update }) {
       files.push({ ...cached, license: entry.license ?? 'unknown', sourceUrl: entry.sourceUrl ?? null });
       continue;
     }
-    if (cached && cached.sourceUrl !== undefined) {
+    if (cached && cached.sourceUrl !== undefined && cached.versionType !== undefined) {
       keep(`${cached.name} ${cached.version} (locked)`);
       files.push(cached);
+      continue;
+    }
+    if (cached && cached.sourceUrl !== undefined) {
+      try {
+        const versionType = await getVersionType(cached.versionId);
+        keep(`${cached.name} ${cached.version} (locked, version type added)`);
+        files.push({ ...cached, versionType });
+      } catch {
+        keep(`${cached.name} ${cached.version} (locked, version type unavailable)`);
+        files.push({ ...cached, versionType: null });
+      }
       continue;
     }
     if (cached) {

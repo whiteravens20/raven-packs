@@ -237,7 +237,12 @@ async function validatePack(slug) {
   const copyleft = lock.files.filter((f) => isCopyleft(f.license));
   console.log(`  \x1b[32m✓\x1b[0m ${copyleft.length} copyleft component(s) name where their source lives`);
 
-  const prereleases = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version));
+  // Modrinth's own version_type where we have it. The name pattern is the
+  // fallback for url entries, which carry no type — on its own it misses a
+  // beta that happens to be numbered like a release.
+  const prereleases = lock.files.filter((f) =>
+    f.versionType ? f.versionType !== 'release' : /alpha|beta|snapshot|-rc/i.test(f.version),
+  );
   if (prereleases.length > 0) {
     console.log(`  \x1b[33m!\x1b[0m ${prereleases.length} prerelease version(s): ${prereleases.map((f) => f.id).join(', ')}`);
   }

@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-04T14:59:11.159Z",
+  "generatedAt": "2026-09-04T16:11:47.411Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -40,7 +40,8 @@
       "sha512": "d9f7c3bb8162577dfb461ffdf04bd6a3563c7586934a0e2a744c14421beffb8286f0d88d4c758317003f20f99fe8072a39b9d675af061e036970d36db36027f0",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/architectury/architectury"
+      "sourceUrl": "https://github.com/architectury/architectury",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"guideme\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -61,7 +62,8 @@
       "sha512": "8b5d8cf7592d7b4759f5347c5acd1b0eb46403437b10b900f535e4cdde59ab1b37d57b71f3f67cdc99a66d55ad5d760f51b55ba2bc50aecf538f8572003e4cbf",
       "license": "LicenseRef-Multiple-OSS-Licenses",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/AppliedEnergistics/GuideME/"
+      "sourceUrl": "https://github.com/AppliedEnergistics/GuideME/",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"titanium\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -82,7 +84,8 @@
       "sha512": "42a386e1cfbeb96049fbdd79fe438c71826a6864f86933e0e62cf4a50728a9d5b6bdce360d70316b234e5c991076c61eb2f922999624ad4cb2a1f612acb8ace3",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/InnovativeOnlineIndustries/Titanium"
+      "sourceUrl": "https://github.com/InnovativeOnlineIndustries/Titanium",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"mcjtylib\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -103,7 +106,8 @@
       "sha512": "3a349ea3718db9da87a6a8603d6beda5c132824cfeaf4dae7fbf3d463b7cab78b65f7deefd4a845bee3f7c3c60b9e062a27197fcd30d33f21cb9f0c4109d0e5c",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/McJty/McJtyLib"
+      "sourceUrl": "https://github.com/McJty/McJtyLib",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"glitchcore\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -124,7 +128,8 @@
       "sha512": "7a009ed163d03536fdfaee7b37cb1ec3073204dffcb06a683369aa88da8dbc3780b0ac69d466bb32a3ad9394c97b698d0fda676e1b4dd4edfc50ac5aa2283c32",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Glitchfiend/GlitchCore"
+      "sourceUrl": "https://github.com/Glitchfiend/GlitchCore",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"terrablender\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -145,7 +150,8 @@
       "sha512": "9d4b2a1be5139c0fb2fad92ed21805b17d9e83b6ea48e637e018bb14063c1823a206390755dbfe8d025c20fd62ac11cdd84db53ddb956dabaeda01bff57bac50",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Glitchfiend/TerraBlender/"
+      "sourceUrl": "https://github.com/Glitchfiend/TerraBlender/",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"collective\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -166,7 +172,8 @@
       "sha512": "5e8d257650b2ace041df4743172797dfa86faeaa3fa2db13890482f433b189bad037c4f5399b5b5b0e3e65fab0c0887ef65e5c5c24eba6c09da8f95ed3435b02",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Serilum/Collective"
+      "sourceUrl": "https://github.com/Serilum/Collective",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"rftools-base\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -189,7 +196,8 @@
       "requiredDependencies": [
         "1Zu0uTEE"
       ],
-      "sourceUrl": "https://github.com/McJtyMods/RFToolsBase"
+      "sourceUrl": "https://github.com/McJtyMods/RFToolsBase",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"supermartijn642s-core-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -210,7 +218,8 @@
       "sha512": "df3844f66fef9f58ab41119bd2c86096e7ca613ecc646ff910344a25d891ebd3c50267bfe2057e18f96de3bdb3fc0e4ada5aec64d97fe12865b42700dc47bb97",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/SuperMartijn642/SuperMartijn642sCoreLib"
+      "sourceUrl": "https://github.com/SuperMartijn642/SuperMartijn642sCoreLib",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"supermartijn642s-config-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -231,7 +240,8 @@
       "sha512": "768d8ca178c5e653986f5131b7aeb7fa57ce7d32c16ed399ced01b273565a2b640130c55c7092747efeff40dbb0348876b18b415f59b0d16dd2c7f32f1798ce2",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/SuperMartijn642/SuperMartijn642sConfigLib"
+      "sourceUrl": "https://github.com/SuperMartijn642/SuperMartijn642sConfigLib",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"scalable-cats-force\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -252,7 +262,8 @@
       "sha512": "4da264d203d786efb638a6ecab0cb4f974436a72c84c0a9cdb2cb0eec5757dac294c1435deae048d44741098e6aaedb4def508a47d2bd4d010a3441921119806",
       "license": "Apache-2.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Kotori316/SLP"
+      "sourceUrl": "https://github.com/Kotori316/SLP",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"silent-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -273,7 +284,8 @@
       "sha512": "1a3ede879804303c01fbeff84d64ce94c811f6c2670d5b2cadb3260488d609bed4cf1fa5e9609e2b7287ecfe16400ec6c0c436bfbfad9c94234b95a44be0a702",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/SilentChaos512/SilentLib"
+      "sourceUrl": "https://github.com/SilentChaos512/SilentLib",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"better-advanced-tooltips\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -294,7 +306,8 @@
       "sha512": "05b5cdad948d1735eab7a67a16aaf32814678c392014ec2ada61b8341c0ed1c1ac181cab1de9da3f2c4632592f4a1a5db254bd0543e6778897c8ccd260894142",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/latvian-dev/better-advanced-tooltips"
+      "sourceUrl": "https://github.com/latvian-dev/better-advanced-tooltips",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"bookshelf-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -315,7 +328,8 @@
       "sha512": "78d4577a8e8fbb241216968475dd73f5b9e5efeb7da802b18a4e6c290e49af6cb4a5676e9855d0d8ff3613f967812e4bd363bbb9196c17c954d19454f84b2214",
       "license": "LGPL-2.1-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Darkhax-Minecraft/Bookshelf"
+      "sourceUrl": "https://github.com/Darkhax-Minecraft/Bookshelf",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"prickle\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -336,7 +350,8 @@
       "sha512": "154d42795ccf1f3e07714775cdb82fd5db17574319286ced13d86b0456b64e4cf5bb89ffbcbfcefce67b73ed0b83e4e2944e493d79d9a385ff9de23006ee7bf5",
       "license": "LGPL-2.1-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Darkhax-Minecraft/PrickleMC"
+      "sourceUrl": "https://github.com/Darkhax-Minecraft/PrickleMC",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"cerbons-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -359,7 +374,8 @@
       "requiredDependencies": [
         "GkIc6rRo"
       ],
-      "sourceUrl": "https://github.com/CERBON-MODS/CERBONs-API"
+      "sourceUrl": "https://github.com/CERBON-MODS/CERBONs-API",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"resourceful-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -380,7 +396,8 @@
       "sha512": "a9d20e345faa9bcb297bd95ac9524205834804d1bb13518397dd4f7f62b352b08c3339ee7f7870d3669078ceeb33d5c31ea527aecce4b31d62ec1ff7d8b562c8",
       "license": "MIT",
       "sourceUrl": "https://github.com/Team-Resourceful/ResourcefulLib",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"resourceful-config\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -401,7 +418,8 @@
       "sha512": "8e4ccc37732b3f5190e7e98df34dbc1339fe614494fcabf1aeaeab9ad8e5993522964b51be31882000c08c48a6d0096b5458364415bb81f2b2b775a7daf2eb87",
       "license": "MIT",
       "sourceUrl": "https://github.com/Team-Resourceful/Resourceful-Config",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"common-storage-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -422,7 +440,8 @@
       "sha512": "e4e2a7bc066c9032c0172428b1012fdd3b0dfcb75ee11bf044db61318906b61d3dbd0ff84a4f4b50403da5fdad4b349d65e02d4be48c55551f0da7ed993e27ff",
       "license": "MIT",
       "sourceUrl": "https://github.com/terrarium-earth/Common-Storage-Lib",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "versionType": "alpha"
     },
     {
       "requestKey": "{\"slug\":\"myotus-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -445,7 +464,8 @@
       "sourceUrl": "https://github.com/mc-myo-s-mod/Myotus",
       "requiredDependencies": [
         "XxWD5pD3"
-      ]
+      ],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"cloth-config\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -466,7 +486,8 @@
       "sha512": "aaf9b010955b8cd294e5a92f069985b18729fd5e2cf22d351f1dff9680f15488688803ec41e77e941cbde130ceb535014ca4c868047d80ab69c2d508e216654d",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/shedaniel/ClothConfig/"
+      "sourceUrl": "https://github.com/shedaniel/ClothConfig/",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"libipn\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -489,7 +510,8 @@
       "requiredDependencies": [
         "ordsPcFz"
       ],
-      "sourceUrl": "https://github.com/blackd/libIPN"
+      "sourceUrl": "https://github.com/blackd/libIPN",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"kotlin-for-forge\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -510,7 +532,8 @@
       "sha512": "b8c3942f4d33179edf3f102f3d870b99dd436f8b8236dbbd31aa51b888162c692cfd88927295f24dc8b4375232f4c6c17360c5d6c4823f93cbcd7cf4bdc8bd14",
       "license": "LGPL-2.1-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/thedarkcolour/KotlinForForge"
+      "sourceUrl": "https://github.com/thedarkcolour/KotlinForForge",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"searchables\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -531,7 +554,8 @@
       "sha512": "d0824bac1900142ac9a53e68f7ec3b4c0d33d9366bbd3f1d0d93eed860e5eb6b5e6f5a215a69bfffa70bcb48573ff49b5a12bbaa96096ceac6636000d506027a",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/jaredlll08/searchables"
+      "sourceUrl": "https://github.com/jaredlll08/searchables",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"konkrete\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -552,7 +576,8 @@
       "sha512": "378bd12e3c32329abbae5cd514e1d1cc2a3cc3a45979fedb1d4e4c0a6732bdcf4b7d1bf7f7a112074bf288957edf86152c9c090a27d1d5de84a9a7825d3d6511",
       "license": "Apache-2.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Keksuccino/Konkrete"
+      "sourceUrl": "https://github.com/Keksuccino/Konkrete",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"rhino\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -573,7 +598,8 @@
       "sha512": "0a6c7f4410281aeb03b815ec03487a8e80a4d3dae013d81282e447bf9c08144ef57318af614ea6d40b7d9a8c25031c557890ec792a5895a82467c1643116f693",
       "license": "MPL-2.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/KubeJS-Mods/Rhino"
+      "sourceUrl": "https://github.com/KubeJS-Mods/Rhino",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"mekanism\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -594,7 +620,8 @@
       "sha512": "66745825330a98f3e4a5ea3a44aff8b00870f715c144edc38dd2f61b4240589600b58ae89efac3b54dbb5aa430b1059dac1a28fd71cac5cc9002bbeb5ba3f22b",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/mekanism/Mekanism"
+      "sourceUrl": "https://github.com/mekanism/Mekanism",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"mekanism-generators\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -617,7 +644,8 @@
       "requiredDependencies": [
         "Ce6I4WUE"
       ],
-      "sourceUrl": "https://github.com/mekanism/Mekanism"
+      "sourceUrl": "https://github.com/mekanism/Mekanism",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"mekanism-tools\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -640,7 +668,8 @@
       "requiredDependencies": [
         "Ce6I4WUE"
       ],
-      "sourceUrl": "https://github.com/mekanism/Mekanism"
+      "sourceUrl": "https://github.com/mekanism/Mekanism",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"immersiveengineering\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -661,7 +690,8 @@
       "sha512": "862523e84747a8b7eaa65f9b3c337fa832ef9efd0545c27f68e350e01f482c7a1242d0e4bdc2caff3d7eb033508b43a353fcd7150c9b544d0c05765ca2a551b3",
       "license": "LicenseRef-Custom",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/BluSunrize/ImmersiveEngineering"
+      "sourceUrl": "https://github.com/BluSunrize/ImmersiveEngineering",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"immersivepetroleum\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -684,7 +714,8 @@
       "requiredDependencies": [
         "tIm2nV03"
       ],
-      "sourceUrl": "https://github.com/TwistedGate/ImmersivePetroleum"
+      "sourceUrl": "https://github.com/TwistedGate/ImmersivePetroleum",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"ae2\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -707,7 +738,8 @@
       "requiredDependencies": [
         "Ck4E7v7R"
       ],
-      "sourceUrl": "https://github.com/AppliedEnergistics/Applied-Energistics-2"
+      "sourceUrl": "https://github.com/AppliedEnergistics/Applied-Energistics-2",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"applied-energistics-2-wireless-terminals\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -730,7 +762,8 @@
       "requiredDependencies": [
         "XxWD5pD3"
       ],
-      "sourceUrl": "https://github.com/Mari023/AE2WirelessTerminalLibrary"
+      "sourceUrl": "https://github.com/Mari023/AE2WirelessTerminalLibrary",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"mega\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -753,7 +786,8 @@
       "requiredDependencies": [
         "XxWD5pD3"
       ],
-      "sourceUrl": "https://github.com/62832/MEGACells"
+      "sourceUrl": "https://github.com/62832/MEGACells",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"applied-mekanistics\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -777,7 +811,8 @@
         "Ce6I4WUE",
         "XxWD5pD3"
       ],
-      "sourceUrl": "https://github.com/AppliedEnergistics/Applied-Mekanistics"
+      "sourceUrl": "https://github.com/AppliedEnergistics/Applied-Mekanistics",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"industrial-foregoing\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -800,7 +835,8 @@
       "requiredDependencies": [
         "1Ro7m06l"
       ],
-      "sourceUrl": "https://github.com/Buuz135/Industrial-Foregoing"
+      "sourceUrl": "https://github.com/Buuz135/Industrial-Foregoing",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"enderio\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -821,7 +857,8 @@
       "sha512": "93ac9f1304d317690ad551ad85ff7dc563cc1b0c3143335116ee2d9199d2d13ce2bcbde1c20a00dafd02f87ce36a94bf07f5097922028f88ff16d34aee5c0de9",
       "license": "Unlicense",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Team-EnderIO/EnderIO"
+      "sourceUrl": "https://github.com/Team-EnderIO/EnderIO",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"xnet\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -845,7 +882,8 @@
         "hIO8IsD8",
         "1Zu0uTEE"
       ],
-      "sourceUrl": "https://github.com/McJtyMods/XNet"
+      "sourceUrl": "https://github.com/McJtyMods/XNet",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"xnet-gases\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -869,7 +907,8 @@
         "iu1jkWqa",
         "Ce6I4WUE"
       ],
-      "sourceUrl": "https://github.com/Terrails/xnet-gases"
+      "sourceUrl": "https://github.com/Terrails/xnet-gases",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"tesseract\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -893,7 +932,8 @@
         "LN9BxssP",
         "rOUBggPv"
       ],
-      "sourceUrl": "https://github.com/SuperMartijn642/Tesseract"
+      "sourceUrl": "https://github.com/SuperMartijn642/Tesseract",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"railcraft-reborn\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -914,7 +954,8 @@
       "sha512": "0b35792a295d5c6ba9487b5a02d292871bb8d6a5bbe8a255ae82f8e62f00d0e106039b93d2ffbb2749c40dc5e92fcc86688ca6b688465e1b2432707570101049",
       "license": "LicenseRef-Railcraft-Reborn-License",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/railcraft-reborn/railcraft"
+      "sourceUrl": "https://github.com/railcraft-reborn/railcraft",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"additional-enchanted-miner\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -937,7 +978,8 @@
       "requiredDependencies": [
         "zr0QMQMo"
       ],
-      "sourceUrl": "https://github.com/Kotori316/QuarryPlus"
+      "sourceUrl": "https://github.com/Kotori316/QuarryPlus",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"ad-astra\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -962,7 +1004,8 @@
         "M1953qlQ",
         "RgLrNK7l",
         "G1hIVOrD"
-      ]
+      ],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"ad-astra-giselle-addon\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -983,7 +1026,8 @@
       "sha512": "f87db7faf700c8b4f8ee7090060ca2f9999bab34ec384600d8daa4b80d861d5ed5d750a96a318ae1872a8891221cdc22c99265e6ecf6ec91f624a58795ced598",
       "license": "MIT",
       "sourceUrl": "https://github.com/gisellevonbingen-Minecraft/Ad-Astra-Giselle-Addon",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"cc-tweaked\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -1004,7 +1048,8 @@
       "sha512": "009fcf48b7d123018a61b2c55f0fede7dd1f6a6325226bf9cc926342185ca8a7e059e13662816d24595aac243abf622b682583631cfe42c3757505b2e864ff73",
       "license": "LicenseRef-CCPL",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/cc-tweaked/CC-Tweaked/"
+      "sourceUrl": "https://github.com/cc-tweaked/CC-Tweaked/",
+      "versionType": "alpha"
     },
     {
       "requestKey": "{\"slug\":\"advancedperipherals\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -1027,7 +1072,8 @@
       "requiredDependencies": [
         "gu7yAYhd"
       ],
-      "sourceUrl": "https://github.com/Seniorendi/AdvancedPeripherals"
+      "sourceUrl": "https://github.com/Seniorendi/AdvancedPeripherals",
+      "versionType": "alpha"
     },
     {
       "requestKey": "{\"slug\":\"silent-gear\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1050,7 +1096,8 @@
       "requiredDependencies": [
         "BQhuHQo4"
       ],
-      "sourceUrl": "https://github.com/SilentChaos512/Silent-Gear"
+      "sourceUrl": "https://github.com/SilentChaos512/Silent-Gear",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"kubejs\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1074,7 +1121,8 @@
         "sk9knFPE",
         "iHLDc0eo"
       ],
-      "sourceUrl": "https://github.com/KubeJS-Mods/KubeJS"
+      "sourceUrl": "https://github.com/KubeJS-Mods/KubeJS",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"almostunified\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1095,7 +1143,8 @@
       "sha512": "82ddfb82b86dcbf62c729ebbb2ed571bf284d31a8ad494b7e10db2da24a87e7887969e6092b78e79053ea0279c75de58dc548d30eca6ba60c2816a9bd3e436fd",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/AlmostReliable/almostunified"
+      "sourceUrl": "https://github.com/AlmostReliable/almostunified",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"biomes-o-plenty\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -1119,7 +1168,8 @@
         "s3dmwKy5",
         "kkmrDlKT"
       ],
-      "sourceUrl": "https://github.com/Glitchfiend/BiomesOPlenty"
+      "sourceUrl": "https://github.com/Glitchfiend/BiomesOPlenty",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"underground-bunkers\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1140,7 +1190,8 @@
       "sha512": "04775162e8bd18a907fc4ae67e05b650b6aeb44e0825c6208ce6f4948152e84c21bac5f5970b6fd2a548add707b907c6b0155aaf9ee6a4d741bead2e79060b40",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": null
+      "sourceUrl": null,
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"natures-compass\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1161,7 +1212,8 @@
       "sha512": "5314b536bcb9a594a9cf2bbd46c82468d17e1559bd6c00da9d91e96c0814f50416799a011705f0d184bd731dac3f03dec009c76fea3d02b3556a6013f9649014",
       "license": "CC-BY-NC-SA-4.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/MattCzyr/NaturesCompass"
+      "sourceUrl": "https://github.com/MattCzyr/NaturesCompass",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"upgraded-iron-chests\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1182,7 +1234,8 @@
       "sha512": "8c3198ff24829417a06d40b06235e75caa80b2bdb14ae7880577bba7c2ae9b17edc73cf91e19278ae240efe004fc37bd0cf4d12703f8c161a3da8d9d84bf3bf1",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": null
+      "sourceUrl": null,
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"cb-compressed-blocks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1203,7 +1256,8 @@
       "sha512": "ddef1a0bf9d27adface154dc4a8a0185d987ecd3fdf2523069bc0641e18338bfa4b44e0609e08bcf304532e52586285fd6dce148ce310468cae0e69c22d11acb",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/sa-shiro/Minecraft-Compressed-Blocks"
+      "sourceUrl": "https://github.com/sa-shiro/Minecraft-Compressed-Blocks",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"elevatormod\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1224,7 +1278,8 @@
       "sha512": "2b13e5daf0e54d7d004a1fbdcfbd75909f32c83527df727f708106b7d5770b790d35facb2308b2fd63540f40c895ff4c7cc30916bb5e6c4934f06484fbaed16e",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/VsnGamer/ElevatorMod"
+      "sourceUrl": "https://github.com/VsnGamer/ElevatorMod",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"gravestone-mod\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1245,7 +1300,8 @@
       "sha512": "5504a222d4085da1898ff6d4dff8eb1821fd14a8caaaac785554277147f984262e63925a411db3f1a34e9c7874652fb6737176bea4c0c3f01243f5eae4ea6eaa",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/henkelmax/gravestone"
+      "sourceUrl": "https://github.com/henkelmax/gravestone",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"fallingtree\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1266,7 +1322,8 @@
       "sha512": "21876b270ca40e3ad6168423f2aba04460f590be191c5558d53e4f542993efa6070589029cb3218557309b096cd920e4da65e53f19687b86c638ec6c342d83e5",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/RakambdaOrg/FallingTree"
+      "sourceUrl": "https://github.com/RakambdaOrg/FallingTree",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"clumps\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1287,7 +1344,8 @@
       "sha512": "314d8d8e640d73041f27e0f3f2cad7aad8b4c77dbd7fb31700ef7760362261f77085eed5289555c725d99c3f47a114e7290cd608f39c9f0f12ef74958463bdcc",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/jaredlll08/Clumps"
+      "sourceUrl": "https://github.com/jaredlll08/Clumps",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"jei\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -1308,7 +1366,8 @@
       "sha512": "868d8d30dfd5055f65e6f476690a41189be9157b08b52961ded3febc7b577b2940a444209d32868a6f736656cb8dcacf7e252b9b66e16f9780e4768d4d775b01",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/mezz/JustEnoughItems"
+      "sourceUrl": "https://github.com/mezz/JustEnoughItems",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"jei-multiblocks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1332,7 +1391,8 @@
         "tIm2nV03",
         "u6dRKJwZ"
       ],
-      "sourceUrl": "https://github.com/sguest/jei-multiblocks"
+      "sourceUrl": "https://github.com/sguest/jei-multiblocks",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"just-enough-resources-jer\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":\"client\"}",
@@ -1353,7 +1413,8 @@
       "sha512": "9a4f8c32e65d5f9451edcf1a584b22b9f590dab2cfb3efb68ef2b4c042d8ff39dcfdaddba0a9d615c7af4ecfa1cefda417c8972d7dcb54e574837ec81d6939b0",
       "license": "LicenseRef-Dont-Be-a-Jerk",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/way2muchnoise/JustEnoughResources"
+      "sourceUrl": "https://github.com/way2muchnoise/JustEnoughResources",
+      "versionType": "alpha"
     },
     {
       "requestKey": "{\"slug\":\"pin-it!-jei-addon\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1376,7 +1437,8 @@
       "requiredDependencies": [
         "u6dRKJwZ"
       ],
-      "sourceUrl": null
+      "sourceUrl": null,
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"just-enough-mekanism-multiblocks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1400,7 +1462,8 @@
       "requiredDependencies": [
         "Ce6I4WUE",
         "u6dRKJwZ"
-      ]
+      ],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"jeioptimizer\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1421,7 +1484,8 @@
       "sha512": "7115458e6a3be43fde112ac77910298e833e684bd4b338139421a5af6676a6e0550d30a0134c43cca5b76b037facf0b50675f85c0780ae7c6924c4915ee08bda",
       "license": "LicenseRef-All-Rights-Reserved",
       "sourceUrl": "https://github.com/bigenergy/JEIOptimizer",
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"ae2-tangible-bookmarks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1445,7 +1509,8 @@
       "requiredDependencies": [
         "XxWD5pD3",
         "32YA23Pp"
-      ]
+      ],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"just-enough-recipe-sharing\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1468,7 +1533,8 @@
       "sourceUrl": "https://github.com/starforcraft/Just-Enough-Recipe-Sharing",
       "requiredDependencies": [
         "u6dRKJwZ"
-      ]
+      ],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"just-enough-effect-descriptions-jeed\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1489,7 +1555,8 @@
       "sha512": "489776211f397b31e8ac74ef3a813e79ddfa5b4a51e04aa70563a32afd98d1117dbde40189f9de101c7f85374932a6c7cf84f22543f6249654032f3970751fd5",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/MehVahdJukaar/JustEnoughEffectDescriptions"
+      "sourceUrl": "https://github.com/MehVahdJukaar/JustEnoughEffectDescriptions",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"enchantment-descriptions\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1513,7 +1580,8 @@
         "aaRl8GiW",
         "uy4Cnpcm"
       ],
-      "sourceUrl": "https://github.com/Darkhax-Minecraft/Enchantment-Descriptions"
+      "sourceUrl": "https://github.com/Darkhax-Minecraft/Enchantment-Descriptions",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"justenoughbreeding\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1534,7 +1602,8 @@
       "sha512": "d1e9970f615d7a0986f030259d7d16cc4ba8cbd89bb81d1a1fbf6da2d3a9c7a0376957e1b418bcd82c9e45dcbdb6eb05fde2e20cc3f5225db33d0436759baee6",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Christofmeg/JustEnoughBreeding"
+      "sourceUrl": "https://github.com/Christofmeg/JustEnoughBreeding",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"just-enough-beacons-reforged\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1558,7 +1627,8 @@
         "GkIc6rRo",
         "u6dRKJwZ"
       ],
-      "sourceUrl": "https://github.com/CERBON-MODS/Just-Enough-Beacons"
+      "sourceUrl": "https://github.com/CERBON-MODS/Just-Enough-Beacons",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"jade-addons-forge\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1581,7 +1651,8 @@
       "requiredDependencies": [
         "nvQzSEkH"
       ],
-      "sourceUrl": "https://github.com/Snownee/JadeAddons"
+      "sourceUrl": "https://github.com/Snownee/JadeAddons",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"jade\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1602,7 +1673,8 @@
       "sha512": "dad9755dce8d85d914fc4df2baa0211f13e5839a71c1925fdd01f69081a95e30a2934e6273f8b01f0169adebe7a9dae57a8d904de0c4cb36dc17369bb474f0f2",
       "license": "CC-BY-NC-SA-4.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Snownee/Jade"
+      "sourceUrl": "https://github.com/Snownee/Jade",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"appleskin\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1623,7 +1695,8 @@
       "sha512": "f4ea46273e407334b63e262e2555c9a8204f7b5e60f23f272fbaa83ad9e88800e0ee186aca840710df2dbe0a18b37758695fef2ae1a902c10b3706e3de772937",
       "license": "Unlicense",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/squeek502/AppleSkin"
+      "sourceUrl": "https://github.com/squeek502/AppleSkin",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"modonomicon\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1644,7 +1717,8 @@
       "sha512": "797c0e5270ce2772968dffbe60143fa123653e7204a0ab816f24fa09a9db38aa6cb3bbccca5a9133b4df341cc47a8a6bce3ff0f95bd2011f7afb023450eef9a0",
       "license": "MIT AND CC-BY-4.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/klikli-dev/modonomicon"
+      "sourceUrl": "https://github.com/klikli-dev/modonomicon",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"sodium\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1665,7 +1739,8 @@
       "sha512": "2a689e1b1e16acc790c011b42ec21958956207c3b49cb99cb5c006e639786adf1cc36559f9840e2c1d27485c00da9712d34020fa4279eb6810eaa54bf20b19b0",
       "license": "LicenseRef-Polyform-Shield-1.0.0",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/CaffeineMC/sodium"
+      "sourceUrl": "https://github.com/CaffeineMC/sodium",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"reeses-sodium-options\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1688,7 +1763,8 @@
       "requiredDependencies": [
         "AANobbMI"
       ],
-      "sourceUrl": "https://github.com/FlashyReese/reeses-sodium-options"
+      "sourceUrl": "https://github.com/FlashyReese/reeses-sodium-options",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"sodium-extra\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1711,7 +1787,8 @@
       "requiredDependencies": [
         "AANobbMI"
       ],
-      "sourceUrl": "https://github.com/FlashyReese/sodium-extra-fabric"
+      "sourceUrl": "https://github.com/FlashyReese/sodium-extra-fabric",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"iris\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1734,7 +1811,8 @@
       "requiredDependencies": [
         "AANobbMI"
       ],
-      "sourceUrl": "https://github.com/IrisShaders/Iris"
+      "sourceUrl": "https://github.com/IrisShaders/Iris",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"lithium\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1755,7 +1833,8 @@
       "sha512": "2735da2088b88a8bdcd4ad02a2b6fffbfd3925557cefd4fa54b5477dfb9e582ea7f521300c060f57dff1325dd21bff276b7333363ad3371ed6893e3de9eca9cd",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/caffeinemc/lithium-fabric"
+      "sourceUrl": "https://github.com/caffeinemc/lithium-fabric",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"modernfix\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1776,7 +1855,8 @@
       "sha512": "b1f0d3ac5ada811b8204bc82adc1cab8ff71752da8e97ae381f21be5f778c199ae59108850febc87d1c46757b27ccbb2669f3fc6340c837db450a205ca2d8c9c",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/embeddedt/ModernFix"
+      "sourceUrl": "https://github.com/embeddedt/ModernFix",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"ferrite-core\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1797,7 +1877,8 @@
       "sha512": "19af89a2075bb10a63884fa853ebf84b02c79dc3242430ecdad056fd764fdcde367a7303276b329df01b0736e2ef264c5d80c7dc92c6aebd244f556a230bb417",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/malte0811/FerriteCore"
+      "sourceUrl": "https://github.com/malte0811/FerriteCore",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"entityculling\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1818,7 +1899,8 @@
       "sha512": "0c22502b84b13d8ac6daffe14ac77e7306b5b7a48f5cd9b3950d9e1d60b3786104aa035fbfdb208b1c9a75ad0e356301a774da32edc3f71cb3a53e2d28fd39e6",
       "license": "LicenseRef-tr7zw-Protective-License",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/tr7zw/EntityCulling"
+      "sourceUrl": "https://github.com/tr7zw/EntityCulling",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"moreculling\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1841,7 +1923,8 @@
       "requiredDependencies": [
         "9s6osm5g"
       ],
-      "sourceUrl": "https://github.com/fxmorin/moreculling"
+      "sourceUrl": "https://github.com/fxmorin/moreculling",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"immediatelyfast\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1862,7 +1945,8 @@
       "sha512": "853c8746d0b28f97cd3eb7e9e55967f98d6c358f609b9db2c4d2d7afee76728d827bad8f3d73d6a0b7c5e36a820779f299cdcda70191e3832d5bd0f2cf034d56",
       "license": "LGPL-3.0-or-later",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/RaphiMC/ImmediatelyFast"
+      "sourceUrl": "https://github.com/RaphiMC/ImmediatelyFast",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"dynamic-fps\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1883,7 +1967,8 @@
       "sha512": "8eb18a280b265e598540306275b51a165836f4b14c6c703b6ced11fcac50bfab439e4deb69e222f62614a9f15fa0ef58e5bd84e20e37ae57755d9c2f8b134057",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/juliand665/Dynamic-FPS"
+      "sourceUrl": "https://github.com/juliand665/Dynamic-FPS",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"servercore\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -1904,7 +1989,8 @@
       "sha512": "55b97df4cc46f52db85b96487188d73c62d511229d98859991c115414c5f1ab37f2f40a0f2edb5692220aa94d6c48b392b0a2d8593b3c3381b1fcbde2a728c8f",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Wesley1808/ServerCore"
+      "sourceUrl": "https://github.com/Wesley1808/ServerCore",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"xaeros-minimap\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1925,7 +2011,8 @@
       "sha512": "7ece42b6665cb3a83d77bca1ae9ab31e9f418a7e0ee73f4be1839b62a8dde7e2727d554b6ed056ca4e7510c1aaa6603e5caaa62355bca9ff202171df73ac49ee",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": null
+      "sourceUrl": null,
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"xaeros-world-map\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1946,7 +2033,8 @@
       "sha512": "57a3175d91c237682b65e1b9df78be23ad8cd03f1c8ca074fc61e1672d280df8fa7335c88a173b46b1e17834af621e5121b80ac0d12cd7c9aba3e3ceb367d1eb",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": null
+      "sourceUrl": null,
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"mouse-tweaks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1967,7 +2055,8 @@
       "sha512": "f95c0cc881211ee0442434976775e07aae40b4a2ba4e3a85455bc57ca9d3c991e239cd98374a8abd442dc9c378dcd9001e2caa1bf69991d424b5652dd7f3483b",
       "license": "BSD-3-Clause",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/YaLTeR/MouseTweaks"
+      "sourceUrl": "https://github.com/YaLTeR/MouseTweaks",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"inventory-profiles-next\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -1991,7 +2080,8 @@
         "onSQdWhM",
         "ordsPcFz"
       ],
-      "sourceUrl": "https://codeberg.org/Inventory-Profiles-Next-Mod/IPNentory-Profiles"
+      "sourceUrl": "https://codeberg.org/Inventory-Profiles-Next-Mod/IPNentory-Profiles",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"controlling\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2014,7 +2104,8 @@
       "requiredDependencies": [
         "fuuu3xnx"
       ],
-      "sourceUrl": "https://github.com/jaredlll08/Controlling"
+      "sourceUrl": "https://github.com/jaredlll08/Controlling",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"just-zoom\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2037,7 +2128,8 @@
       "requiredDependencies": [
         "J81TRJWm"
       ],
-      "sourceUrl": "https://github.com/Keksuccino/JustZoom"
+      "sourceUrl": "https://github.com/Keksuccino/JustZoom",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"lambdynamiclights\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2058,7 +2150,8 @@
       "sha512": "2a8ca94cd56e9e5ed046126f4b03edba2965c8fe76210ebc5ca53bb075832274dce1cb438082fbc2aea268f93986ad17b6231afad7c100359a9185bba517c4f9",
       "license": "LicenseRef-Lambda-License",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/LambdAurora/LambDynamicLights"
+      "sourceUrl": "https://github.com/LambdAurora/LambDynamicLights",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"not-enough-animations\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2079,7 +2172,8 @@
       "sha512": "9d929cf8e0a0ff2c806e007571b10cd9b81cd508826519f55e25f0390149109c7c12605143e4c11b5b5fac749e69de532c1ad00aa6a257e4dd0d3a3a77f2461b",
       "license": "LicenseRef-tr7zw-Protective-License",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/tr7zw/NotEnoughAnimations"
+      "sourceUrl": "https://github.com/tr7zw/NotEnoughAnimations",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"fusion-connected-textures\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -2100,7 +2194,8 @@
       "sha512": "5fa517b3807bb1fbaa5e779cf0ace91a75dc4101c5a986c640e026dfe61d93d6a9e2d78051614e5e64ae9d536fd68fec9bbe57709e8eabad842cab445a009f4f",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/SuperMartijn642/Fusion"
+      "sourceUrl": "https://github.com/SuperMartijn642/Fusion",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"betterf3\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2123,7 +2218,8 @@
       "requiredDependencies": [
         "9s6osm5g"
       ],
-      "sourceUrl": "https://github.com/TreyRuffy/BetterF3"
+      "sourceUrl": "https://github.com/TreyRuffy/BetterF3",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"no-chat-reports\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -2144,7 +2240,8 @@
       "sha512": "292a3623b5addb17e9f15681a4f2534562e9882ef809e504f49da4778fafc12e21a71995b5d05554d435201f401ace1e86af50e6e26f6ce9d203a5896a1ece21",
       "license": "WTFPL",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Aizistral-Studios/No-Chat-Reports"
+      "sourceUrl": "https://github.com/Aizistral-Studios/No-Chat-Reports",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":null,\"url\":\"https://cdn.modrinth.com/data/Vebnzrzj/versions/PelnLFOJ/LuckPerms-NeoForge-5.4.149.jar\",\"version\":\"5.4.149\",\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2183,7 +2280,8 @@
       "sha512": "8f3dbfb65b616afed2da07d975f0a16a4a009d1726490be91d96c4a18c18be920c3cfd8cf3968ce907e41516f85b9a15e1e6ea2f60d180538d2b4b53e2d2abd5",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/programmer1o1/playername-styler"
+      "sourceUrl": "https://github.com/programmer1o1/playername-styler",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"nedologin\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -2204,7 +2302,8 @@
       "sha512": "a88237398f1c3a159e8365839480725fe13d724acdff9b59014b7a7a78bfdf830862125c56bdca4415d37d5ccfc5ad3f4e6f707f86db819fe13de76737b5ceb7",
       "license": "LicenseRef-Beerware",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Ariss-Interactive/nedologin"
+      "sourceUrl": "https://github.com/Ariss-Interactive/nedologin",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"open-parties-and-claims\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -2225,7 +2324,8 @@
       "sha512": "2d4ad4946b44d0bb80fb2309c99e2eae87922f019cb1c4c988e452bcd81952af5d8eb64c4b6760cbe7ef440f2f946b0021411fbd54579a833bf96ac16a1411e5",
       "license": "LGPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/thexaero/open-parties-and-claims"
+      "sourceUrl": "https://github.com/thexaero/open-parties-and-claims",
+      "versionType": "beta"
     },
     {
       "requestKey": "{\"slug\":\"coreprotectneo\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2246,7 +2346,8 @@
       "sha512": "8c653d87eec5b739410e692e387ad64ffdcde7e5b340ebf6cefcc00c15d3c313c36bb2d20f9ba6a494b8682cafc508046085b7f07df84a210d1ddbb36674717b",
       "license": "LicenseRef-All-Rights-Reserved",
       "requiredDependencies": [],
-      "sourceUrl": null
+      "sourceUrl": null,
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"anti-xray\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2267,7 +2368,8 @@
       "sha512": "7f5998b5b06f58247afc70e95024f35a162c96c5d8ad537f8da44da709dfae4e064f3ea295540619a69da8afa256d2268b31acbbc47a12392a63cae4b628c725",
       "license": "MIT",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/DrexHD/FabricAntiXray"
+      "sourceUrl": "https://github.com/DrexHD/FabricAntiXray",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"worldedit\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2288,7 +2390,8 @@
       "sha512": "e039492df0b486e7ce76d0eaf8cb11eadad2e78220600b8498ab8eef4642a29e310a6bcb4378257553b3639c6d0bc1ebf0f73df3a7a677c6af6baf86716b0bc7",
       "license": "GPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/EngineHub/WorldEdit/"
+      "sourceUrl": "https://github.com/EngineHub/WorldEdit/",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"chunky\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2309,7 +2412,8 @@
       "sha512": "2db769dd723f243a21e1881e7c9f825e9c193da6f2bed454b70cb6fa9e51c57f63fdcf017c0657bbd26f7bba30815413e27c74d3c7be0783390a96ee9baa4bf7",
       "license": "GPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/pop4959/Chunky"
+      "sourceUrl": "https://github.com/pop4959/Chunky",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"spark\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2330,7 +2434,8 @@
       "sha512": "f86ce34f2759c69df82578c397ff55b666c84626229a98f598458b960c21b38c95d6bfef4772af7f963c4f4868e5e2d9aef6b99c1d51bab55bf45e0e6e6b5ed4",
       "license": "GPL-3.0-only",
       "requiredDependencies": [],
-      "sourceUrl": "https://github.com/lucko/spark"
+      "sourceUrl": "https://github.com/lucko/spark",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"starter-kit\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2353,7 +2458,8 @@
       "requiredDependencies": [
         "e0M1UDsY"
       ],
-      "sourceUrl": "https://github.com/Serilum/Starter-Kit"
+      "sourceUrl": "https://github.com/Serilum/Starter-Kit",
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"henny-essentials\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
@@ -2374,7 +2480,8 @@
       "sha512": "d0a7826b8f443615ffcfcf5ffa8394a8c421081168d0a169dfa03849fe455a31d25259bdd9ccfa3cc3b4e0457738ff5ea86625fad7cf9b33e0fc20e23015357f",
       "license": "MIT",
       "sourceUrl": null,
-      "requiredDependencies": []
+      "requiredDependencies": [],
+      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar\",\"version\":\"0.1.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
