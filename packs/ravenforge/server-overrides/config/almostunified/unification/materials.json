@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Pinned, not because the generated default was wrong — it already reads",
+    "[minecraft, immersiveengineering, mekanism] — but because it is generated,",
+    "from whichever mods happened to be installed the first time the server",
+    "started. Adding a mod later could reorder it and quietly move the canonical",
+    "steel on a fresh world. Written down, it is a decision instead of an",
+    "accident.",
+    "",
+    "Immersive Engineering wins the shared materials. Measured on a live server:",
+    "c:ingots/steel has four providers (Ad Astra, IE, Mekanism, Railcraft) and",
+    "c:plates/steel three, and with this order Ad Astra's own alloying recipe",
+    "outputs immersiveengineering:ingot_steel while its compressor outputs",
+    "immersiveengineering:plate_steel. Railcraft's lead and nickel ores smelt to",
+    "the IE ingots the same way. 609 recipes rewritten, 86 duplicates dropped,",
+    "8596 recipes down to 8483.",
+    "",
+    "Only the keys we change are listed — AlmostUnified fills the rest in from",
+    "its own defaults and rewrites the file, measured: four keys in, eleven out,",
+    "with the tag patterns and stone variants restored untouched."
+  ],
+  "mod_priorities": [
+    "minecraft",
+    "immersiveengineering",
+    "mekanism"
+  ]
+}
