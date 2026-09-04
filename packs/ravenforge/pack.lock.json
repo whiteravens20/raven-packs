@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-04T16:11:47.411Z",
+  "generatedAt": "2026-09-04T16:12:01.103Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1535,6 +1535,68 @@
         "u6dRKJwZ"
       ],
       "versionType": "release"
+    },
+    {
+      "requestKey": "{\"slug\":null,\"url\":\"https://mediafilez.forgecdn.net/files/7727/898/ae2jeiintegration-1.2.1.jar\",\"version\":\"1.2.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
+      "kind": "mod",
+      "side": "both",
+      "id": "ae2jeiintegration",
+      "name": "AE2 JEI Integration",
+      "source": "url",
+      "version": "1.2.1",
+      "fileName": "ae2jeiintegration-1.2.1.jar",
+      "url": "https://mediafilez.forgecdn.net/files/7727/898/ae2jeiintegration-1.2.1.jar",
+      "size": 91710,
+      "sha1": "e99898b3e9c32bf6ac757e7ad50247746622cdfc",
+      "sha512": "5aa19cdf7c97c2d2a24d74f8b84379222aa34b5ce86b86c7fb799526e8f268dfa080a4f587c9c96704b40430c7c728aa1b5391ae67346d702e2fe31e691b8c48",
+      "sha256": "2989c5d762d3f14a58b4db6519daaff81e719dff3445a2b39328948ac23e548b",
+      "license": "LGPL-3.0-only",
+      "sourceUrl": "https://www.curseforge.com/minecraft/mc-mods/ae2-jei-integration",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"silentgearjei\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "client",
+      "clientSide": "required",
+      "serverSide": "unsupported",
+      "id": "silentgearjei",
+      "name": "SilentGearJEI",
+      "source": "modrinth",
+      "projectId": "yiUlraa8",
+      "versionId": "Rpbwbrk7",
+      "version": "1.1.9",
+      "versionType": "release",
+      "fileName": "silentgearjei-1.1.9.jar",
+      "url": "https://cdn.modrinth.com/data/yiUlraa8/versions/Rpbwbrk7/silentgearjei-1.1.9.jar",
+      "size": 56764,
+      "sha1": "01a8bc92e223c10f5b08053681ff2303b1d58c59",
+      "sha512": "ccc1999d8647e8f7c928cb4e97fb23801d7f4f34eef597ba6edd289b13a3a93564bc3207351ec17bd324c0d4181169d27c2fd1416d760af4285259780c2fbefb",
+      "license": "AGPL-3.0-or-later",
+      "sourceUrl": "https://github.com/DrowningFish233/silentgearjei",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"advanced-loot-info\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "required",
+      "serverSide": "required",
+      "id": "advanced-loot-info",
+      "name": "Advanced Loot Info (ALI)",
+      "source": "modrinth",
+      "projectId": "PEPVViac",
+      "versionId": "y8p1Vq83",
+      "version": "1.21.1-1.12.0",
+      "versionType": "beta",
+      "fileName": "AdvancedLootInfo-neoforge-1.21.1-1.12.0.jar",
+      "url": "https://cdn.modrinth.com/data/PEPVViac/versions/y8p1Vq83/AdvancedLootInfo-neoforge-1.21.1-1.12.0.jar",
+      "size": 720490,
+      "sha1": "d4d48bde7b92449f34281159232650d8dda28ad0",
+      "sha512": "a496418ca955f2912c2c2e1064abe9bea31f9676a15673eab843d2dcfb3e962232bde69b096ff2b647efbab7bbe90546cb38f72cdfbe753ca284d83fe7a7bd24",
+      "license": "MIT",
+      "sourceUrl": "https://github.com/yanny7/AdvancedLootInfo",
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"just-enough-effect-descriptions-jeed\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
