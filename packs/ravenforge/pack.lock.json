@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-04T14:59:03.739Z",
+  "generatedAt": "2026-09-04T14:59:11.159Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -423,6 +423,29 @@
       "license": "MIT",
       "sourceUrl": "https://github.com/terrarium-earth/Common-Storage-Lib",
       "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"myotus-lib\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "unknown",
+      "serverSide": "unknown",
+      "id": "myotus-lib",
+      "name": "Myotus Lib",
+      "source": "modrinth",
+      "projectId": "32YA23Pp",
+      "versionId": "uqvIHRrm",
+      "version": "1.21.1-19.1.1",
+      "fileName": "Myotus-1.21.1-19.1.1.jar",
+      "url": "https://cdn.modrinth.com/data/32YA23Pp/versions/uqvIHRrm/Myotus-1.21.1-19.1.1.jar",
+      "size": 438921,
+      "sha1": "d00556870d4c4da2d6966fbebccb4670c3680360",
+      "sha512": "b086c1e333673887746e250e8af065cee124c35917a9749174b4a7ca3b21a62d4d022bb2ab3e8b0042fa792bc2d9601057a824e749a0558d046c0620cae21acc",
+      "license": "LGPL-3.0-only",
+      "sourceUrl": "https://github.com/mc-myo-s-mod/Myotus",
+      "requiredDependencies": [
+        "XxWD5pD3"
+      ]
     },
     {
       "requestKey": "{\"slug\":\"cloth-config\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1354,6 +1377,98 @@
         "u6dRKJwZ"
       ],
       "sourceUrl": null
+    },
+    {
+      "requestKey": "{\"slug\":\"just-enough-mekanism-multiblocks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "kind": "mod",
+      "side": "client",
+      "clientSide": "required",
+      "serverSide": "unsupported",
+      "id": "just-enough-mekanism-multiblocks",
+      "name": "Just Enough Mekanism Multiblocks",
+      "source": "modrinth",
+      "projectId": "kRaE85yQ",
+      "versionId": "g0Exmy3H",
+      "version": "7.7",
+      "fileName": "JustEnoughMekanismMultiblocks-1.21.1-7.7.jar",
+      "url": "https://cdn.modrinth.com/data/kRaE85yQ/versions/g0Exmy3H/JustEnoughMekanismMultiblocks-1.21.1-7.7.jar",
+      "size": 137612,
+      "sha1": "ff4e9eded15a0118f3cf1182cab2d1cd137d89af",
+      "sha512": "32cb1705b832cadc569c88d3aed11202d27d0d458ff2b88b70c46ccd832d112d7b3f25a8598e4c5533c07a73aa4ca17033d6245b15282b26bdb4988bffa40855",
+      "license": "MIT",
+      "sourceUrl": "https://github.com/gisellevonbingen-Minecraft/JustEnoughMekanismMultiblocks",
+      "requiredDependencies": [
+        "Ce6I4WUE",
+        "u6dRKJwZ"
+      ]
+    },
+    {
+      "requestKey": "{\"slug\":\"jeioptimizer\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "kind": "mod",
+      "side": "client",
+      "clientSide": "required",
+      "serverSide": "unsupported",
+      "id": "jeioptimizer",
+      "name": "JEIOptimizer",
+      "source": "modrinth",
+      "projectId": "GRvMb5oF",
+      "versionId": "pYIhVXxK",
+      "version": "1.1.0-19.42",
+      "fileName": "jeioptimizer-1.21.1-1.1.0-19.42.jar",
+      "url": "https://cdn.modrinth.com/data/GRvMb5oF/versions/pYIhVXxK/jeioptimizer-1.21.1-1.1.0-19.42.jar",
+      "size": 24260,
+      "sha1": "a9a4e4675dddcb438707b0fcc8e9fb98d89ae721",
+      "sha512": "7115458e6a3be43fde112ac77910298e833e684bd4b338139421a5af6676a6e0550d30a0134c43cca5b76b037facf0b50675f85c0780ae7c6924c4915ee08bda",
+      "license": "LicenseRef-All-Rights-Reserved",
+      "sourceUrl": "https://github.com/bigenergy/JEIOptimizer",
+      "requiredDependencies": []
+    },
+    {
+      "requestKey": "{\"slug\":\"ae2-tangible-bookmarks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "required",
+      "serverSide": "required",
+      "id": "ae2-tangible-bookmarks",
+      "name": "AE2 Tangible Bookmarks",
+      "source": "modrinth",
+      "projectId": "gpwwX5bd",
+      "versionId": "zbXkTZdU",
+      "version": "1.21.1-19.1.3",
+      "fileName": "AE2-TangibleBookmarks-1.21.1-19.1.3.jar",
+      "url": "https://cdn.modrinth.com/data/gpwwX5bd/versions/zbXkTZdU/AE2-TangibleBookmarks-1.21.1-19.1.3.jar",
+      "size": 62430,
+      "sha1": "263189aec469cb143dbc5edd203511296a815b9c",
+      "sha512": "57642f15b5c64b3db67b44817175f28a3d3b0527488b84dd0ac6b65c5faae1337b9ba4f6b421a0631d7d065ad38896f9ef2eb2c15e85456efeb58fc2bbb18a71",
+      "license": "LGPL-3.0-only",
+      "sourceUrl": "https://github.com/mc-myo-s-mod/AE2-Tangible-Bookmarks",
+      "requiredDependencies": [
+        "XxWD5pD3",
+        "32YA23Pp"
+      ]
+    },
+    {
+      "requestKey": "{\"slug\":\"just-enough-recipe-sharing\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "required",
+      "serverSide": "required",
+      "id": "just-enough-recipe-sharing",
+      "name": "Just Enough Recipe Sharing (JERS)",
+      "source": "modrinth",
+      "projectId": "NBckKpmw",
+      "versionId": "jpBNuiNK",
+      "version": "1.21.1-1.0.1",
+      "fileName": "justenoughrecipesharing-neoforge-1.21.1-1.0.1.jar",
+      "url": "https://cdn.modrinth.com/data/NBckKpmw/versions/jpBNuiNK/justenoughrecipesharing-neoforge-1.21.1-1.0.1.jar",
+      "size": 68361,
+      "sha1": "9dc6a9ba71f81628665154c194c2d1a9088394ea",
+      "sha512": "f97e4162515c52a4af171ae6c325cb8f0f6084bc87aa63a26993a0f63042c5a0c9af22dfb383d808ddfc1640f842a0f9c06b5f078334db93ff8395b54e357ee6",
+      "license": "MIT",
+      "sourceUrl": "https://github.com/starforcraft/Just-Enough-Recipe-Sharing",
+      "requiredDependencies": [
+        "u6dRKJwZ"
+      ]
     },
     {
       "requestKey": "{\"slug\":\"just-enough-effect-descriptions-jeed\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
