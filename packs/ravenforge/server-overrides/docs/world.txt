@@ -48,12 +48,17 @@ Worth setting once, so players see the wall coming instead of walking into it:
 
     /worldborder warning distance 50
 
-Three things about the border that are not obvious and were checked in the
+Five things about the border that are not obvious and were checked in the
 game's own bytecode rather than assumed:
 
-  * THERE IS ONE BORDER FOR THE WHOLE SERVER. Every dimension other than the
-    overworld gets a listener wired to the overworld's border at world load, so
-    the nether and ravenforge:mining both inherit whatever you set here.
+  * THERE IS ONE BORDER FOR THE WHOLE SERVER. MinecraftServer.createLevels walks
+    every LevelStem in the dimension registry and, for each one that is not the
+    overworld, hangs a DelegateBorderChangeListener off the overworld's border.
+    Every dimension therefore inherits whatever you set here: the nether,
+    ravenforge:mining, and all eleven Ad Astra dimensions — the five planets and
+    the six orbits. Ad Astra's dimension types all carry coordinate_scale 1.0,
+    so on the moon and on Mars the ±5000 means ±5000, with none of the nether's
+    arithmetic below.
 
   * IT IS NOT SCALED FOR THE NETHER. The listener copies the size verbatim, with
     no division by coordinate_scale. A border of 10000 is ±5000 in the nether
@@ -68,6 +73,25 @@ game's own bytecode rather than assumed:
     destination's border. Someone standing at nether 5000 and lighting a portal
     comes out at the edge of the overworld border, not at 40000. So the nether's
     oversized border is a pregeneration question, not a containment hole.
+
+  * IT IS A WALL OF INFINITE HEIGHT, SO FLIGHT DOES NOT CLEAR IT. The border is
+    handed to the physics as a collision shape, and WorldBorder.getCollisionShape
+    builds it from NEGATIVE_INFINITY to POSITIVE_INFINITY in y. The server then
+    replays every movement packet through Entity.move and rewinds the player when
+    the result drifts more than a quarter of a block from what the client claimed.
+    Nothing about flying changes that path: a Mekanism jetpack, a Meka-Suit and
+    Ad Astra's Jet Suit all move the player by adding to its delta movement, which
+    is ordinary physics, so all three hit the wall exactly as a walking player
+    does. Elytra likewise.
+
+  * WHAT DOES GET PAST IT IS GAME MODE AND TELEPORTS. The rewind is skipped for
+    creative and spectator, which is operators only. Teleports are not checked at
+    all — /tp, and an ender pearl, whose thrown entity never goes through
+    Entity.move and whose landing calls no border check. A player who pearls out
+    is not contained, but they are outside the border, where vanilla applies
+    damage that grows with the distance and never stops. Treat it as a nuisance,
+    not a hole: nothing out there is worth the trip, and /rtp and the warps all
+    land inside.
 
 
 3. Pregeneration
