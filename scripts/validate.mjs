@@ -195,6 +195,7 @@ async function validatePack(slug) {
   await validateBookText(slug);
   await validateBookPages(slug);
   await validateMilestones(slug);
+  await validateShopMath(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -695,6 +696,125 @@ async function validateMilestones(slug) {
 
   const total = [...paid.values()].reduce((sum, row) => sum + row.rc, 0);
   console.log(`  \x1b[32m✓\x1b[0m ${paid.size} milestone(s) priced and wired, ${total.toLocaleString('pl-PL')} RavenCoin in total`);
+}
+
+/**
+ * The money-supply arithmetic in `docs/shop.txt` has to add up.
+ *
+ * That document is not a description of the economy, it IS the economy: the
+ * lens prices exist nowhere else, and every later number — the catalogue, the
+ * lifetime sink, the RavenCoin-per-hour the faucet has to hit — is derived
+ * from them by hand. Hand-derived numbers drift, and drift here is invisible:
+ * prose does not fail to compile, and the figure it quotes is the one the next
+ * decision gets calibrated against.
+ *
+ * It had already happened twice. The catalogue claimed 38 000 "for the rest of
+ * the lenses" from the very first commit, when the table summed to 28 800 —
+ * an error at authorship, not staleness. Then the milestone total was raised
+ * to 31 500 in one sentence and left at 23 000 in the next, three paragraphs
+ * down, when three endgame milestones were added.
+ *
+ * So every figure this checks is one that is stated twice: once where it is
+ * derived and once where it is used.
+ */
+async function validateShopMath(slug) {
+  const before = problems.length;
+  const shop = path.join(PACKS_DIR, slug, 'server-overrides', 'docs', 'shop.txt');
+  let text;
+  try {
+    text = await fs.readFile(shop, 'utf8');
+  } catch {
+    return;
+  }
+  const num = (raw) => Number(raw.replace(/[\s ]/g, ''));
+
+  // Section 3's price column: `lime  emerald, uranium  8 000`. Rows that sell
+  // nothing carry words there instead of a figure and drop out on their own.
+  const table = text.match(/\n3\. What the shop sells\n[\s\S]*?\n4\. What the shop buys\n/);
+  if (!table) {
+    fail(slug, 'shop.txt has no section 3 this script can read — the price table is ungated');
+    return;
+  }
+  const lenses = new Map();
+  for (const row of table[0].matchAll(/^ {4}(\w+) {2,}\S.*?(\d[\d\s ]*\d)\s*$/gm)) {
+    lenses.set(row[1], num(row[2]));
+  }
+  if (lenses.size < 2) {
+    fail(slug, 'shop.txt section 3 lists no priced lenses — the table format changed under this check');
+    return;
+  }
+
+  // Brown is priced with the rank rather than with the lenses, and section 6
+  // adds it separately, so it is not part of "the rest".
+  const brown = lenses.get('brown');
+  const rest = [...lenses].filter(([name]) => name !== 'brown');
+  const restSum = rest.reduce((sum, [, price]) => sum + price, 0);
+
+  const claim = text.match(
+    /The catalogue costs one fully equipped player ([\d\s ]+) once — ([\d\s ]+) for\nTechnik, ([\d\s ]+) for brown, and ([\d\s ]+) for the (\w+) remaining lens rows/,
+  );
+  if (!claim) {
+    fail(slug, 'shop.txt section 6 no longer states the catalogue the way this check reads it');
+    return;
+  }
+  const [, catalogue, technik, brownClaim, restClaim, countWord] = claim.map((part) =>
+    typeof part === 'string' ? part.trim() : part,
+  );
+  const COUNTS = { five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
+
+  if (num(restClaim) !== restSum) {
+    fail(slug, `shop.txt section 6 puts the lenses at ${restClaim}, but section 3 sums to ${restSum.toLocaleString('pl-PL')}`);
+  }
+  if (COUNTS[countWord] !== rest.length) {
+    fail(slug, `shop.txt section 6 says "${countWord} remaining lens rows", but section 3 prices ${rest.length} besides brown`);
+  }
+  if (brown !== undefined && num(brownClaim) !== brown) {
+    fail(slug, `shop.txt section 6 puts brown at ${brownClaim}, but section 3 prices it at ${brown.toLocaleString('pl-PL')}`);
+  }
+  const sum = num(technik) + num(brownClaim) + num(restClaim);
+  if (num(catalogue) !== sum) {
+    fail(slug, `shop.txt section 6 calls the catalogue ${catalogue}, but its own three parts add to ${sum.toLocaleString('pl-PL')}`);
+  }
+
+  // Technik's price is real config, not prose — the Council reads it back from
+  // there when it levies the fee, so a reprice would leave the document
+  // quoting a number the game no longer charges.
+  try {
+    const ranks = JSON.parse(
+      await fs.readFile(path.join(PACKS_DIR, slug, 'server-overrides', 'config', 'ravencoin-ranks.json'), 'utf8'),
+    );
+    const rank = (ranks.ranks ?? ranks).find?.((entry) => entry.id === 'technik');
+    if (rank && rank.price !== num(technik)) {
+      fail(slug, `shop.txt prices Technik at ${technik}, but ravencoin-ranks.json charges ${rank.price.toLocaleString('pl-PL')}`);
+    }
+  } catch {
+    // No rank config in this pack; the three-part sum above still stands.
+  }
+
+  // The milestone total is stated twice, paragraphs apart. Both come from the
+  // payout table, which is the one place it is not prose.
+  const script = path.join(PACKS_DIR, slug, 'server-overrides', 'kubejs', 'server_scripts', 'milestones.js');
+  let payouts = null;
+  try {
+    const source = await fs.readFile(script, 'utf8');
+    const rows = [...source.matchAll(/\w+: \{ rc: (\d+), name: '[^']*' \}/g)];
+    if (rows.length > 0) payouts = rows.reduce((total, row) => total + Number(row[1]), 0);
+  } catch {
+    // No milestones in this pack.
+  }
+  if (payouts === null) return;
+  const mentions = [...text.matchAll(/([\d\s ]+?) (?:in total to a player|against a lifetime faucet)/g)];
+  if (mentions.length < 2) {
+    fail(slug, 'shop.txt section 6 no longer states the milestone total twice — this check reads both');
+  }
+  for (const mention of mentions) {
+    if (num(mention[1]) !== payouts) {
+      fail(slug, `shop.txt says milestones pay ${mention[1].trim()}, but milestones.js totals ${payouts.toLocaleString('pl-PL')}`);
+    }
+  }
+
+  if (problems.length !== before) return;
+  console.log(`  \x1b[32m✓\x1b[0m shop.txt adds up: ${rest.length} lenses ${restSum.toLocaleString('pl-PL')}, catalogue ${num(catalogue).toLocaleString('pl-PL')}`);
 }
 
 /**
