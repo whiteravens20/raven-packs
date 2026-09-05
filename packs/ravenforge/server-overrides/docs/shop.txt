@@ -225,11 +225,11 @@ pellets.
 6. The money supply
 -------------------
 
-The catalogue costs one fully equipped player 288 000 once — 150 000 for
-Technik, 100 000 for brown, 38 000 for the rest of the lenses. Ten of them is
-2.9 million of lifetime sink, and spread over a season of roughly 3 000
-player-hours that needs about 960 RavenCoin an hour of faucet. A committed
-player earns around 800. The two numbers meeting is the whole calibration: over
+The catalogue costs one fully equipped player 280 500 once — 150 000 for
+Technik, 100 000 for brown, and 30 500 for the nine remaining lens rows in
+section 3, summed. Ten of them is 2.8 million of lifetime sink, and spread over
+a season of roughly 3 000 player-hours that needs about 935 RavenCoin an hour of
+faucet. A committed player earns around 800. The two numbers meeting is the whole calibration: over
 one season, a dedicated player can buy the catalogue almost exactly once.
 
 A THIRD FAUCET, ADDED AFTER THIS CALIBRATION AND KEPT SMALL. Eighteen milestones
@@ -258,7 +258,7 @@ pellets, which means a fission reactor actually running; a Jet Suit is a whole
 netherite space suit plus the end of the calorite ladder.
 
 ⚠ It is also the only faucet that consumes no amethyst, so it dilutes the anchor
-in section 1 by exactly what it pays. 23 000 against a lifetime faucet near 2.9
+in section 1 by exactly what it pays. 31 500 against a lifetime faucet near 2.8
 million is a rounding error, and it is written down rather than hidden: each
 payout goes on the statement as ADJUST with `milestone:<key>` in the note, so
 /rc history tells it apart from a shop sale even though the ledger has no kind
