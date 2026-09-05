@@ -1,0 +1,19 @@
+{
+  "category": "ravenforge:guide/categories/wyzwania",
+  "name": "Pierwsza technika",
+  "icon": "mekanism:enrichment_chamber",
+  "x": -3,
+  "y": 4,
+  "parents": [
+    {
+      "entry": "ravenforge:guide/entries/wyzwania_start"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Pierwsza technika",
+      "text": "Cztery progi, każdy za sam przedmiot w ręce:\n\n- **Pierwszy prąd** — dowolny generator, Mekanism albo Immersive\n- **Dwa razy tyle** — Enrichment Chamber\n- **Sieć** — kontroler ME\n- **Maszyna zamiast kilofa** — Quarry Plus"
+    }
+  ]
+}

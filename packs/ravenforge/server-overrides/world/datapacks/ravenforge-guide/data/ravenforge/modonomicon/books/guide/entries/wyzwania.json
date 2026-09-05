@@ -1,0 +1,19 @@
+{
+  "category": "ravenforge:guide/categories/wyzwania",
+  "name": "Wyzwania",
+  "icon": "ravencoin:coin",
+  "x": 0,
+  "y": 0,
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Za co serwer płaci",
+      "text": "Za niektóre rzeczy dostajesz RavenCoin. Nagroda wchodzi **prosto na konto**, nie do plecaka, a na czacie zobaczysz nazwę wyzwania i stan konta.\\\n\\\nKażde liczy się **raz na gracza**."
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Gdzie to widać",
+      "text": "Pełna lista jest w ekranie osiągnięć, w zakładce **Wyzwania**. Tutaj masz to samo, po kolei.\\\n\\\nIle płaci które — przekonasz się, kiedy je zdobędziesz."
+    }
+  ]
+}

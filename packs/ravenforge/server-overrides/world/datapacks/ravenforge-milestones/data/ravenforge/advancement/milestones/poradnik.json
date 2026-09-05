@@ -5,7 +5,7 @@
       "id": "modonomicon:modonomicon"
     },
     "title": "Przeczytane",
-    "description": "Otwórz wszystkie osiem wpisów poradnika.",
+    "description": "Otwórz wszystkie wpisy w Podstawach.",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

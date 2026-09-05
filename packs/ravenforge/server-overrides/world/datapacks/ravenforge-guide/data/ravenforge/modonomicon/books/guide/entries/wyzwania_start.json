@@ -1,0 +1,19 @@
+{
+  "category": "ravenforge:guide/categories/wyzwania",
+  "name": "Na początek",
+  "icon": "minecraft:iron_pickaxe",
+  "x": 0,
+  "y": 2,
+  "parents": [
+    {
+      "entry": "ravenforge:guide/entries/wyzwania"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Na początek",
+      "text": "Dwa, na pierwszy wieczór:\n\n- **Na dół** — odwiedź kopalnię\n- **Przeczytane** — otwórz wszystkie wpisy w Podstawach"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "category": "ravenforge:guide/categories/wyzwania",
+  "name": "Kosmos",
+  "icon": "ad_astra:moon_globe",
+  "x": 3,
+  "y": 4,
+  "parents": [
+    {
+      "entry": "ravenforge:guide/entries/wyzwania_start"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Pięć lądowań",
+      "text": "Po jednym za każdy świat, w kolejności, w jakiej się je otwiera:\n\n- **Księżyc**\n- **Mars**\n- **Wenus**\n- **Merkury**\n- **Glacio**"
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Czym się tam leci",
+      "text": "Rakietami z Ad Astry. Paliwo produkujesz sam i nikt ci go nie sprzedaje - bramką jest desh, ostrum i calorite, czyli to, co musisz wykopać.\\\n\\\nOrbity są wyłączone. Rakieta leci od razu na planetę."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "category": "ravenforge:guide/categories/wyzwania",
+  "name": "Głęboka woda",
+  "icon": "mekanism:sps_casing",
+  "x": 0,
+  "y": 4,
+  "parents": [
+    {
+      "entry": "ravenforge:guide/entries/wyzwania_start"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Głęboka woda",
+      "text": "Trzy po kolei i jedno obok:\n\n- **Rozszczepienie** — obudowa reaktora\n- **Supercritical Phase Shifter** — obudowa SPS\n- **Antymateria** — pierwsza pigułka\n- **Smok** — zabij Smoka Kresu"
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Smok wraca",
+      "text": "Smok nie jest jednorazowy. Na tym serwerze wraca co tydzień, więc jeśli ktoś cię ubiegł, poczekaj.\\\n\\\nWyzwanie liczy się raz, przy twoim pierwszym."
+    }
+  ]
+}
