@@ -194,6 +194,7 @@ async function validatePack(slug) {
   await validateBookLayout(slug);
   await validateBookText(slug);
   await validateBookPages(slug);
+  await validateMilestones(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -532,6 +533,14 @@ async function validateBookPages(slug) {
         fail(slug, `${file.relative} names parent "${parent.entry}", which is no entry in this book`);
       }
     }
+    // The same path rule again, and the same silence when it is wrong: a
+    // command_to_run_on_first_read that resolves to nothing simply does not run,
+    // and whatever the command was for — here, granting a milestone criterion —
+    // never happens for anybody.
+    const command = entry.command_to_run_on_first_read;
+    if (typeof command === 'string' && !known.has(command)) {
+      fail(slug, `${file.relative} runs "${command}" on first read, which is no command in this book`);
+    }
 
     const pages = Array.isArray(entry.pages) ? entry.pages : [];
     for (let i = 0; i < pages.length; i++) {
@@ -547,6 +556,89 @@ async function validateBookPages(slug) {
   if (checked > 0) {
     console.log(`  \x1b[32m✓\x1b[0m ${checked} inline book text(s) render and point where they say`);
   }
+}
+
+/**
+ * A milestone that pays nothing, and a payout for a milestone that does not
+ * exist, both fail in silence.
+ *
+ * The advancement decides WHEN, and kubejs/server_scripts/milestones.js decides
+ * WHAT IT IS WORTH, in two files that have to agree on a key and a title. An
+ * advancement with no row earns the player a toast and no money; a row with no
+ * advancement registers a listener for an id that will never fire. Neither
+ * writes a line to any log, and neither shows up until somebody actually
+ * reaches the milestone on a live server — which for half of these is weeks in.
+ *
+ * The titles are compared as well as the keys, because the payout message names
+ * the milestone: rename it in the datapack alone and the chat line goes on
+ * quoting the old name forever.
+ */
+async function validateMilestones(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'));
+  } catch {
+    return;
+  }
+  const advancements = files.filter(
+    (file) => /\/advancement\/milestones\/[^/]+\.json$/.test(file.relative),
+  );
+  const script = files.find((file) => file.relative.endsWith('kubejs/server_scripts/milestones.js'));
+  if (advancements.length === 0 && !script) return;
+
+  if (advancements.length === 0 || !script) {
+    fail(slug, 'milestones need both the advancements and milestones.js — one of the two is missing');
+    return;
+  }
+
+  const source = await fs.readFile(script.absolute, 'utf8');
+  const table = source.match(/const MS_MILESTONES = \{([\s\S]*?)\n {2}\}/);
+  if (!table) {
+    fail(slug, 'milestones.js has no MS_MILESTONES table this script can read — the payouts are ungated');
+    return;
+  }
+  const paid = new Map();
+  for (const row of table[1].matchAll(/(\w+): \{ rc: (\d+), name: '([^']*)' \}/g)) {
+    paid.set(row[1], { rc: Number(row[2]), name: row[3] });
+  }
+
+  const declared = new Map();
+  for (const file of advancements) {
+    const name = file.relative.replace(/^.*\//, '').replace(/\.json$/, '');
+    let advancement;
+    try {
+      advancement = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    declared.set(name, advancement);
+  }
+
+  const ids = new Set([...declared.keys()].map((name) => `ravenforge:milestones/${name}`));
+  for (const [name, advancement] of declared) {
+    if (advancement.parent !== undefined && !ids.has(advancement.parent)) {
+      fail(slug, `advancement ${name} names parent "${advancement.parent}", which is no advancement in this tab`);
+    }
+    if (name === 'root') continue;
+    const row = paid.get(name);
+    if (!row) {
+      fail(slug, `advancement ${name} has no row in milestones.js — earning it would pay nothing and say nothing`);
+      continue;
+    }
+    const title = advancement.display?.title;
+    if (typeof title === 'string' && title !== row.name) {
+      fail(slug, `advancement ${name} is titled "${title}" but milestones.js calls it "${row.name}" — the payout message would quote the wrong name`);
+    }
+  }
+  for (const name of paid.keys()) {
+    if (!declared.has(name)) {
+      fail(slug, `milestones.js pays for "${name}", which is no advancement — that listener can never fire`);
+    }
+  }
+
+  const total = [...paid.values()].reduce((sum, row) => sum + row.rc, 0);
+  console.log(`  \x1b[32m✓\x1b[0m ${paid.size} milestone(s) priced and wired, ${total.toLocaleString('pl-PL')} RavenCoin in total`);
 }
 
 /**
