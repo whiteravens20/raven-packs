@@ -42,8 +42,8 @@ touch, so those four can just as well be four separate pieces in four places.
 
 Forceload is a chunk kept ticking while nobody is near. It only runs while the
 owner is online (decision D17) — so on this server nothing you build works
-overnight, and that has to be said out loud in the guide book, because in a
-technical pack it is a surprise.
+overnight, which in a technical pack is a surprise. The guide book start_kit.js
+hands out says it on its fifth page for that reason.
 
 Gracz and Obywatel are granted by our own mod from `minecraft:play_time`, and
 they are **earned, never sold**: a rung with `playtimeMinutes` set cannot be
@@ -205,8 +205,10 @@ What each one adds, by node, is in the group files themselves. The shape:
 
     nowy          home / sethome / delhome / listhomes, home.limit.1,
                   back, afk, spawn, warp, warps, listwarps,
-                  rules, playtime, page, and ravenforge.rtp — the pack's own
-                  random teleport, kubejs/server_scripts/rtp.js
+                  rules, playtime, page, and the pack's own two:
+                  ravenforge.rtp for the random teleport
+                  (kubejs/server_scripts/rtp.js) and ravenforge.start
+                  for the starter kit (kubejs/server_scripts/start_kit.js)
     gracz         home.limit.2
     obywatel      home.limit.3
     technik       nothing new — it pays for ground, not for shortcuts
@@ -226,16 +228,26 @@ the two display commands are Administrator's alone. A warp is a permanent hole
 in the map's distances, and Budowniczy building the place a warp points at is a
 different job from deciding the world should have one.
 
-**Henny's kits are off, and the join kit is Starter Kit's job.** kitsEnabled is
-pinned false in HennyEssentials.json, and no kit node is granted to anybody —
-they would be dead weight. The reason is in the mod, not in taste: `/kit <name>`
-is registered with no requires() on the claiming branch at all, so every player
-who knows a kit's name can take it, while `/kits` — the browser — IS gated, on
+**Kits are one script now, not two mods.** kitsEnabled is pinned false in
+HennyEssentials.json, and no kit node is granted to anybody — they would be dead
+weight. The reason is in the mod, not in taste: `/kit <name>` is registered with
+no requires() on the claiming branch at all, so every player who knows a kit's
+name can take it, while `/kits` — the browser — IS gated, on
 command.he.listkits. Anyone can take, nobody can look. There is also no per-kit
 node anywhere in the mod, so "this kit for Technik only" cannot be expressed.
-Starter Kit covers the one job that mattered, the first-join kit, and does it on
-a Collective first-join tag rather than a command. Anything repeatable and
-valuable belongs in the shop, priced, where it can be gated properly.
+
+Starter Kit went out with it, and Collective with Starter Kit, which was the
+only thing in the pack that wanted it. Starter Kit did the first-join kit
+correctly and nothing else: once, off a Collective tag, no cooldown and no
+second helping. Neither mod could say "once an hour, and again after a death",
+so kubejs/server_scripts/start_kit.js says it instead — `/start`, gated on
+ravenforge.start, handing out stone tools without a sword or a hoe, four bread
+and the guide book. Its cooldown lives in the player's own NBT rather than in
+memory, so a restart does not refill it; a death clears it deliberately, because
+KubeJS copies persistent data across the respawn and would otherwise keep it.
+
+Anything repeatable and valuable still belongs in the shop, priced, where it can
+be gated properly.
 
 **tpa starts at Moderator.** Ordinary players do not get it, and neither does
 Budowniczy, who sits on the other branch. It is consent-based — the target

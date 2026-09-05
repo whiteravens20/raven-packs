@@ -17,6 +17,7 @@ permissions:
 - command.he.page
 - command.he.pcallback
 - ravenforge.rtp
+- ravenforge.start
 prefixes:
 - '&7[Nowy] ':
     priority: 10

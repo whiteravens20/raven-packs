@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-05T07:14:32.125Z",
+  "generatedAt": "2026-09-05T09:38:10.289Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -152,28 +152,6 @@
       "requiredDependencies": [],
       "sourceUrl": "https://github.com/Glitchfiend/TerraBlender/",
       "versionType": "beta"
-    },
-    {
-      "requestKey": "{\"slug\":\"collective\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
-      "kind": "mod",
-      "side": "both",
-      "clientSide": "optional",
-      "serverSide": "optional",
-      "id": "collective",
-      "name": "Collective",
-      "source": "modrinth",
-      "projectId": "e0M1UDsY",
-      "versionId": "4XRlrKGN",
-      "version": "1.21.1-8.39-fabric+forge+neo",
-      "fileName": "collective-1.21.1-8.39.jar",
-      "url": "https://cdn.modrinth.com/data/e0M1UDsY/versions/4XRlrKGN/collective-1.21.1-8.39.jar",
-      "size": 1061931,
-      "sha1": "b1153f03c97bccaa6bc11d6199f07f16ef4318ff",
-      "sha512": "5e8d257650b2ace041df4743172797dfa86faeaa3fa2db13890482f433b189bad037c4f5399b5b5b0e3e65fab0c0887ef65e5c5c24eba6c09da8f95ed3435b02",
-      "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [],
-      "sourceUrl": "https://github.com/Serilum/Collective",
-      "versionType": "release"
     },
     {
       "requestKey": "{\"slug\":\"rftools-base\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
@@ -2497,30 +2475,6 @@
       "license": "GPL-3.0-only",
       "requiredDependencies": [],
       "sourceUrl": "https://github.com/lucko/spark",
-      "versionType": "release"
-    },
-    {
-      "requestKey": "{\"slug\":\"starter-kit\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
-      "kind": "mod",
-      "side": "server",
-      "clientSide": "optional",
-      "serverSide": "required",
-      "id": "starter-kit",
-      "name": "Starter Kit",
-      "source": "modrinth",
-      "projectId": "6L3ydNi8",
-      "versionId": "OUsoZwOx",
-      "version": "1.21.1-8.1-fabric+forge+neo",
-      "fileName": "starterkit-1.21.1-8.1.jar",
-      "url": "https://cdn.modrinth.com/data/6L3ydNi8/versions/OUsoZwOx/starterkit-1.21.1-8.1.jar",
-      "size": 273623,
-      "sha1": "9dff28020422ddaf4d7f677888212df5c2f6fb9d",
-      "sha512": "baf3e243ff6cf408c62c964b7c13c2238e3310377bf7053b8b0209e2d6c4114b89c1bbc68b08b3a35aa7789bc1e547735403a71074017452b344ba3ebe8a1fdc",
-      "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [
-        "e0M1UDsY"
-      ],
-      "sourceUrl": "https://github.com/Serilum/Starter-Kit",
       "versionType": "release"
     },
     {
