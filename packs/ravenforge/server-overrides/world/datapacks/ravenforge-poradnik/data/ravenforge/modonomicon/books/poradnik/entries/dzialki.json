@@ -1,0 +1,29 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Działki",
+  "icon": "minecraft:oak_fence",
+  "x": 0,
+  "y": 4,
+  "parents": [
+    {
+      "entry": "ravenforge:poradnik/entries/komendy"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Zajmowanie terenu",
+      "text": "Teren zajmujesz mapą **Xaero** — modułem Open Parties and Claims. Otwierasz mapę, przełączasz się na tryb działek i klikasz chunki.\\\n\\\nRanga **Nowy** ma **4 chunki**."
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Co to jest chunk",
+      "text": "Chunk to kwadrat **16x16** kratek, na całą wysokość świata — od dna po niebo.\\\n\\\n**F3+G** rysuje siatkę chunków. Cztery chunki złożone w kwadrat to teren 32x32.\\\n\\\nNie muszą się stykać. Możesz mieć cztery kawałki w czterech różnych miejscach."
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Po co to komu",
+      "text": "Działka blokuje obcym:\n\n- stawianie i niszczenie bloków\n- otwieranie skrzyń i maszyn\n- maszyny obszarowe, które inaczej zjadłyby twoją bazę z sąsiedniej działki\n\nTo jedyna ochrona, jaką masz. Buduj **w** działce, nie obok niej."
+    }
+  ]
+}

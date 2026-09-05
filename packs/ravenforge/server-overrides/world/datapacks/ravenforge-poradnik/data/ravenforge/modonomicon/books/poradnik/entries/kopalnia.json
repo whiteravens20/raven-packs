@@ -1,0 +1,29 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Kopalnia",
+  "icon": "minecraft:iron_pickaxe",
+  "x": -3,
+  "y": 6,
+  "parents": [
+    {
+      "entry": "ravenforge:poradnik/entries/dom"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Osobny wymiar",
+      "text": "**/warp kopalnia**\\\n\\\nNie ma tam portalu — warp to jedyne wejście. To osobny świat, przeznaczony do rozkopania."
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Kasuje się co trzydzieści dni",
+      "text": "Kopalnia jest **usuwana i generowana od nowa** mniej więcej raz na trzydzieści dni, razem z działkami, które w niej stoją.\\\n\\\n**Nie buduj tam nic na stałe i nie zostawiaj tam niczego, czego ci szkoda.**"
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Tylko tam wolno burzyć",
+      "text": "Wyłącznie w kopalni działają:\n\n- Quarry i Chunk Destroyer\n- pompa (Advanced Pump)\n- **TNT** i wagonik z TNT\n- świder (Tunnel Bore)\n\nW każdym innym wymiarze postawienie ich albo odpalenie zostanie odrzucone.\\\n\\\nPowód jest jeden: to jedyne miejsce, gdzie zniszczony teren i tak zniknie przy najbliższym resecie."
+    }
+  ]
+}

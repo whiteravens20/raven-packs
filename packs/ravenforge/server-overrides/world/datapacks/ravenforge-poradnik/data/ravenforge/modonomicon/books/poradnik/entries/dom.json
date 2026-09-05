@@ -1,0 +1,19 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Dom",
+  "icon": "minecraft:red_bed",
+  "x": -3,
+  "y": 4,
+  "parents": [
+    {
+      "entry": "ravenforge:poradnik/entries/komendy"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Jeden dom na start",
+      "text": "**/sethome** stawia dom tam, gdzie stoisz. **/home** wraca.\\\n\\\nIle domów masz, zależy od rangi:\n\n- **Nowy** — jeden\n- **Gracz** — dwa\n- **Obywatel** — trzy\n\nRangi zdobywa się czasem w grze. Szczegóły we wpisie **Rangi**."
+    }
+  ]
+}

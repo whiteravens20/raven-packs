@@ -1,0 +1,19 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Witaj",
+  "icon": "minecraft:oak_sign",
+  "x": 0,
+  "y": 0,
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Białe Kruki: Forge",
+      "text": "Ten poradnik dostajesz razem z zestawem startowym, komendą **/start**.\\\n\\\nZestaw możesz wziąć **raz na godzinę**, a po śmierci od razu — bo to zestaw do wrócenia do roboty, a nie do walki. Dlatego są w nim narzędzia, chleb i ta książka, ale nie ma miecza ani motyki."
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Co tu jest",
+      "text": "Osiem wpisów, wszystkie o rzeczach, których gra sama nie powie.\\\n\\\nJeżeli czytasz tylko jeden, przeczytaj **Maszyny w nocy**. To jedyna zasada na tym serwerze, która potrafi kosztować całą noc pracy."
+    }
+  ]
+}

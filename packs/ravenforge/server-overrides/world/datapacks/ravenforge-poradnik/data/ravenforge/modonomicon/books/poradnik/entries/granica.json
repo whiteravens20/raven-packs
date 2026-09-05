@@ -1,0 +1,24 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Granica świata",
+  "icon": "minecraft:iron_bars",
+  "x": 0,
+  "y": 8,
+  "parents": [
+    {
+      "entry": "ravenforge:poradnik/entries/forceloady"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Ściana bez końca w górę",
+      "text": "Świat ma granicę i **nie da się jej przelecieć**. To nie jest ściana do pewnej wysokości — sięga od dna świata po nieskończoność.\\\n\\\nJetpack z Mekanismu, Meka-Suit i Jet Suit z Ad Astry zatrzymają się o nią tak samo jak chodzenie."
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "W każdym wymiarze",
+      "text": "Granica obowiązuje wszędzie: w Overworldzie, w Netherze, w Endzie, w kopalni oraz na wszystkich planetach i orbitach Ad Astry.\\\n\\\nJeżeli podejdziesz blisko, ekran zacznie czerwienieć. To ostrzeżenie, nie awaria."
+    }
+  ]
+}

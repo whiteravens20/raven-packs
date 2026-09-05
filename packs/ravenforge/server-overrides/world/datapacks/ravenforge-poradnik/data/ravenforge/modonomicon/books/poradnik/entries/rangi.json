@@ -1,0 +1,24 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Rangi",
+  "icon": "minecraft:gold_ingot",
+  "x": 3,
+  "y": 4,
+  "parents": [
+    {
+      "entry": "ravenforge:poradnik/entries/komendy"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Drabina",
+      "text": "Cztery szczeble, jeden za drugim:\n\n- **Nowy** — od wejścia\n- **Gracz** — 10 godzin w grze\n- **Obywatel** — 40 godzin w grze\n- **Technik** — za RavenCoin"
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Czego nie da się kupić",
+      "text": "Gracza i Obywatela dostajesz sam, za czas spędzony w grze. **Nikt ich nie sprzedaje** i nie da się ich przyspieszyć.\\\n\\\nKupić można tylko Technika, ostatni szczebel. Płaci się nim za **ziemię**, nie za skróty: więcej chunków i więcej chunków trzymanych w ruchu."
+    }
+  ]
+}

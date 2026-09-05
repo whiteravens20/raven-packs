@@ -1,0 +1,29 @@
+{
+  "category": "ravenforge:poradnik/categories/podstawy",
+  "name": "Komendy",
+  "icon": "minecraft:paper",
+  "x": 0,
+  "y": 2,
+  "parents": [
+    {
+      "entry": "ravenforge:poradnik/entries/powitanie"
+    }
+  ],
+  "pages": [
+    {
+      "type": "modonomicon:text",
+      "title": "Co masz na start",
+      "text": "Od pierwszego wejścia:\n\n- **/start** — zestaw i ten poradnik\n- **/spawn** — powrót na spawn\n- **/rtp** — losowe miejsce w świecie\n- **/back** — tam, skąd cię przeniosło"
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Dom i warpy",
+      "text": "Dom:\n\n- **/sethome**, **/home**\n- **/delhome**, **/listhomes**\n\nReszta:\n\n- **/warp**, **/warps**\n- **/rules**, **/playtime**, **/afk**"
+    },
+    {
+      "type": "modonomicon:text",
+      "title": "Czego nie ma",
+      "text": "**/tpa nie jest dla graczy.** To narzędzie moderacji, do dotarcia do kogoś, kto potrzebuje pomocy. Odległość ma na tym serwerze kosztować.\\\n\\\nDo szukania miejsca na bazę jest **/rtp**. Losuje punkt daleko od spawnu, omija cudze działki i sprawdza, czy da się tam bezpiecznie stanąć.\\\n\\\nWarpy stawia tylko administracja. Chodzić po nich może każdy."
+    }
+  ]
+}

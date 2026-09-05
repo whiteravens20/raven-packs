@@ -31,21 +31,13 @@
 // the flag straight off PlayerRespawnEvent.isEndConquered(), and killing the
 // dragon must not also pay out a kit.
 //
-// EVERY ITEM IS BUILT FROM AN OBJECT rather than an item string, and the book
-// is the reason. `Item.of` takes both, but the two routes are not equally safe:
-// a string is read by a Brigadier StringReader and DataComponentWrapper.
-// readPatch, so a page would have to survive SNBT escaping on top of the JSON
-// escaping it already needs — two layers of backslashes with no way to test
-// them short of booting a server. An object goes to ItemStack.CODEC instead,
-// which is `id` / `count` / `components`, and skips SNBT entirely. Traced
+// EVERY ITEM IS BUILT FROM AN OBJECT rather than an item string. `Item.of`
+// takes both — a string through a Brigadier StringReader and
+// DataComponentWrapper.readPatch, an object through ItemStack.CODEC, which is
+// `id` / `count` / `components` — and the object form is the one that needs no
+// second layer of quoting for a component value. One route for every item in
+// the kit, including the one that carries a component, beats two. Traced
 // through ItemWrapper.wrapResult in kubejs-neoforge-2101.7.2-build.374.
-//
-// The book's own shape, read out of WrittenBookContent rather than guessed:
-// `title` is capped at 32 characters by Codec.string(0, 32) and a longer one is
-// a hard parse failure; a page is a STRING holding a JSON text component, not a
-// JSON object, because PAGES_CODEC sits on ComponentSerialization.flatCodec;
-// and neither title nor page needs a `{raw: ...}` wrapper, because
-// Filterable.codec is a withAlternative that accepts the bare value.
 //
 // Wrapped in a function because KubeJS runs every server script in one shared
 // scope; see the same note in `rtp.js`.
@@ -76,85 +68,29 @@
     { id: 'minecraft:bread', count: 4 },
   ]
 
-  // A page is a JSON text component in a string, so a line break inside it is
-  // the two characters backslash-n and not a real newline — a raw newline
-  // inside a JSON string literal is a parse error. Written as '\\n' here, which
-  // is those two characters and nothing more.
-  const kitPage = lines => '{"text":"' + lines.join('\\n') + '"}'
-
-  // What a new player cannot work out from the game, in the order they meet it.
-  // Every fact here is one this pack actually sets: the commands are the ones
-  // `nowy` holds in luckperms/yaml-storage/groups/nowy.yml, the claim and home
-  // numbers are that file's, the mine's warp name is mine_warp.js's, and the
-  // gated blocks are mining_gate.js's list. The forceload page exists because
-  // docs/ranks.txt asks for it by name: in a technical pack, machines stopping
-  // when you log out is the surprise that costs somebody a night's work.
+  // THE GUIDE IS MODONOMICON'S BOOK, and the item that carries it is plain
+  // `modonomicon:modonomicon`. What makes it OUR book is one component.
+  // Measured in CreativeModeTabRegistry: the mod's own creative-tab entry is
+  // `new ItemStack(ItemRegistry.MODONOMICON)` with `DataComponentRegistry.
+  // BOOK_ID` set to the book's id, and nothing else — so that is exactly what
+  // this hands out. `book_id` is a bare ResourceLocation string, because
+  // DataComponentRegistry builds the type on `ResourceLocation.CODEC`.
   //
-  // Deliberately absent: the size of the world border. docs/world.txt sets it
-  // by hand on a live server and the pack ships no number, so printing one here
-  // would be a promise about a setting this file cannot see.
+  // ⚠ `model` in book.json does NOT choose the item. Modonomicon registers six
+  // items (`modonomicon`, four colours, `leaflet`) and `model` only picks the
+  // client-side look; every generated book stack is `modonomicon:modonomicon`.
+  // Handing out `modonomicon_purple` instead would give a book that renders but
+  // is not the one the tab builds.
+  //
+  // The book itself is a datapack: world/datapacks/ravenforge-poradnik/.
+  // Modonomicon loads books from `data/<ns>/modonomicon/books/<id>/`, splitting
+  // the resource path on `/` and taking the FIRST segment as the book id — so
+  // the string below and that directory name have to stay in step, and a typo
+  // in either yields an item that opens nothing.
   const KIT_BOOK = {
-    id: 'minecraft:written_book',
+    id: 'modonomicon:modonomicon',
     count: 1,
-    components: {
-      'minecraft:written_book_content': {
-        title: 'Poradnik startowy',
-        author: 'Białe Kruki',
-        resolved: true,
-        pages: [
-          kitPage([
-            'BIAŁE KRUKI', 'Forge', '',
-            'Poradnik startowy', '',
-            'Zestaw bierzesz', 'komendą /start.', '',
-            'Raz na godzinę,', 'a po śmierci', 'od razu.',
-          ]),
-          kitPage([
-            'KOMENDY', '',
-            '/start - zestaw', '/spawn - na spawn', '/rtp - losowo',
-            '/sethome, /home', '/delhome', '/listhomes', '/back',
-            '/warp, /warps', '/rules, /playtime', '/afk',
-          ]),
-          kitPage([
-            'DOM', '',
-            '/sethome stawia dom', 'tam gdzie stoisz,', '/home wraca.', '',
-            'Nowy ma jeden dom.', 'Gracz dwa,', 'Obywatel trzy.',
-          ]),
-          kitPage([
-            'DZIAŁKI', '',
-            'Teren zajmujesz', 'mapą Xaero - Open', 'Parties and Claims.', '',
-            'Nowy ma 4 chunki.', 'Chunk to 16x16', 'na całą wysokość.',
-            'Pokaże go F3+G.', '', 'Nie muszą się', 'stykać.',
-          ]),
-          kitPage([
-            'MASZYNY W NOCY', '',
-            'Chunk trzymany', 'w ruchu działa', 'tylko gdy jesteś', 'online.', '',
-            'Gdy się wylogujesz,', 'wszystko staje.', '',
-            'Nowy ma 0 takich', 'chunków.',
-          ]),
-          kitPage([
-            'KOPALNIA', '',
-            '/warp kopalnia', '',
-            'Co trzydzieści dni', 'jest kasowana', 'i robi się od nowa.',
-            'Nie buduj tam nic', 'na stałe.', '',
-            'Quarry i TNT', 'działają tylko tam.',
-          ]),
-          kitPage([
-            'RANGI', '',
-            'Nowy', 'Gracz - 10 h gry', 'Obywatel - 40 h gry',
-            'Technik - za', 'RavenCoin', '',
-            'Gracza i Obywatela', 'dostajesz sam,', 'za czas w grze.',
-            'Nikt ich nie', 'sprzedaje.',
-          ]),
-          kitPage([
-            'GRANICA ŚWIATA', '',
-            'Świat ma granicę', 'i nie da się jej', 'przelecieć - to',
-            'ściana bez końca', 'w górę.', '',
-            'Jetpack, Meka-Suit', 'i Jet Suit też', 'się o nią',
-            'zatrzymają.',
-          ]),
-        ],
-      },
-    },
+    components: { 'modonomicon:book_id': 'ravenforge:poradnik' },
   }
 
   // A permission check must never take the command down with it. Copied in
