@@ -274,13 +274,17 @@ trap ravenclassic documents applies here: LuckPerms reads `home.limit.*` as
 every rung at once, the home ladder quietly stops existing, and it still looks
 like it is working.
 
-Two gaps against ravenclassic, neither invented away:
+One gap against ravenclassic, not invented away:
 
-  * **no /rtp.** Henny has no random-teleport node at all. On ravenclassic that
-    is how a new player finds somewhere to put a first claim. Here they walk.
   * **no /nickname of Henny's own.** playername-styler ships one, but it is
     gated at op level 2, so it is effectively staff-only until something grants
     it otherwise.
+
+Henny's missing /rtp was the second gap and is not one any more. The mod has no
+random-teleport node at all, so the pack writes the command itself in
+kubejs/server_scripts/rtp.js and grants ravenforge.rtp to nowy — which is also
+why two of the four nodes in the table above are the pack's own rather than
+Henny's.
 
 TARGET PROTECTION IS NOT IN THIS MOD. Henny's Ban and Mute never ask what rank
 their target holds — measured in the jar, neither class touches
