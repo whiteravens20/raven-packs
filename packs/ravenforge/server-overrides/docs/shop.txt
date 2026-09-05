@@ -112,7 +112,7 @@ table in Industrial Foregoing lists ores from mods that are not here.
     red          redstone (weight 32)                          5 000
     white        nether quartz                                 2 500
     purple       lead                                          2 500
-    gray         silver                                          800
+    gray         silver, AD ASTRA OIL                          2 500
     orange       copper                                          800
     blue         lapis                                           800
     black        coal                                            400
@@ -122,6 +122,17 @@ table in Industrial Foregoing lists ores from mods that are not here.
 
     yellow       GOLD                                        NEVER SELL
     light_blue   DIAMOND                                     NEVER SELL
+
+Gray is the one row Ad Astra moved. The Giselle addon adds a laser drill recipe
+whose catalyst is the gray lens and whose output is ad_astra:oil, so the same
+lens that was priced for silver now also taps oil — and because the pack's world
+datapack puts ad_astra:oil into #c:crude_oil, that oil feeds Immersive
+Petroleum's tree as well as Ad Astra's refinery. One purchase, two tech trees.
+It is not a monopoly, which is what keeps the price at 2 500 rather than in the
+five-figure band: oil wells generate normally and the mining dimension renews
+them every cycle, so anyone who does not want to pay can go pump one. What the
+lens sells is passive and endless and at home. The recipe is also placed —
+depth 20 to 60, and only in ocean or desert biomes.
 
 Brown is not really a lens, it is a netherite tap, and it is priced with the
 rank rather than with the other lenses. Behind the Technik gate the whole thing
