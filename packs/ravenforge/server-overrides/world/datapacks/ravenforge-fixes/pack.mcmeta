@@ -1,0 +1,6 @@
+{
+  "pack": {
+    "pack_format": 48,
+    "description": "White Ravens Forge \u2014 compatibility fixes for other mods' data files. Ten Silent Gear recipes, republished with their mod_loaded guard spelled the way NeoForge 1.21 reads it."
+  }
+}
