@@ -124,6 +124,14 @@
     // Immersive Petroleum — the molotov. Napalm is a fluid and goes by id.
     'immersivepetroleum:molotov',
 
+    // Silent Gear's magnetic upgrade. One craft puts the trait at level 5, the
+    // maximum, on any gear type, and the effect moves every ItemEntity within
+    // three blocks whose pickup delay has run out — measured in
+    // ItemMagnetTraitEffect, which checks only `hasPickUpDelay` and the
+    // `PreventRemoteMovement` tag. There is no owner test and no claim test, so
+    // it reaches another player's death drop and anything lying in a stall.
+    'silentgear:magnetic_upgrade',
+
     // Blast strength 6, stronger than TNT, and its only real use is summoning
     // the dragon — which is the server's job, not a player's (D20).
     'minecraft:end_crystal',
