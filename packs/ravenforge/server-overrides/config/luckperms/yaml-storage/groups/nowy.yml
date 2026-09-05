@@ -12,8 +12,6 @@ permissions:
 - command.he.warp
 - command.he.warps
 - command.he.listwarps
-- command.he.kit
-- command.he.kits
 - command.he.rules
 - command.he.playtime
 - command.he.page

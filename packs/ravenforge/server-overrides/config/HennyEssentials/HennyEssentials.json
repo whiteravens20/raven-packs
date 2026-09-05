@@ -11,6 +11,7 @@
     "afkConfigs": { "enableAFKKick": false }
   },
   "commandConfigs": {
-    "teleportConfigs": { "defaultNumberOfHomes": 1 }
+    "teleportConfigs": { "defaultNumberOfHomes": 1 },
+    "kitConfigs": { "kitsEnabled": false }
   }
 }

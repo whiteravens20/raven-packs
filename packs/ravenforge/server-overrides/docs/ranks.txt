@@ -191,7 +191,7 @@ Four ranks, ravenclassic's, appointed rather than earned:
 
     Budowniczy      ordinary player + building tools and warp management
     Moderator       ordinary player + moderation
-    Administrator   Moderator + Budowniczy + kits, banned items, reloads
+    Administrator   Moderator + Budowniczy + banned items, reloads
     Architekt       everything, the only account with op
 
 Inheritance is a diamond and it is deliberate: Budowniczy and Moderator both
@@ -204,7 +204,7 @@ Moderator does not inherit fly.
 What each one adds, by node, is in the group files themselves. The shape:
 
     nowy          home / sethome / delhome / listhomes, home.limit.1,
-                  back, afk, spawn, warp, warps, listwarps, kit, kits,
+                  back, afk, spawn, warp, warps, listwarps,
                   rules, playtime, page, and ravenforge.rtp — the pack's own
                   random teleport, kubejs/server_scripts/rtp.js
     gracz         home.limit.2
@@ -214,8 +214,8 @@ What each one adds, by node, is in the group files themselves. The shape:
                   (anvil, craftingtable, stonecutter…)
     moderator     ban / tempban / unban, mute / tempmute / unmute, the uuid
                   variants, vanish, invsee, viewechest, broadcsat, and tpa
-    administrator setspawn, warp management, the kit-editing set, banned
-                  items, tokens, the three reloads
+    administrator setspawn, warp management, banned items, tokens, the
+                  three reloads
     architekt     nothing of its own; it is the sum of the two branches
 
 Two of those placements are decisions rather than defaults.
@@ -225,6 +225,17 @@ nowy, so everybody travels the network — but setwarp, delwarp, settempwarp and
 the two display commands are Administrator's alone. A warp is a permanent hole
 in the map's distances, and Budowniczy building the place a warp points at is a
 different job from deciding the world should have one.
+
+**Henny's kits are off, and the join kit is Starter Kit's job.** kitsEnabled is
+pinned false in HennyEssentials.json, and no kit node is granted to anybody —
+they would be dead weight. The reason is in the mod, not in taste: `/kit <name>`
+is registered with no requires() on the claiming branch at all, so every player
+who knows a kit's name can take it, while `/kits` — the browser — IS gated, on
+command.he.listkits. Anyone can take, nobody can look. There is also no per-kit
+node anywhere in the mod, so "this kit for Technik only" cannot be expressed.
+Starter Kit covers the one job that mattered, the first-join kit, and does it on
+a Collective first-join tag rather than a command. Anything repeatable and
+valuable belongs in the shop, priced, where it can be gated properly.
 
 **tpa starts at Moderator.** Ordinary players do not get it, and neither does
 Budowniczy, who sits on the other branch. It is consent-based — the target
