@@ -193,6 +193,7 @@ async function validatePack(slug) {
   await validateBookItems(slug, pack);
   await validateBookLayout(slug);
   await validateBookText(slug);
+  await validateBookPages(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -400,6 +401,38 @@ async function validateBookLayout(slug) {
  * Both are invisible in the source and only show up in game, which is what
  * makes them worth a gate rather than a habit.
  */
+/**
+ * The two rules above, applied to one string.
+ *
+ * Shared because the text reaches the same renderer by two routes: behind a
+ * lang key in a resource pack (ravenclassic) and inline in the page's own JSON
+ * (ravenforge, whose Modonomicon reads `text` as a literal when it is not a
+ * translation key). The renderer does not care which, so neither does this.
+ */
+function checkMarkdownBreaks(slug, where, value) {
+  const isListItem = (line) => /^\s*[-*+]\s+/.test(line);
+  const lines = value.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim() !== '') continue;
+    const before = [...lines.slice(0, i)].reverse().find((line) => line.trim() !== '');
+    const after = lines.slice(i + 1).find((line) => line.trim() !== '');
+    if (before && after && !isListItem(before) && !isListItem(after)) {
+      fail(
+        slug,
+        `${where} splits paragraphs with a blank line, which Modonomicon renders as ` +
+          'nothing — end the line with a backslash instead',
+      );
+    }
+  }
+
+  for (let i = 0; i < lines.length - 1; i++) {
+    if (lines[i].endsWith('\\') && isListItem(lines[i + 1])) {
+      fail(slug, `${where} ends a line with a backslash right before a list, which renders as a literal "\\"`);
+    }
+  }
+}
+
 async function validateBookText(slug) {
   let files;
   try {
@@ -410,7 +443,6 @@ async function validateBookText(slug) {
   const langs = files.filter((file) => /\/lang\/[a-z]{2}_[a-z]{2}\.json$/.test(file.relative));
   if (langs.length === 0) return;
 
-  const isListItem = (line) => /^\s*[-*+]\s+/.test(line);
   const keysets = new Map();
   let checked = 0;
 
@@ -427,26 +459,7 @@ async function validateBookText(slug) {
     for (const [key, value] of Object.entries(lang)) {
       if (!key.endsWith('.text') || typeof value !== 'string') continue;
       checked++;
-      const lines = value.split('\n');
-
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim() !== '') continue;
-        const before = [...lines.slice(0, i)].reverse().find((line) => line.trim() !== '');
-        const after = lines.slice(i + 1).find((line) => line.trim() !== '');
-        if (before && after && !isListItem(before) && !isListItem(after)) {
-          fail(
-            slug,
-            `${file.relative}: ${key} splits paragraphs with a blank line, which Modonomicon renders as ` +
-              'nothing — end the line with a backslash instead',
-          );
-        }
-      }
-
-      for (let i = 0; i < lines.length - 1; i++) {
-        if (lines[i].endsWith('\\') && isListItem(lines[i + 1])) {
-          fail(slug, `${file.relative}: ${key} ends a line with a backslash right before a list, which renders as a literal "\\"`);
-        }
-      }
+      checkMarkdownBreaks(slug, `${file.relative}: ${key}`, value);
     }
   }
 
@@ -462,6 +475,78 @@ async function validateBookText(slug) {
   }
 
   if (checked > 0) console.log(`  \x1b[32m✓\x1b[0m ${checked} guide book text(s) render with their paragraphs separated`);
+}
+
+/**
+ * ravenforge writes its book inline, and its ids come from the file path.
+ *
+ * Modonomicon 1.120.4 has no `id` field on an entry at all — BookDataManager
+ * splits the resource path on "/", takes the first segment as the book id and
+ * keeps the whole location as the entry's own. So `<ns>:<book>/<rest>` IS the
+ * id, and a `category` or a `parents` entry that names anything else points at
+ * nothing. Its page text is inline too, read as a literal when it is not a
+ * translation key, which puts it out of reach of the lang-file check above and
+ * in reach of exactly the same two renderer traps.
+ *
+ * An entry that declares its own `id` belongs to the older layout and is left
+ * to validateBookLayout — the two Modonomicon versions in this repo disagree
+ * about where an id comes from, and only one of them can be right per pack.
+ */
+async function validateBookPages(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'));
+  } catch {
+    return;
+  }
+  const inBooks = files.filter(
+    (file) => /\/modonomicon\/books\//.test(file.relative) && file.relative.endsWith('.json'),
+  );
+  if (inBooks.length === 0) return;
+
+  const idOf = (relative) => {
+    const match = relative.match(/\/data\/([^/]+)\/modonomicon\/books\/(.+)\.json$/);
+    return match ? `${match[1]}:${match[2]}` : null;
+  };
+  const known = new Set(inBooks.map((file) => idOf(file.relative)).filter(Boolean));
+
+  let checked = 0;
+  for (const file of inBooks) {
+    const id = idOf(file.relative);
+    if (id === null || !/\/entries\//.test(file.relative)) continue;
+
+    let entry;
+    try {
+      entry = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    if (entry.id !== undefined) continue;
+
+    if (typeof entry.category === 'string' && !known.has(entry.category)) {
+      fail(slug, `${file.relative} names category "${entry.category}", which is no file in this book — the entry renders nowhere`);
+    }
+    for (const parent of entry.parents ?? []) {
+      if (typeof parent.entry === 'string' && !known.has(parent.entry)) {
+        fail(slug, `${file.relative} names parent "${parent.entry}", which is no entry in this book`);
+      }
+    }
+
+    const pages = Array.isArray(entry.pages) ? entry.pages : [];
+    for (let i = 0; i < pages.length; i++) {
+      for (const field of ['title', 'text']) {
+        const value = pages[i][field];
+        if (typeof value !== 'string') continue;
+        checked++;
+        checkMarkdownBreaks(slug, `${file.relative}: page ${i + 1} ${field}`, value);
+      }
+    }
+  }
+
+  if (checked > 0) {
+    console.log(`  \x1b[32m✓\x1b[0m ${checked} inline book text(s) render and point where they say`);
+  }
 }
 
 /**
