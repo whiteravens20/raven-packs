@@ -82,7 +82,7 @@
   // Handing out `modonomicon_purple` instead would give a book that renders but
   // is not the one the tab builds.
   //
-  // The book itself is a datapack: world/datapacks/ravenforge-poradnik/.
+  // The book itself is a datapack: world/datapacks/ravenforge-guide/.
   // Modonomicon loads books from `data/<ns>/modonomicon/books/<id>/`, splitting
   // the resource path on `/` and taking the FIRST segment as the book id — so
   // the string below and that directory name have to stay in step, and a typo
