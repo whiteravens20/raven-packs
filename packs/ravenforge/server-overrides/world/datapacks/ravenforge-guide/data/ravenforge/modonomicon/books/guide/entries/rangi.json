@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Rangi",
   "icon": "minecraft:gold_ingot",
   "x": 3,
   "y": 4,
   "parents": [
     {
-      "entry": "ravenforge:poradnik/entries/komendy"
+      "entry": "ravenforge:guide/entries/komendy"
     }
   ],
   "pages": [
@@ -21,5 +21,5 @@
       "text": "Gracza i Obywatela dostajesz sam, za czas spędzony w grze. **Nikt ich nie sprzedaje** i nie da się ich przyspieszyć.\\\n\\\nKupić można tylko Technika, ostatni szczebel. Płaci się nim za **ziemię**, nie za skróty: więcej chunków i więcej chunków trzymanych w ruchu."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_rangi"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_rangi"
 }

@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Maszyny w nocy",
   "icon": "minecraft:redstone_torch",
   "x": 0,
   "y": 6,
   "parents": [
     {
-      "entry": "ravenforge:poradnik/entries/dzialki"
+      "entry": "ravenforge:guide/entries/dzialki"
     }
   ],
   "pages": [
@@ -21,5 +21,5 @@
       "text": "Planuj maszyny pod swoją obecność, nie pod dobę. Proces, który ma trwać osiem godzin, potrwa osiem godzin **twojej gry**.\\\n\\\nRanga **Nowy** ma **0** takich chunków. Pierwsze dwa dostajesz jako **Gracz**.\\\n\\\nTo nie jest awaria. Tak jest ustawione celowo, żeby serwer na piętnaście miejsc nie liczył w kółko cudzych fabryk."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_forceloady"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_forceloady"
 }

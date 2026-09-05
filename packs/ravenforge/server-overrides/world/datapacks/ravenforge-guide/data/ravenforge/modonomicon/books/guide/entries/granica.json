@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Granica świata",
   "icon": "minecraft:iron_bars",
   "x": 0,
   "y": 8,
   "parents": [
     {
-      "entry": "ravenforge:poradnik/entries/forceloady"
+      "entry": "ravenforge:guide/entries/forceloady"
     }
   ],
   "pages": [
@@ -21,5 +21,5 @@
       "text": "Granica obowiązuje wszędzie: w Overworldzie, w Netherze, w Endzie, w kopalni oraz na wszystkich planetach i orbitach Ad Astry.\\\n\\\nJeżeli podejdziesz blisko, ekran zacznie czerwienieć. To ostrzeżenie, nie awaria."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_granica"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_granica"
 }

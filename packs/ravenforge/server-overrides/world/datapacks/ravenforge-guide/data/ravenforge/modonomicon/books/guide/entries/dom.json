@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Dom",
   "icon": "minecraft:red_bed",
   "x": -3,
   "y": 4,
   "parents": [
     {
-      "entry": "ravenforge:poradnik/entries/komendy"
+      "entry": "ravenforge:guide/entries/komendy"
     }
   ],
   "pages": [
@@ -16,5 +16,5 @@
       "text": "**/sethome** stawia dom tam, gdzie stoisz. **/home** wraca.\\\n\\\nIle domów masz, zależy od rangi:\n\n- **Nowy** — jeden\n- **Gracz** — dwa\n- **Obywatel** — trzy\n\nRangi zdobywa się czasem w grze. Szczegóły we wpisie **Rangi**."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_dom"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_dom"
 }

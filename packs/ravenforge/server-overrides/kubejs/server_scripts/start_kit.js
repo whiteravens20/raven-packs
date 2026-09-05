@@ -90,7 +90,7 @@
   const KIT_BOOK = {
     id: 'modonomicon:modonomicon',
     count: 1,
-    components: { 'modonomicon:book_id': 'ravenforge:poradnik' },
+    components: { 'modonomicon:book_id': 'ravenforge:guide' },
   }
 
   // A permission check must never take the command down with it. Copied in

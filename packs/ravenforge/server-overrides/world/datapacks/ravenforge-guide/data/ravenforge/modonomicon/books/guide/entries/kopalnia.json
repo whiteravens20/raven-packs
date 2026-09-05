@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Kopalnia",
   "icon": "minecraft:iron_pickaxe",
   "x": -3,
   "y": 6,
   "parents": [
     {
-      "entry": "ravenforge:poradnik/entries/dom"
+      "entry": "ravenforge:guide/entries/dom"
     }
   ],
   "pages": [
@@ -26,5 +26,5 @@
       "text": "Wyłącznie w kopalni działają:\n\n- Quarry i Chunk Destroyer\n- pompa (Advanced Pump)\n- **TNT** i wagonik z TNT\n- świder (Tunnel Bore)\n\nW każdym innym wymiarze postawienie ich albo odpalenie zostanie odrzucone.\\\n\\\nPowód jest jeden: to jedyne miejsce, gdzie zniszczony teren i tak zniknie przy najbliższym resecie."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_kopalnia"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_kopalnia"
 }

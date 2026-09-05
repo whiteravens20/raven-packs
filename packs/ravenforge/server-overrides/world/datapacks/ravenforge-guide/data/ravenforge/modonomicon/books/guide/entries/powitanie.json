@@ -1,5 +1,5 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Witaj",
   "icon": "minecraft:oak_sign",
   "x": 0,
@@ -16,5 +16,5 @@
       "text": "Osiem wpisów, wszystkie o rzeczach, których gra sama nie powie.\\\n\\\nJeżeli czytasz tylko jeden, przeczytaj **Maszyny w nocy**. To jedyna zasada na tym serwerze, która potrafi kosztować całą noc pracy."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_powitanie"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_powitanie"
 }

@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:poradnik/categories/podstawy",
+  "category": "ravenforge:guide/categories/podstawy",
   "name": "Działki",
   "icon": "minecraft:oak_fence",
   "x": 0,
   "y": 4,
   "parents": [
     {
-      "entry": "ravenforge:poradnik/entries/komendy"
+      "entry": "ravenforge:guide/entries/komendy"
     }
   ],
   "pages": [
@@ -26,5 +26,5 @@
       "text": "Działka blokuje obcym:\n\n- stawianie i niszczenie bloków\n- otwieranie skrzyń i maszyn\n- maszyny obszarowe, które inaczej zjadłyby twoją bazę z sąsiedniej działki\n\nTo jedyna ochrona, jaką masz. Buduj **w** działce, nie obok niej."
     }
   ],
-  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_dzialki"
+  "command_to_run_on_first_read": "ravenforge:guide/commands/read_dzialki"
 }

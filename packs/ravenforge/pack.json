@@ -104,7 +104,7 @@
     { "slug": "jade-addons-forge", "reason": "Teaches Jade to read the modded machines" },
     { "slug": "jade", "reason": "What am I looking at — block and machine tooltips" },
     { "slug": "appleskin", "reason": "Shows saturation and what food actually does" },
-    { "slug": "modonomicon", "reason": "Carries the in-game guide, as in White Ravens Classic. The book is world/datapacks/ravenforge-guide/ and the starter kit hands it out: the item is plain modonomicon:modonomicon with the modonomicon:book_id component set to ravenforge:poradnik, which is what the mod's own creative tab builds. Required on both sides — the server loads the datapack and syncs it, the client renders it" },
+    { "slug": "modonomicon", "reason": "Carries the in-game guide, as in White Ravens Classic. The book is world/datapacks/ravenforge-guide/ and the starter kit hands it out: the item is plain modonomicon:modonomicon with the modonomicon:book_id component set to ravenforge:guide, which is what the mod's own creative tab builds. Required on both sides — the server loads the datapack and syncs it, the client renders it" },
 
     { "slug": "sodium", "reason": "Rendering engine rewrite — the single biggest FPS win. Sodium 0.6 runs on NeoForge; Embeddium is no longer needed" },
     { "slug": "reeses-sodium-options", "reason": "Nicer Sodium options screen" },
