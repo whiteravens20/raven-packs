@@ -585,7 +585,14 @@ async function validateMilestones(slug) {
   } catch {
     return;
   }
-  const advancements = files.filter(
+  // Every advancement in the pack, so a parent can be resolved wherever its file
+  // lives — an advancement's parent is a ResourceLocation and does not care.
+  // Only the ones under milestones/ have to carry a price, though: the Council's
+  // hidden one CHARGES, and lives outside that folder for exactly that reason.
+  const allAdvancements = files.filter(
+    (file) => /\/advancement\/.+\.json$/.test(file.relative),
+  );
+  const advancements = allAdvancements.filter(
     (file) => /\/advancement\/milestones\/[^/]+\.json$/.test(file.relative),
   );
   const script = files.find((file) => file.relative.endsWith('kubejs/server_scripts/milestones.js'));
@@ -608,8 +615,9 @@ async function validateMilestones(slug) {
   }
 
   const declared = new Map();
-  for (const file of advancements) {
-    const name = file.relative.replace(/^.*\//, '').replace(/\.json$/, '');
+  const ids = new Set();
+  for (const file of allAdvancements) {
+    const id = file.relative.match(/\/data\/([^/]+)\/advancement\/(.+)\.json$/);
     let advancement;
     try {
       advancement = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
@@ -617,15 +625,19 @@ async function validateMilestones(slug) {
       fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
       continue;
     }
-    declared.set(name, advancement);
+    if (id) ids.add(`${id[1]}:${id[2]}`);
+    if (advancements.includes(file)) {
+      declared.set(file.relative.replace(/^.*\//, '').replace(/\.json$/, ''), advancement);
+    } else if (advancement.parent !== undefined) {
+      declared.set(`\u0000${id ? `${id[1]}:${id[2]}` : file.relative}`, advancement);
+    }
   }
 
-  const ids = new Set([...declared.keys()].map((name) => `ravenforge:milestones/${name}`));
   for (const [name, advancement] of declared) {
     if (advancement.parent !== undefined && !ids.has(advancement.parent)) {
-      fail(slug, `advancement ${name} names parent "${advancement.parent}", which is no advancement in this tab`);
+      fail(slug, `advancement ${name.replace('\u0000', '')} names parent "${advancement.parent}", which does not exist`);
     }
-    if (name === 'root') continue;
+    if (name === 'root' || name.startsWith('\u0000')) continue;
     const row = paid.get(name);
     if (!row) {
       fail(slug, `advancement ${name} has no row in milestones.js — earning it would pay nothing and say nothing`);
@@ -672,6 +684,7 @@ async function validateMilestones(slug) {
     }
   }
   for (const [name, advancement] of declared) {
+    if (name.startsWith('\u0000')) continue;
     for (const [criterion, body] of Object.entries(advancement.criteria ?? {})) {
       if (body.trigger !== 'minecraft:impossible') continue;
       if (!granted.has(`${name}/${criterion}`)) {
