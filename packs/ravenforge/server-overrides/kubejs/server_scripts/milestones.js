@@ -38,10 +38,19 @@
 //
 // The amounts are calibrated in docs/shop.txt terms, not picked: one amethyst
 // shard is nine RavenCoin, a good geode is about 900 an hour, and the whole
-// ladder below comes to 23 000 — roughly 26 hours of that, 8% of the 288 000
+// ladder below comes to 31 500 — roughly 35 hours of that, 11% of the 288 000
 // catalogue, and inside the 15 000-40 000 band the file gives for a median
 // active player. Nothing here repeats, so no amount of play can turn it into
 // the "somebody found a printer" alarm.
+//
+// The three armour and storage entries were measured before they were priced.
+// A MekaSuit piece takes a netherite piece, two polonium pellets, an ultimate
+// control circuit, an induction cell and four HDPE sheets — four of those means
+// a whole netherite set and a fission reactor actually running, not a casing on
+// the ground. A Jet Suit sits on a full netherite space suit plus calorite
+// plates, blocks, an engine, a tank and two etrionic capacitors, which is the
+// end of Ad Astra's metal ladder. Both are priced level with the top of their
+// own branch and neither is bought by the shop at any price.
 //
 // Wrapped in a function because KubeJS runs every server script in one shared
 // scope; see the same note in `rtp.js`.
@@ -70,13 +79,21 @@
     reaktor: { rc: 2000, name: 'Rozszczepienie' },
     sps: { rc: 2000, name: 'Supercritical Phase Shifter' },
     antymateria: { rc: 3000, name: 'Antymateria' },
+    mekasuit: { rc: 3000, name: 'Niezniszczalny' },
     smok: { rc: 2000, name: 'Smok' },
+
+    // 2 500 rather than the 3 000 its neighbours get, and the difference is the
+    // point: section 4 of docs/shop.txt already buys this cell back for 25 000,
+    // so the milestone marks the build rather than paying for it. The three at
+    // 3 000 are the ones the shop pays nothing for, ever.
+    mega_cell: { rc: 2500, name: 'Przechować cały świat' },
 
     ksiezyc: { rc: 1500, name: 'Księżyc' },
     mars: { rc: 2000, name: 'Mars' },
     wenus: { rc: 2500, name: 'Wenus' },
     merkury: { rc: 2500, name: 'Merkury' },
     glacio: { rc: 3000, name: 'Glacio' },
+    jetsuit: { rc: 3000, name: 'Iron Man' },
   }
 
   // Thousands separated by a space, which is how Polish writes them and how

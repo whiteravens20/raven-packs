@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/siec_me",
+  "display": {
+    "icon": {
+      "id": "megacells:item_storage_cell_256m"
+    },
+    "title": "Przechować cały świat",
+    "description": "Zrób MEGA 256M Item Cell.",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "komorka": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "megacells:item_storage_cell_256m"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
