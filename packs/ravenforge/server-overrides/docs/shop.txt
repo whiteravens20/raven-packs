@@ -232,6 +232,29 @@ player-hours that needs about 960 RavenCoin an hour of faucet. A committed
 player earns around 800. The two numbers meeting is the whole calibration: over
 one season, a dedicated player can buy the catalogue almost exactly once.
 
+A THIRD FAUCET, ADDED AFTER THIS CALIBRATION AND KEPT SMALL. Fifteen milestones
+— world/datapacks/ravenforge-milestones/, priced in
+kubejs/server_scripts/milestones.js — pay 23 000 in total to a player who
+finishes every one of them, once each. That is about 2 550 shards, or
+twenty-six hours of a good geode: eight per cent of the catalogue above, and
+inside the median band in the table below. It cannot become the printer in the
+second alarm, because nothing in it repeats — an advancement is earned once and
+the game itself remembers who has earned it.
+
+What it buys is direction rather than income. The buy-back in section 4 starts
+at early endgame and pays nothing before it, and it pays nothing at all for the
+one large thing in this pack with no economic pull of its own: the five planets.
+Exactly half the milestone money sits there, deliberately, so RavenCoin flows
+TOWARDS space rather than being charged for reaching it — which is the other
+half of the decision that rocket fuel has no price.
+
+⚠ It is also the only faucet that consumes no amethyst, so it dilutes the anchor
+in section 1 by exactly what it pays. 23 000 against a lifetime faucet near 2.9
+million is a rounding error, and it is written down rather than hidden: each
+payout goes on the statement as ADJUST with `milestone:<key>` in the note, so
+/rc history tells it apart from a shop sale even though the ledger has no kind
+of its own for a reward yet.
+
     total supply, target        300 000 - 600 000
     median active player         15 000 -  40 000
     the richest                  up to   400 000

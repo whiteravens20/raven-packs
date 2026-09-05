@@ -15,5 +15,6 @@
       "title": "Co tu jest",
       "text": "Osiem wpisów, wszystkie o rzeczach, których gra sama nie powie.\\\n\\\nJeżeli czytasz tylko jeden, przeczytaj **Maszyny w nocy**. To jedyna zasada na tym serwerze, która potrafi kosztować całą noc pracy."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_powitanie"
 }

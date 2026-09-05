@@ -20,5 +20,6 @@
       "title": "Co z tym zrobić",
       "text": "Planuj maszyny pod swoją obecność, nie pod dobę. Proces, który ma trwać osiem godzin, potrwa osiem godzin **twojej gry**.\\\n\\\nRanga **Nowy** ma **0** takich chunków. Pierwsze dwa dostajesz jako **Gracz**.\\\n\\\nTo nie jest awaria. Tak jest ustawione celowo, żeby serwer na piętnaście miejsc nie liczył w kółko cudzych fabryk."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_forceloady"
 }

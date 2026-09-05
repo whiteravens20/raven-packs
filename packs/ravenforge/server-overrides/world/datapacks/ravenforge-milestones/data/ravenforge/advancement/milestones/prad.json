@@ -1,0 +1,37 @@
+{
+  "parent": "ravenforge:milestones/root",
+  "display": {
+    "icon": {
+      "id": "mekanismgenerators:heat_generator"
+    },
+    "title": "Pierwszy prąd",
+    "description": "Zdobądź dowolny generator — Mekanism albo Immersive Engineering.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "generator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mekanismgenerators:heat_generator",
+              "mekanismgenerators:solar_generator",
+              "mekanismgenerators:wind_generator",
+              "mekanismgenerators:bio_generator",
+              "mekanismgenerators:gas_burning_generator",
+              "immersiveengineering:dynamo",
+              "immersiveengineering:windmill",
+              "immersiveengineering:watermill",
+              "immersiveengineering:thermoelectric_generator",
+              "immersiveengineering:diesel_generator"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

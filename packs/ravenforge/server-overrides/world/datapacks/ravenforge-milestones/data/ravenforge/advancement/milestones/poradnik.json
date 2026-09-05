@@ -1,0 +1,66 @@
+{
+  "parent": "ravenforge:milestones/root",
+  "display": {
+    "icon": {
+      "id": "modonomicon:modonomicon"
+    },
+    "title": "Przeczytane",
+    "description": "Otwórz wszystkie osiem wpisów poradnika.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "powitanie": {
+      "trigger": "minecraft:impossible"
+    },
+    "komendy": {
+      "trigger": "minecraft:impossible"
+    },
+    "dom": {
+      "trigger": "minecraft:impossible"
+    },
+    "dzialki": {
+      "trigger": "minecraft:impossible"
+    },
+    "rangi": {
+      "trigger": "minecraft:impossible"
+    },
+    "forceloady": {
+      "trigger": "minecraft:impossible"
+    },
+    "kopalnia": {
+      "trigger": "minecraft:impossible"
+    },
+    "granica": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "powitanie"
+    ],
+    [
+      "komendy"
+    ],
+    [
+      "dom"
+    ],
+    [
+      "dzialki"
+    ],
+    [
+      "rangi"
+    ],
+    [
+      "forceloady"
+    ],
+    [
+      "kopalnia"
+    ],
+    [
+      "granica"
+    ]
+  ]
+}

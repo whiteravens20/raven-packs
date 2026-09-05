@@ -15,5 +15,6 @@
       "title": "Jeden dom na start",
       "text": "**/sethome** stawia dom tam, gdzie stoisz. **/home** wraca.\\\n\\\nIle domów masz, zależy od rangi:\n\n- **Nowy** — jeden\n- **Gracz** — dwa\n- **Obywatel** — trzy\n\nRangi zdobywa się czasem w grze. Szczegóły we wpisie **Rangi**."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_dom"
 }

@@ -20,5 +20,6 @@
       "title": "Czego nie da się kupić",
       "text": "Gracza i Obywatela dostajesz sam, za czas spędzony w grze. **Nikt ich nie sprzedaje** i nie da się ich przyspieszyć.\\\n\\\nKupić można tylko Technika, ostatni szczebel. Płaci się nim za **ziemię**, nie za skróty: więcej chunków i więcej chunków trzymanych w ruchu."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_rangi"
 }

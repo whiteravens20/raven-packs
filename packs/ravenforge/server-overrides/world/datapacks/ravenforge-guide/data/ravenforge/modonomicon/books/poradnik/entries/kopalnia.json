@@ -25,5 +25,6 @@
       "title": "Tylko tam wolno burzyć",
       "text": "Wyłącznie w kopalni działają:\n\n- Quarry i Chunk Destroyer\n- pompa (Advanced Pump)\n- **TNT** i wagonik z TNT\n- świder (Tunnel Bore)\n\nW każdym innym wymiarze postawienie ich albo odpalenie zostanie odrzucone.\\\n\\\nPowód jest jeden: to jedyne miejsce, gdzie zniszczony teren i tak zniknie przy najbliższym resecie."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_kopalnia"
 }

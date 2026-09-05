@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/ruda",
+  "display": {
+    "icon": {
+      "id": "mekanismgenerators:fission_reactor_casing"
+    },
+    "title": "Rozszczepienie",
+    "description": "Zdobądź obudowę reaktora rozszczepienia.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obudowa": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mekanismgenerators:fission_reactor_casing"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

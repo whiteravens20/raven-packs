@@ -25,5 +25,6 @@
       "title": "Czego nie ma",
       "text": "**/tpa nie jest dla graczy.** To narzędzie moderacji, do dotarcia do kogoś, kto potrzebuje pomocy. Odległość ma na tym serwerze kosztować.\\\n\\\nDo szukania miejsca na bazę jest **/rtp**. Losuje punkt daleko od spawnu, omija cudze działki i sprawdza, czy da się tam bezpiecznie stanąć.\\\n\\\nWarpy stawia tylko administracja. Chodzić po nich może każdy."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_komendy"
 }

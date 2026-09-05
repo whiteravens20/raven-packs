@@ -1,0 +1,22 @@
+{
+  "parent": "ravenforge:milestones/root",
+  "display": {
+    "icon": {
+      "id": "minecraft:iron_pickaxe"
+    },
+    "title": "Na dół",
+    "description": "Odwiedź wymiar kopalniany — /warp kopalnia.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "wejscie": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "ravenforge:mining"
+      }
+    }
+  }
+}

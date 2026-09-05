@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/reaktor",
+  "display": {
+    "icon": {
+      "id": "mekanism:sps_casing"
+    },
+    "title": "Supercritical Phase Shifter",
+    "description": "Zdobądź obudowę SPS.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obudowa": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mekanism:sps_casing"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

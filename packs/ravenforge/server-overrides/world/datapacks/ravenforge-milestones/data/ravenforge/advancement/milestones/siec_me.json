@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/prad",
+  "display": {
+    "icon": {
+      "id": "ae2:controller"
+    },
+    "title": "Sieć",
+    "description": "Zdobądź kontroler ME.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "kontroler": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ae2:controller"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

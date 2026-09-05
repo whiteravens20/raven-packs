@@ -20,5 +20,6 @@
       "title": "W każdym wymiarze",
       "text": "Granica obowiązuje wszędzie: w Overworldzie, w Netherze, w Endzie, w kopalni oraz na wszystkich planetach i orbitach Ad Astry.\\\n\\\nJeżeli podejdziesz blisko, ekran zacznie czerwienieć. To ostrzeżenie, nie awaria."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_granica"
 }

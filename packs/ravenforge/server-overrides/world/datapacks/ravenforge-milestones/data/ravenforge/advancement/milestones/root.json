@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "id": "ravencoin:coin"
+    },
+    "title": "Wyzwania",
+    "description": "Za każde z nich RavenCoin wpada prosto na konto. Każde raz na gracza.",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "wejscie": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

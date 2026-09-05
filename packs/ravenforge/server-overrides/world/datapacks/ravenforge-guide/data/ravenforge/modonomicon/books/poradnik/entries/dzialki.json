@@ -25,5 +25,6 @@
       "title": "Po co to komu",
       "text": "Działka blokuje obcym:\n\n- stawianie i niszczenie bloków\n- otwieranie skrzyń i maszyn\n- maszyny obszarowe, które inaczej zjadłyby twoją bazę z sąsiedniej działki\n\nTo jedyna ochrona, jaką masz. Buduj **w** działce, nie obok niej."
     }
-  ]
+  ],
+  "command_to_run_on_first_read": "ravenforge:poradnik/commands/read_dzialki"
 }
