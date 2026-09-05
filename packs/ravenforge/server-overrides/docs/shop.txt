@@ -278,6 +278,23 @@ Three alarms:
     is the single number worth watching, and the only one that means the design
     has failed rather than drifted.
 
+THE THIRD ALARM HAS ONE AUTOMATIC ANSWER, and it is the only thing in the pack
+that takes money instead of paying it. At 500 000 on the account, the Council of
+White Ravens buys Technik for the player who has not bought it themselves and
+levies the fee — kubejs/server_scripts/council.js, on the hidden advancement
+ravenforge:rada/technik. It creates no money; it moves 150 000 out of the largest
+hoard in the game and into the incinerator at the top of this file, and it turns
+a player who was sitting on the supply into one who has spent a fifth of it.
+
+Set against the numbers above, it is a corner case by design: 500 000 is more
+than the whole target supply's lower bound and more than the richest holder is
+expected to reach. If it fires often, that is not the Council working — it is
+the second alarm, and the buy-back is what wants looking at.
+
+⚠ Technik requires Obywatel, which is forty hours of play and unbuyable, so a
+rich newcomer is refused. The Council says so, adjourns, and keeps looking: the
+purchase goes through by itself on the first sweep after Obywatel lands.
+
 Two commands measure it. Both are operator-only, and both are slow enough to be
 weekly rather than routine — the census decompresses one player file per offline
 account.

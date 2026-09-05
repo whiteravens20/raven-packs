@@ -53,6 +53,14 @@ costs RavenCoin.
     ! The Technik price in config/ravencoin-ranks.json is a placeholder.
       It is set with the rest of the currency balance, not on its own.
 
+Technik has a second route in, and nobody types it. A player whose account
+reaches 500 000 RavenCoin without having bought the rank has it bought for them,
+at the same price, by kubejs/server_scripts/council.js — the reasoning is in
+docs/shop.txt section 6, under the third alarm. It goes through RankService.buy
+like any other purchase, so the prerequisite still binds: somebody who has not
+yet earned Obywatel is refused, told why, and bought in automatically once they
+have. Nothing here can hand out a rung of the ladder that was not paid for.
+
 The claim and forceload numbers are ravenclassic's. This is a technical pack and
 bases here are larger, so they may want raising — but raise them in nowy.yml and
 in openpartiesandclaims-server.toml together, see section 3.
