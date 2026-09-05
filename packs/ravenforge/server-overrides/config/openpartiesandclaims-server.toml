@@ -65,4 +65,16 @@
 		#The barrel behind a stall is deliberately absent from this list — the
 		#shop opens it server-side for its own renter, which is the whole point
 		#of the "Zaopatrz" button.
-		forcedBlockProtectionExceptionList = ["minecraft:crafting_table", "anything$ravencoin:shop", "anything$ravencoin:server_shop", "anything$ravencoin:atm"]
+		#
+		#The lectern is the noticeboard on a server claim, and it is listed BARE,
+		#with no "anything$" — so an empty hand opens the book and a hand holding
+		#one is still refused. That second half matters: right-clicking a lectern
+		#while holding a book is how vanilla PUTS a book on it, and nobody but the
+		#server gets to decide what the noticeboard says.
+		#
+		#Reading is all this line can open. The "Take Book" button lives inside
+		#LecternMenu, and OPAC subscribes to no container or menu event at all
+		#(measured in the 0.30.3 jar), so it cannot see the take, let alone stop
+		#it. kubejs/server_scripts/lectern_guard.js is what puts the book back,
+		#and only on server claims.
+		forcedBlockProtectionExceptionList = ["minecraft:crafting_table", "minecraft:lectern", "anything$ravencoin:shop", "anything$ravencoin:server_shop", "anything$ravencoin:atm"]
