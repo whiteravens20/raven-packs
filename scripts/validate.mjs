@@ -371,6 +371,11 @@ async function validateBookLayout(slug) {
         fail(slug, `${file.rest} is not valid JSON: ${error.message}`);
         continue;
       }
+      // An entry with no `id` of its own belongs to the newer Modonomicon,
+      // where the id comes from the path and a directory under entries/ is just
+      // a directory. validateBookPages checks those; the two versions disagree
+      // about where an id comes from, so each check takes only its own.
+      if (entry.id === undefined) continue;
       const wantCategory = `${namespace}:${category}`;
       const wantId = `${namespace}:${category}/${name}`;
       if (entry.category !== wantCategory) {
@@ -634,6 +639,44 @@ async function validateMilestones(slug) {
   for (const name of paid.keys()) {
     if (!declared.has(name)) {
       fail(slug, `milestones.js pays for "${name}", which is no advancement — that listener can never fire`);
+    }
+  }
+
+  // An `impossible` criterion can only be granted by something outside the
+  // advancement, and here that something is a Modonomicon BookCommand. Both
+  // ends of that wiring fail in silence: a criterion nothing grants makes the
+  // whole advancement unearnable forever, and a command naming a criterion that
+  // no longer exists simply does nothing. Neither is visible until a player
+  // reads the book and nothing happens.
+  const granted = new Set();
+  for (const file of files) {
+    if (!/\/modonomicon\/books\/[^/]+\/commands\/[^/]+\.json$/.test(file.relative)) continue;
+    let command;
+    try {
+      command = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    const grant = String(command.command ?? '').match(
+      /^advancement grant \S+ only ravenforge:milestones\/(\S+) (\S+)$/,
+    );
+    if (!grant) continue;
+    const [, name, criterion] = grant;
+    granted.add(`${name}/${criterion}`);
+    const advancement = declared.get(name);
+    if (!advancement) {
+      fail(slug, `${file.relative} grants advancement "${name}", which does not exist`);
+    } else if (advancement.criteria?.[criterion] === undefined) {
+      fail(slug, `${file.relative} grants criterion "${criterion}" of ${name}, which has no such criterion`);
+    }
+  }
+  for (const [name, advancement] of declared) {
+    for (const [criterion, body] of Object.entries(advancement.criteria ?? {})) {
+      if (body.trigger !== 'minecraft:impossible') continue;
+      if (!granted.has(`${name}/${criterion}`)) {
+        fail(slug, `advancement ${name} needs criterion "${criterion}", which is impossible and nothing grants — that milestone can never be earned`);
+      }
     }
   }
 
