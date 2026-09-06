@@ -51,34 +51,37 @@
   // lecterns worth guarding.
   const LgWatched = new Map()
 
-  // LecternMenu adds exactly one slot, index 0, bound to the LecternBlockEntity
-  // — measured in the constructor, which calls addSlot once. `Slot.container` is
-  // a public final field, so the block entity comes back without a mixin and
-  // with it the position and the level. The menu itself exposes neither.
-  const lecternOf = (menu) => {
-    const slot = menu.getSlot(0)
-    return slot == null ? null : slot.container
-  }
+  // Where each player last right-clicked a lectern.
+  //
+  // The menu cannot tell us. Measured on a live server: `menu.getSlot(0).container`
+  // is `LecternBlockEntity$1` — the anonymous `Container` the block entity wraps
+  // its book in — not the block entity, so it has neither `getBlockPos` nor
+  // `getLevel`. Nor does anything else on the path: `this$0` on that container,
+  // `blockPos`/`getBlockPos`/`lectern` on the menu, and `block`/`pos` on the
+  // KubeJS event all come back undefined or throw. The position has to be caught
+  // before the menu exists, and the right-click is the only moment that has it.
+  const LgWhere = new Map()
+
+  BlockEvents.rightClicked(event => {
+    if (String(event.block.id) !== 'minecraft:lectern') return
+    LgWhere.set(String(event.player.uuid), event.block.pos)
+  })
 
   /** True when this position sits on a claim owned by the server itself. */
   const onServerClaim = (server, level, pos) => {
     const claim = LgPAC.get(server).getServerClaimsManager()
-      .get(level.dimension().location(), pos)
+      .get(level.dimension, pos)
     return claim != null && claim.getPlayerId().equals(LgPlayerConfig.SERVER_CLAIM_UUID)
   }
 
   PlayerEvents.inventoryOpened('minecraft:lectern', event => {
     const player = event.player
-    const menu = event.inventoryContainer
-    const book = menu.getBook()
+    const book = event.inventoryContainer.getBook()
     if (book.isEmpty()) return
 
-    const lectern = lecternOf(menu)
-    if (lectern == null) return
-
-    const level = lectern.getLevel()
-    if (level == null) return
-    if (!onServerClaim(player.getServer(), level, lectern.getBlockPos())) return
+    const pos = LgWhere.get(String(player.uuid))
+    if (pos === undefined) return
+    if (!onServerClaim(player.getServer(), player.level, pos)) return
 
     LgWatched.set(String(player.uuid), book.copy())
   })
@@ -90,14 +93,12 @@
     if (taken === undefined) return
     LgWatched.delete(key)
 
-    const menu = event.inventoryContainer
-    if (!menu.getBook().isEmpty()) return
+    if (!event.inventoryContainer.getBook().isEmpty()) return
 
-    const lectern = lecternOf(menu)
-    if (lectern == null) return
-    const level = lectern.getLevel()
-    if (level == null) return
-    const pos = lectern.getBlockPos()
+    const pos = LgWhere.get(key)
+    if (pos === undefined) return
+    LgWhere.delete(key)
+    const level = player.level
 
     // Prefer the stack the player is actually holding, so the book that goes
     // back is the one that left. The fallback covers the inventory being full
