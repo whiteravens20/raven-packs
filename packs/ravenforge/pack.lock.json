@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-05T09:38:10.289Z",
+  "generatedAt": "2026-09-06T05:19:16.146Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1831,7 +1831,7 @@
       "versionType": "release"
     },
     {
-      "requestKey": "{\"slug\":\"iris\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "requestKey": "{\"slug\":\"iris\",\"url\":null,\"version\":null,\"allowPrerelease\":true,\"side\":null}",
       "kind": "mod",
       "side": "client",
       "clientSide": "required",
@@ -1840,19 +1840,17 @@
       "name": "Iris Shaders",
       "source": "modrinth",
       "projectId": "YL57xq9U",
-      "versionId": "t3ruzodq",
-      "version": "1.8.12+1.21.1-neoforge",
-      "fileName": "iris-neoforge-1.8.12+mc1.21.1.jar",
-      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/t3ruzodq/iris-neoforge-1.8.12%2Bmc1.21.1.jar",
-      "size": 2438548,
-      "sha1": "a3e6355915c7d3b2bc392724795113e51d289378",
-      "sha512": "57b8026a3c3c433cf6123d63dc6ce7e11f6d480a72926370db1fc7f2b06059bc16a753ecd7e7af659c19e90b592103196b0e89585ce4f0744a4ca433f59bcf1a",
+      "versionId": "KduFYu4t",
+      "version": "1.8.14-beta.1+1.21.1-neoforge",
+      "versionType": "beta",
+      "fileName": "iris-neoforge-1.8.14-beta.1+mc1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/KduFYu4t/iris-neoforge-1.8.14-beta.1%2Bmc1.21.1.jar",
+      "size": 2540723,
+      "sha1": "1bd129cf7bce65d6b1c0543045f0620c98a0f885",
+      "sha512": "33fddb430e16222902eac75b8b3d57c381b0f3cc729f3b56c4628df12ca108f23a0b11e2feb167923d6d14d1fc7e8ee1a977ec421b19d1951bdca74c4092b9c5",
       "license": "LGPL-3.0-only",
-      "requiredDependencies": [
-        "AANobbMI"
-      ],
       "sourceUrl": "https://github.com/IrisShaders/Iris",
-      "versionType": "release"
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"lithium\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",

@@ -109,7 +109,7 @@
     { "slug": "sodium", "reason": "Rendering engine rewrite — the single biggest FPS win. Sodium 0.6 runs on NeoForge; Embeddium is no longer needed" },
     { "slug": "reeses-sodium-options", "reason": "Nicer Sodium options screen" },
     { "slug": "sodium-extra", "reason": "Extra Sodium video options" },
-    { "slug": "iris", "reason": "Shader support, Sodium-compatible. Oculus has no 1.21.x build at all" },
+    { "slug": "iris", "allowPrerelease": true, "reason": "Shader support. The 1.8.12 release is built against Sodium 0.6 and its mixin hard-references SodiumGameOptions, which Sodium 0.8 renamed to SodiumOptions — measured, and it crashes the client the moment it joins a world. 1.8.14-beta.1 is the Sodium 0.8 build and the only one newer than June 2025. Downgrading Sodium instead is closed: sodium-extra and reeses-sodium-options both require 0.8.12+. Embeddium + NeOculus is the only other shader stack and is a year older" },
     { "slug": "lithium", "reason": "Game-logic optimisation — helps the server as much as the client" },
     { "slug": "modernfix", "reason": "Startup and memory optimisation. Covers on NeoForge much of what Krypton does on Fabric, which has no NeoForge build" },
     { "slug": "ferrite-core", "reason": "Cuts memory usage — worth more here than in Classic, with this many mods" },
