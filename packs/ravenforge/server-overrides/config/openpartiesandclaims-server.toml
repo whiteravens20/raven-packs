@@ -67,10 +67,17 @@
 		#of the "Zaopatrz" button.
 		#
 		#The lectern is the noticeboard on a server claim, and it is listed BARE,
-		#with no "anything$" — so an empty hand opens the book and a hand holding
-		#one is still refused. That second half matters: right-clicking a lectern
-		#while holding a book is how vanilla PUTS a book on it, and nobody but the
-		#server gets to decide what the noticeboard says.
+		#with no "anything$". Bare does NOT mean "empty hand" — that is the
+		#"hand$" prefix, per the mod's own documentation further down this file.
+		#Bare means the click goes through unless the held item is itself blocked
+		#by itemUseProtectionExceptionList, so a hand holding a pickaxe, a block
+		#or a plain written book is refused and cannot put anything on the
+		#noticeboard. The one hand that is NOT refused is one holding a
+		#Modonomicon book, because that namespace is an item-use exception below.
+		#That is deliberate — a player should not have to stow the guide to read
+		#the noticeboard — and it is harmless: vanilla only places a book on an
+		#EMPTY lectern, and lectern_guard.js refills this one the moment it is
+		#emptied. Every other hand still cannot decide what the noticeboard says.
 		#
 		#Reading is all this line can open. The "Take Book" button lives inside
 		#LecternMenu, and OPAC subscribes to no container or menu event at all
