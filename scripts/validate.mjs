@@ -439,6 +439,20 @@ function checkMarkdownBreaks(slug, where, value) {
       fail(slug, `${where} ends a line with a backslash right before a list, which renders as a literal "\\"`);
     }
   }
+
+  // One trailing backslash is Modonomicon's hard break. Two is a literal
+  // backslash followed by a hard break, and it reaches the player as a stray
+  // "\" in the middle of a sentence. Easy to write by accident, because the
+  // separator has to survive JSON escaping on the way in — measured on a live
+  // client, where a doubled one rendered as "Nagroda czeka.\ \".
+  //
+  // The check above this one only asks THAT paragraphs are separated, which is
+  // why it passed a separator that was wrong. Whether is not the same as how.
+  for (const line of lines) {
+    if (/[^\\]\\{2}$|^\\{2}$/.test(line)) {
+      fail(slug, `${where} ends a line with two backslashes — one is the line break, the second reaches the player as a literal "\\"`);
+    }
+  }
 }
 
 async function validateBookText(slug) {
