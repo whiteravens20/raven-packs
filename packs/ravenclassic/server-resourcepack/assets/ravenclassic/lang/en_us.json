@@ -73,7 +73,7 @@
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.title": "Backpack",
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.text": "The standard one. Worn on your back and visible on your character.\\\n\\\nYou upgrade it in steps: more room, fluid tanks, a sleeping bag.",
   "book.ravenclassic.przewodnik.sprzet.plecaki.p0.title": "Backpack",
-  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack is worn on your back and shows on your character. You upgrade it in steps, it holds fluids, and with the sleeping bag out it sets your spawn.\\\n\\\nOn death it goes into your grave with everything else — nothing spills.",
+  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack is worn on your back and shows on your character. You upgrade it in steps, it holds fluids, and with the sleeping bag out it sets your spawn.\\\n\\\nOn death it goes into your grave with everything else — nothing spills.\\\\\n\\\\\nOn spawn and other server claims **right-clicking the backpack will not work** — you get a message about somebody else's claim. Backpacks are not banned there: open it with the **B key**, which works everywhere. Outside server claims right-click behaves normally.",
   "book.ravenclassic.przewodnik.sprzet.groby.name": "Graves",
   "book.ravenclassic.przewodnik.sprzet.groby.description": "Dying does not cost you your gear",
   "book.ravenclassic.przewodnik.sprzet.groby.p0.title": "Your grave",

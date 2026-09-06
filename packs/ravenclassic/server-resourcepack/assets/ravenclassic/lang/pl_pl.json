@@ -73,7 +73,7 @@
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.title": "Plecak",
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.text": "Podstawowa wersja. Nosisz go na plecach i widać go na postaci.\\\n\\\nUlepsza się go stopniowo: więcej miejsca, zbiorniki na płyny, śpiwór.",
   "book.ravenclassic.przewodnik.sprzet.plecaki.p0.title": "Plecak",
-  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack nosisz na plecach i widać go na postaci. Ulepszasz go stopniowo, mieści też płyny, a z rozłożonym śpiworem ustawisz w nim punkt odrodzenia.\\\n\\\nPrzy śmierci plecak trafia do grobu razem z resztą — nic z niego nie wypada.",
+  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack nosisz na plecach i widać go na postaci. Ulepszasz go stopniowo, mieści też płyny, a z rozłożonym śpiworem ustawisz w nim punkt odrodzenia.\\\n\\\nPrzy śmierci plecak trafia do grobu razem z resztą — nic z niego nie wypada.\\\\\n\\\\\nNa spawnie i innych działkach serwera **prawy przycisk myszy plecaka nie zadziała** — dostaniesz komunikat o cudzej działce. To nie zakaz plecaków: otwórz go **klawiszem B**, który działa wszędzie. Poza działkami serwera prawy przycisk działa normalnie.",
   "book.ravenclassic.przewodnik.sprzet.groby.name": "Groby",
   "book.ravenclassic.przewodnik.sprzet.groby.description": "Śmierć nie kosztuje ekwipunku",
   "book.ravenclassic.przewodnik.sprzet.groby.p0.title": "Twój grób",
