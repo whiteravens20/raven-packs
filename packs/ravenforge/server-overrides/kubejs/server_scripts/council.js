@@ -203,7 +203,7 @@
     coTicks++
     if (coTicks % CO_EVERY !== 0) return
     try {
-      const players = event.server.getPlayerList().getPlayers()
+      let players = event.server.getPlayerList().getPlayers()
       for (let i = 0; i < players.size(); i++) {
         var player = players.get(i)
         coConsider(player)

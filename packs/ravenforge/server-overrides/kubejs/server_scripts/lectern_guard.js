@@ -107,7 +107,7 @@
     const inventory = player.getInventory()
     let restored = false
     for (let i = 0; i < inventory.getContainerSize(); i++) {
-      const stack = inventory.getItem(i)
+      let stack = inventory.getItem(i)
       if (stack.isEmpty() || !LgStack.isSameItemSameComponents(stack, taken)) continue
       restored = LgLectern.tryPlaceBook(player, level, pos, level.getBlockState(pos), stack)
       break

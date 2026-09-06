@@ -185,7 +185,7 @@
     const roof = level.getMaxBuildHeight()
 
     if (!world.ceiling) {
-      const surface = level.getHeight(RtpHeightmap.MOTION_BLOCKING_NO_LEAVES, x, z)
+      let surface = level.getHeight(RtpHeightmap.MOTION_BLOCKING_NO_LEAVES, x, z)
       if (surface <= floor + 1 || surface >= roof - 2) return null
       if (!rtpPocketOk(level, x, surface, z)) return null
       if (rtpDangerNear(level, x, surface, z)) return null
@@ -399,7 +399,7 @@
       rtpTick()
     } catch (error) {
       console.error('[ravenforge] rtp tick failed, queue cleared: ' + error)
-      const stuck = Object.keys(rtpPending)
+      let stuck = Object.keys(rtpPending)
       for (let i = 0; i < stuck.length; i++) delete rtpPending[stuck[i]]
     }
   })

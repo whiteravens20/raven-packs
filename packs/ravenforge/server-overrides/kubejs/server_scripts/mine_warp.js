@@ -126,7 +126,7 @@
   const mwStandDown = server => {
     mwArmed = false
     if (mwForced) {
-      const level = mwLevel(server)
+      let level = mwLevel(server)
       if (level != null) level.setChunkForced(0, 0, false)
       mwForced = false
     }

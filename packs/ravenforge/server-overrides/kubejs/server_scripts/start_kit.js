@@ -183,7 +183,7 @@
   PlayerEvents.respawned(event => {
     try {
       if (event.endConquered) return
-      const data = event.player.persistentData
+      let data = event.player.persistentData
       if (!data.contains(KIT_KEY)) return
       if (data.getLong(KIT_KEY) === 0) return
       data.putLong(KIT_KEY, 0)
