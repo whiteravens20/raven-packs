@@ -1,0 +1,13 @@
+[
+  {
+    "id": "ravenclassic:poradnik_przeczytany",
+    "required_facts": [],
+    "required_stages": [],
+    "required_values": [
+      {
+        "value_id": "ravenclassic:wpisy_przeczytane",
+        "threshold": 14
+      }
+    ]
+  }
+]
