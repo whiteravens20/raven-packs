@@ -70,7 +70,17 @@
     { "slug": "underground-bunkers", "reason": "Underground structures and loot" },
     { "slug": "natures-compass", "reason": "Finds a biome instead of wandering for one" },
 
-    { "slug": "upgraded-iron-chests", "reason": "Chest tiers for the early game, before an ME network exists. iron-chests itself has no 1.21.1 build" },
+    { "slug": "extended-storage", "reason": "Chest tiers for the early game, before an ME network exists. iron-chests itself has no 1.21.1 build. Replaces upgraded-iron-chests, which reskinned the chest completely: measured in the 1.4 jar, LegacyChestSoundMixin swaps the vanilla chest sound for trapdoor and ender-chest sounds with no way to opt out, every tier has its own BlockEntityRenderer and hovering particles, and the screen is a custom one carrying a search bar, a chest finder and dump buttons. Its config holds five keys — quick stack, deposit all, compaction, particles, range — none of which touch the sound, the renderer or the screen, and on a server the settings screen is OP-only, so a player cannot even turn the particles off. Extended Storage is plain by comparison: vanilla block.chest.open/close, a static block model with no lid animation, and an auto-sized vanilla-style container screen" },
+    {
+      "url": "https://mediafilez.forgecdn.net/files/7949/745/JsonThings-1.21.1-0.13.7.jar",
+      "id": "jsonthings",
+      "name": "Json Things",
+      "version": "0.13.7",
+      "license": "BSD-3-Clause",
+      "sourceUrl": "https://github.com/gigaherz/JsonThings",
+      "reason": "Hard requirement of Extended Storage, which is a data-driven content pack rather than code: its jar carries no classes at all, only `things/` definitions. Both it and the JsonMore it bundles declare jsonthings as a mandatory dependency, so NeoForge refuses to load either without it. Carried as a url because the mod is published on CurseForge and nowhere else",
+      "side": "both"
+    },
     { "slug": "cb-compressed-blocks", "reason": "Block compression — storage before storage is automated" },
     { "slug": "elevatormod", "reason": "Vertical transport between floors of a build" },
     { "slug": "gravestone-mod", "reason": "Death drops go into a grave rather than onto the floor" },
