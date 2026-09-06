@@ -87,4 +87,10 @@
 		#open it at all. Measured on a live client 2026-09-06; the default for this
 		#list is just the firework rocket, and the pack had never overridden it.
 		#Opening a guide changes nothing in the world, so there is nothing to protect.
-		itemUseProtectionExceptionList = ["minecraft:firework_rocket", "modonomicon:modonomicon"]
+		#
+		#Wildcard rather than the one item, copied from Classic, which had this list
+		#right first. Modonomicon registers six items — `modonomicon`, four colours
+		#and `leaflet` — and `model` in book.json only picks which one a generated
+		#book looks like, so naming a single id leaves five that still refuse to
+		#open. Nothing in this namespace places, breaks or throws anything.
+		itemUseProtectionExceptionList = ["minecraft:firework_rocket", "modonomicon:*"]
