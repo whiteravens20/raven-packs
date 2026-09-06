@@ -196,6 +196,7 @@ async function validatePack(slug) {
   await validateBookPages(slug);
   await validateMilestones(slug);
   await validateShopMath(slug);
+  await validateKubeJsConst(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -696,6 +697,146 @@ async function validateMilestones(slug) {
 
   const total = [...paid.values()].reduce((sum, row) => sum + row.rc, 0);
   console.log(`  \x1b[32m✓\x1b[0m ${paid.size} milestone(s) priced and wired, ${total.toLocaleString('pl-PL')} RavenCoin in total`);
+}
+
+/**
+ * `const` inside a nested block is a runtime crash in KubeJS's Rhino.
+ *
+ * Measured on a live 1.21.1 server with KubeJS 2101.7.2 (2026-09-06). A `const`
+ * declared directly in a function body is fine; the same declaration one brace
+ * deeper — inside `if`, `for`, `try`, `catch` or a bare block — throws
+ * `InternalError: TypeError: redeclaration of var <name>` every time it is
+ * executed. `let` in the identical position is fine, and so is `var`. The name
+ * in the message is whatever you declared; it is not a real collision, so
+ * renaming never helps and grepping for the reported identifier finds nothing.
+ *
+ * This is invisible to every other check we run. The file parses, so nothing
+ * fails to build; Rhino compiles it, so nothing fails to load; the throw only
+ * happens when that line is reached. `council.js` shipped with one and swept
+ * every ten seconds into a caught exception nobody read. `rtp.js` had one on
+ * the main surface-finding path and a second inside the handler that was meant
+ * to recover from the first. `lectern_guard.js` had one in the loop that puts
+ * the book back, which is the entire point of the script.
+ *
+ * So this is a syntactic gate, run over every KubeJS script in the pack. It
+ * blanks comments and string bodies, then tracks whether each open brace starts
+ * a function body (it follows `=>`, or a parameter list that is not a control
+ * head) or a plain block, and reports every `const` whose innermost brace is a
+ * plain block.
+ */
+const KJS_CONTROL = new Set(['if', 'for', 'while', 'switch', 'catch', 'with', 'else', 'do', 'try', 'finally']);
+
+/** Replace comment and string bodies with spaces, preserving every offset. */
+function blankLiterals(src) {
+  const out = src.split('');
+  const keep = (a, b) => {
+    for (let k = a; k < b; k++) if (out[k] !== '\n') out[k] = ' ';
+  };
+  let i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    const d = src[i + 1];
+    if (c === '/' && d === '/') {
+      let j = src.indexOf('\n', i);
+      if (j < 0) j = src.length;
+      keep(i, j);
+      i = j;
+    } else if (c === '/' && d === '*') {
+      let j = src.indexOf('*/', i + 2);
+      j = j < 0 ? src.length : j + 2;
+      keep(i, j);
+      i = j;
+    } else if (c === '"' || c === "'" || c === '`') {
+      let j = i + 1;
+      while (j < src.length) {
+        if (src[j] === '\\') j += 2;
+        else if (src[j] === c) {
+          j++;
+          break;
+        } else j++;
+      }
+      keep(i + 1, j - 1);
+      i = j;
+    } else i++;
+  }
+  return out.join('');
+}
+
+/**
+ * Is the `{` at `at` the body of a function, rather than a plain block?
+ *
+ * True when it follows `=>`, or a `(…)` whose preceding word is not a control
+ * keyword — which covers `function f() {`, `method() {` and `(function () {`.
+ */
+function opensFunctionBody(s, at) {
+  let i = at - 1;
+  while (i >= 0 && /\s/.test(s[i])) i--;
+  if (i < 0) return false;
+  if (s[i] === '>' && s[i - 1] === '=') return true;
+  if (s[i] !== ')') return false;
+  let depth = 0;
+  let j = i;
+  for (; j >= 0; j--) {
+    if (s[j] === ')') depth++;
+    else if (s[j] === '(') {
+      depth--;
+      if (depth === 0) break;
+    }
+  }
+  let k = j - 1;
+  while (k >= 0 && /\s/.test(s[k])) k--;
+  const end = k;
+  while (k >= 0 && /[A-Za-z0-9_$]/.test(s[k])) k--;
+  return !KJS_CONTROL.has(s.slice(k + 1, end + 1));
+}
+
+/** Every `const` in `src` whose innermost enclosing brace is a plain block. */
+function constInNestedBlock(src) {
+  const s = blankLiterals(src);
+  const stack = [];
+  const found = [];
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === '{') stack.push(opensFunctionBody(s, i) ? 'fn' : 'block');
+    else if (c === '}') stack.pop();
+    else if (/[A-Za-z_$]/.test(c) && (i === 0 || !/[A-Za-z0-9_$.]/.test(s[i - 1]))) {
+      let j = i;
+      while (j < s.length && /[A-Za-z0-9_$]/.test(s[j])) j++;
+      if (s.slice(i, j) === 'const' && stack.length > 0 && stack[stack.length - 1] === 'block') {
+        found.push(src.slice(0, i).split('\n').length);
+      }
+      i = j - 1;
+    }
+  }
+  return found;
+}
+
+async function validateKubeJsConst(slug) {
+  const dir = path.join(PACKS_DIR, slug, 'server-overrides', 'kubejs');
+  let files;
+  try {
+    files = await listFiles(dir);
+  } catch {
+    return;
+  }
+  const scripts = files.filter((file) => file.relative.endsWith('.js'));
+  if (scripts.length === 0) return;
+
+  let bad = 0;
+  for (const file of scripts) {
+    const src = await fs.readFile(file.absolute, 'utf8');
+    for (const line of constInNestedBlock(src)) {
+      bad++;
+      fail(
+        slug,
+        `kubejs/${file.relative}:${line} declares const inside a nested block — ` +
+          `Rhino throws "redeclaration of var" there at runtime; use let`,
+      );
+    }
+  }
+  if (bad === 0) {
+    console.log(`  \x1b[32m✓\x1b[0m ${scripts.length} KubeJS script(s) free of block-scoped const`);
+  }
 }
 
 /**
