@@ -512,16 +512,39 @@ async function validateBookPages(slug) {
   );
   if (inBooks.length === 0) return;
 
+  // The id Modonomicon gives a file is NOT its path. BookDataManager.apply
+  // splits the resource path on "/" and takes the book from part 0, then
+  // `Arrays.stream(pathParts).skip(2)` for the rest — so
+  // `guide/categories/podstawy` registers as `<ns>:podstawy`, with the book
+  // name and the kind directory both dropped. Measured in
+  // modonomicon-1.21.1-neoforge-1.120.4.jar.
+  //
+  // This check used to build the path form instead, which is why it passed a
+  // book whose every entry pointed at a category that did not exist: the gate
+  // and the guide were wrong in the same direction. `book.getCategory()` then
+  // answers null, `category.addEntry()` throws, apply() swallows it per entry,
+  // and the book opens with nothing in it and nothing in the log to say why.
   const idOf = (relative) => {
     const match = relative.match(/\/data\/([^/]+)\/modonomicon\/books\/(.+)\.json$/);
-    return match ? `${match[1]}:${match[2]}` : null;
+    if (!match) return null;
+    const parts = match[2].split('/');
+    if (parts.length < 3) return null;
+    return { kind: parts[1], id: `${match[1]}:${parts.slice(2).join('/')}` };
   };
-  const known = new Set(inBooks.map((file) => idOf(file.relative)).filter(Boolean));
+
+  // Three maps, not one, because Modonomicon keeps three: a category and an
+  // entry may share a name without colliding, so merging them would let an
+  // entry name a category as its parent and pass.
+  const known = { categories: new Set(), entries: new Set(), commands: new Set() };
+  for (const file of inBooks) {
+    const resolved = idOf(file.relative);
+    if (resolved && known[resolved.kind]) known[resolved.kind].add(resolved.id);
+  }
 
   let checked = 0;
   for (const file of inBooks) {
     const id = idOf(file.relative);
-    if (id === null || !/\/entries\//.test(file.relative)) continue;
+    if (id === null || id.kind !== 'entries') continue;
 
     let entry;
     try {
@@ -532,11 +555,11 @@ async function validateBookPages(slug) {
     }
     if (entry.id !== undefined) continue;
 
-    if (typeof entry.category === 'string' && !known.has(entry.category)) {
+    if (typeof entry.category === 'string' && !known.categories.has(entry.category)) {
       fail(slug, `${file.relative} names category "${entry.category}", which is no file in this book — the entry renders nowhere`);
     }
     for (const parent of entry.parents ?? []) {
-      if (typeof parent.entry === 'string' && !known.has(parent.entry)) {
+      if (typeof parent.entry === 'string' && !known.entries.has(parent.entry)) {
         fail(slug, `${file.relative} names parent "${parent.entry}", which is no entry in this book`);
       }
     }
@@ -545,7 +568,7 @@ async function validateBookPages(slug) {
     // and whatever the command was for — here, granting a milestone criterion —
     // never happens for anybody.
     const command = entry.command_to_run_on_first_read;
-    if (typeof command === 'string' && !known.has(command)) {
+    if (typeof command === 'string' && !known.commands.has(command)) {
       fail(slug, `${file.relative} runs "${command}" on first read, which is no command in this book`);
     }
 
