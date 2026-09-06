@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:guide/categories/wyzwania",
+  "category": "ravenforge:wyzwania",
   "name": "Głęboka woda",
   "icon": "mekanism:sps_casing",
   "x": 0,
   "y": 4,
   "parents": [
     {
-      "entry": "ravenforge:guide/entries/wyzwania_start"
+      "entry": "ravenforge:wyzwania_start"
     }
   ],
   "pages": [

@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:guide/categories/wyzwania",
+  "category": "ravenforge:wyzwania",
   "name": "Kosmos",
   "icon": "ad_astra:moon_globe",
   "x": 3,
   "y": 4,
   "parents": [
     {
-      "entry": "ravenforge:guide/entries/wyzwania_start"
+      "entry": "ravenforge:wyzwania_start"
     }
   ],
   "pages": [

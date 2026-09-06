@@ -1,12 +1,12 @@
 {
-  "category": "ravenforge:guide/categories/wyzwania",
+  "category": "ravenforge:wyzwania",
   "name": "Na początek",
   "icon": "minecraft:iron_pickaxe",
   "x": 0,
   "y": 2,
   "parents": [
     {
-      "entry": "ravenforge:guide/entries/wyzwania"
+      "entry": "ravenforge:wyzwania"
     }
   ],
   "pages": [
