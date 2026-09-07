@@ -1,13 +1,23 @@
 [
   {
     "id": "ravenclassic:poradnik_przeczytany",
-    "required_facts": [],
+    "required_facts": [
+      "ravenclassic:przeczytane_logowanie",
+      "ravenclassic:przeczytane_komendy",
+      "ravenclassic:przeczytane_czat",
+      "ravenclassic:przeczytane_claim",
+      "ravenclassic:przeczytane_forceload",
+      "ravenclassic:przeczytane_party",
+      "ravenclassic:przeczytane_rangi",
+      "ravenclassic:przeczytane_sklepy",
+      "ravenclassic:przeczytane_waystones",
+      "ravenclassic:przeczytane_wsparcie",
+      "ravenclassic:przeczytane_plecaki",
+      "ravenclassic:przeczytane_groby",
+      "ravenclassic:przeczytane_drzewa",
+      "ravenclassic:przeczytane_shadery"
+    ],
     "required_stages": [],
-    "required_values": [
-      {
-        "value_id": "ravenclassic:wpisy_przeczytane",
-        "threshold": 14
-      }
-    ]
+    "required_values": []
   }
 ]
