@@ -8,6 +8,7 @@
     "en": "A modded tech server with a currency, mods and scripts of our own."
   },
   "author": "White Ravens",
+  "unlisted": true,
   "minecraft": "1.21.1",
   "loader": {
     "type": "neoforge",
