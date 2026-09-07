@@ -12,9 +12,17 @@
 # zostaje z egzemplarzem, ale zestaw startowy i tak daje poradnik każdemu, więc
 # to kopia czegoś, co już ma. Pulpit jest znowu pełny w ciągu sekundy.
 #
-# Znacznik stoi DOKŁADNIE w bloku pulpitu:
-#   /summon minecraft:marker ~ ~ ~ {Tags:["rc_pulpit"]}
-# stojąc na pulpicie i celując w niego. Znaczników może być wiele.
+# Znacznik stoi DOKŁADNIE w bloku pulpitu — nie nad nim. `~ ~ ~` w /summon to
+# pozycja STÓP, więc stojąc NA pulpicie postawisz go o blok za wysoko i `if block`
+# poniżej nigdy nie trafi. Odczytaj współrzędne pulpitu (F3, "Targeted Block")
+# i podaj je wprost:
+#   /summon minecraft:marker <x> <y> <z> {Tags:["rc_pulpit"]}
+#
+# Sprawdzenie, że siedzi tam, gdzie trzeba — wypisze pozycję każdego trafionego,
+# a milczenie znaczy, że żaden nie stoi w pulpicie:
+#   /execute as @e[type=minecraft:marker,tag=rc_pulpit] at @s if block ~ ~ ~ minecraft:lectern run data get entity @s Pos
+#
+# Znaczników może być wiele, po jednym na pulpit.
 #
 # Cztery linijki zamiast jednej, bo setblock nie zna stanu, który zastępuje:
 # pominięta właściwość wraca do wartości domyślnej, więc pulpit obrócony na
