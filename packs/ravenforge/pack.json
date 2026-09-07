@@ -172,10 +172,10 @@
     { "slug": "henny-essentials", "reason": "Homes, warps, spawn, kits and moderation, replacing Saro's Essentials. Measured in jar 1.0.4-H3: it has the real LuckPerms integration Saro's never had. LuckPermsIntegration resolves permissions through CachedPermissionData.checkPermission as a Tristate, reads prefix and suffix from meta, and getMaxHomeLimit parses the highest home.limit.<n> node a player holds — so the per-rank home ladder ravenclassic runs on is finally possible here. Its own nodes are command.he.<command>. Saro's could only do op-or-everyone per command, with no numeric value anywhere in its config and so no limit to hand out per rank; its entry claimed nothing else on NeoForge 1.21.1 covered this ground, and that was wrong. Also a licence improvement: MIT with published source against All Rights Reserved with none. Two things configured rather than accepted: it starts a server restart task every 360 minutes by default, and its addgroupperm/addgroupprefix commands duplicate LuckPerms, so those nodes go to nobody and LuckPerms stays the single source of truth. It carries no target protection at all — Ban and Mute never ask about rank — which is what kubejs/server_scripts/rank_guard.js is for", "side": "server" },
 
     {
-      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar",
+      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.2.0-beta.1/ravencoin-1.21.1-0.2.0-beta.1.jar",
       "id": "ravencoin",
       "name": "RavenCoin",
-      "version": "0.1.0-beta.1",
+      "version": "0.2.0-beta.1",
       "license": "Apache-2.0",
       "sourceUrl": "https://github.com/pavlojs/raven-economy",
       "reason": "The pack's economy: a currency that is also an item, an ATM, player and server shops, and ranks bought through the LuckPerms API. Written for this pack because no published mod combines them. Carried as a url because it is not on Modrinth",

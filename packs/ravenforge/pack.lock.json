@@ -19,7 +19,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-06T09:15:11.660Z",
+  "generatedAt": "2026-09-07T13:59:36.898Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -2516,22 +2516,22 @@
       "versionType": "release"
     },
     {
-      "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar\",\"version\":\"0.1.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
+      "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.2.0-beta.1/ravencoin-1.21.1-0.2.0-beta.1.jar\",\"version\":\"0.2.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
       "kind": "mod",
       "side": "both",
       "id": "ravencoin",
       "name": "RavenCoin",
       "source": "url",
-      "version": "0.1.0-beta.1",
-      "fileName": "ravencoin-1.21.1-0.1.0-beta.1.jar",
-      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.1.0-beta.1/ravencoin-1.21.1-0.1.0-beta.1.jar",
-      "size": 131278,
-      "sha1": "b6e1b3e2c380beef2c03a7553cb0e1e851b54ece",
-      "sha512": "3198d98e9ceb23910c1955cb05dc3059c6f1fd6f857c668f46f999ef87191833e014f4d8e420595edb32c2bebaba12d0dde22394e897834ca33cdbd09ae4be18",
-      "sha256": "e9400df389dbd2866ad4e105de02e8096d1eb58e2bdac80e8ac5837d93498066",
+      "version": "0.2.0-beta.1",
+      "fileName": "ravencoin-1.21.1-0.2.0-beta.1.jar",
+      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.2.0-beta.1/ravencoin-1.21.1-0.2.0-beta.1.jar",
+      "size": 195118,
+      "sha1": "c012f4c07609090938efde5a0c6f72a13501f7eb",
+      "sha512": "e782be06eeaaef4e4d6cbbba72f1d87391a8957b377bcfc0a8b271468bf08684cebaa7c7a807b19656f9a503727044d6e4c49c5dad57474dd5cdb33b27b15562",
+      "sha256": "a929b08c604668c8a4c99eea361ca850c0d72267abe49de3242f2a740b524931",
       "license": "Apache-2.0",
-      "requiredDependencies": [],
-      "sourceUrl": "https://github.com/pavlojs/raven-economy"
+      "sourceUrl": "https://github.com/pavlojs/raven-economy",
+      "requiredDependencies": []
     }
   ]
 }
