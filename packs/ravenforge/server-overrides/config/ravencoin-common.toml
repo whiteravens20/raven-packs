@@ -1,34 +1,11 @@
-#RavenCoin — the White Ravens Forge economy
-[currency]
-	#Whether the minting recipe exists at all.
-	#true  — players mint their own; the recipe's cost is the exchange rate.
-	#false — the server shop, quests and ranks are the only sources of coin.
-	#Changing this needs a restart: recipes are built when the datapack loads.
-	mintingEnabled = true
-	#How much RavenCoin a player's account is opened with on first login.
-	# Default: 0
-	# Range: 0 ~ 9223372036854775807
-	startingBalance = 0
+# RavenCoin is the only economy on this server, so the bare command names are
+# free to take — and the handbook teaches them that way (docs/shop.txt reaches
+# for /baltop, not /rc top). The mod defaults them off because two mods claiming
+# /pay is how a server ends up with a command that silently does the wrong thing.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
 
-#Commands
 [commands]
-	#Whether players can transfer money to each other.
-	payEnabled = true
-	#Whether to register /balance, /bal, /pay and /baltop as well.
-	#The prefixed forms /rc and /ravencoin are always registered.
-	#Leave this off if another economy mod or plugin owns those names.
 	shortCommandAliases = true
-
-#Shops — each block is configured in game, by whoever owns it
-[shops]
-	#Whether shop blocks will trade.
-	#false leaves them standing and configured, but closed.
-	shopsEnabled = true
-
-#Ranks — the ladder itself lives in ravencoin-ranks.json
-[ranks]
-	#Whether ranks can be bought with RavenCoin.
-	#Needs a permissions plugin; without LuckPerms this does nothing.
-	ranksEnabled = true
-	#Whether each rank requires the one below it to be owned first.
-	requireLadderOrder = true
