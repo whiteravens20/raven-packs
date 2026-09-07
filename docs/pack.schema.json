@@ -33,6 +33,10 @@
       ]
     },
     "author": { "type": "string" },
+    "unlisted": {
+      "type": "boolean",
+      "description": "Keep this pack out of a build that was not asked for it by name. A pack still in development is validated and locked like any other, but must not reach dist/ — the site deploy replaces the whole catalogue, so a pack that lands there is offered by the launcher to everyone. Naming the slug on the command line overrides this, which is how it is built for testing and how it is released when it is ready."
+    },
     "minecraft": {
       "type": "string",
       "minLength": 1,

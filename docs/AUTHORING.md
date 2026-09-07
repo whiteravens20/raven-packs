@@ -22,6 +22,7 @@ continue otherwise, since the slug becomes part of the published manifest URL.
 | `loader.type` | yes | `fabric`, `quilt`, `forge` or `neoforge`. |
 | `loader.version` | yes | Pin it — an unpinned loader makes builds irreproducible. |
 | `recommendedRamMb` | no | Shown to players. Defaults to 4096. |
+| `unlisted` | no | Keep a pack still in development out of the published catalogue. See below. |
 | `server` | no | `{ ip, port }` for the launcher's Quick-Connect button, and the entry written into `servers.dat`. |
 | `serverListName` | no | Name shown in Minecraft's multiplayer list. Takes `§` formatting codes. Defaults to `name`. |
 | `mods` | no | See below. |
@@ -37,6 +38,30 @@ continue otherwise, since the slug becomes part of the published manifest URL.
 > For both of them `loader.version` is the **plain build number** —
 > `21.1.248`, not `1.21.1-21.1.248`. The launcher composes the Maven
 > coordinate itself, and prefixing it here produces a URL that does not exist.
+
+## A pack that is not ready yet
+
+Set `"unlisted": true` while a pack is still being built.
+
+```jsonc
+{ "slug": "ravenforge", "unlisted": true }
+```
+
+It changes one thing: `node scripts/build.mjs` with no arguments skips the pack.
+That sweep is what CI runs on every push to `main`, and its `dist/` is what
+`deploy-pages` publishes — replacing the **whole** site, so a pack that reaches
+`dist/` is a pack the launcher offers to everyone who opens it.
+
+Nothing else changes. The pack is still validated, still locked, still checked
+for dependency resolution — being unfinished is not a reason to let it rot.
+
+**Naming the slug overrides the flag**, and that is the point: `node
+scripts/build.mjs ravenforge --with-zip` builds it for testing, and a
+`ravenforge-v*` tag releases it, because both said which pack they meant.
+
+Publishing it for real is deleting the line. Do that in the commit that releases
+it, not before — until `main` has the pack, keeping the flag is the only thing
+standing between a half-finished pack and every launcher's pack list.
 
 ## Entries
 

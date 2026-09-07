@@ -357,6 +357,21 @@ function buildMrpackIndex(pack, lock) {
 
 // ── Build one pack ─────────────────────────────────────────
 
+/**
+ * A pack's definition, or null if there is no readable one.
+ *
+ * Deliberately quiet about a broken file: this only decides whether a pack
+ * joins an unasked-for sweep, and `buildPack` fails loudly on the same file a
+ * moment later with a message that says which pack and why.
+ */
+async function readPackMeta(slug) {
+  try {
+    return JSON.parse(await fs.readFile(path.join(PACKS_DIR, slug, 'pack.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 async function buildPack(slug, { withZip }) {
   const packFile = path.join(PACKS_DIR, slug, 'pack.json');
   let pack;
@@ -949,11 +964,22 @@ async function main() {
   const withZip = args.includes('--with-zip');
   const requested = args.filter((a) => !a.startsWith('-'));
 
+  // A slug on the command line is an explicit instruction and always wins — it
+  // is how an unlisted pack is built for testing, and how the release workflow
+  // builds the one pack a tag names. Only the sweep that nobody asked to be
+  // specific about honours `unlisted`, because that sweep is what feeds the
+  // catalogue: deploy-pages replaces the whole site, so a pack that reaches
+  // dist/ is a pack the launcher offers to everyone.
   const slugs = requested.length
     ? requested
-    : (await fs.readdir(PACKS_DIR, { withFileTypes: true }))
-        .filter((e) => e.isDirectory())
-        .map((e) => e.name)
+    : (
+        await Promise.all(
+          (await fs.readdir(PACKS_DIR, { withFileTypes: true }))
+            .filter((e) => e.isDirectory())
+            .map(async (e) => ((await readPackMeta(e.name))?.unlisted ? null : e.name)),
+        )
+      )
+        .filter((slug) => slug !== null)
         .sort();
 
   if (slugs.length === 0) {
