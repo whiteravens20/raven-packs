@@ -194,6 +194,7 @@ async function validatePack(slug) {
   await validateBookLayout(slug);
   await validateBookText(slug);
   await validateBookPages(slug);
+  await validateResearch(slug);
   await validateMilestones(slug);
   await validateShopMath(slug);
   await validateKubeJsConst(slug);
@@ -599,6 +600,101 @@ async function validateBookPages(slug) {
 
   if (checked > 0) {
     console.log(`  \x1b[32m✓\x1b[0m ${checked} inline book text(s) render and point where they say`);
+  }
+}
+
+/**
+ * Research hooks that count instead of remembering.
+ *
+ * `modonomicon:entry_viewed_once` is named for a guarantee it does not give.
+ * The client sends `BookEntryReadMessage` on EVERY `openEntry` — it computes
+ * `firstRead` and sends regardless — the server fires the hook without looking
+ * at it, the trigger handler matches on entry id alone, and
+ * `ResearchStateManager.incrementValue` adds blindly. So a hook carrying
+ * `value_id` fires again every time the player reopens the same page, and a
+ * node gated on `threshold: N` is reached by opening ONE entry N times.
+ *
+ * Measured in modonomicon-26.2-fabric-2.4.0.jar after shipping exactly that
+ * bug in ravenclassic 1.7.0: "read the whole guide" paid a block of diamond
+ * for reading one page fourteen times.
+ *
+ * `fact_id` is the construction that holds. `PlayerResearchState.factIds` is a
+ * Set, so granting is idempotent however often the hook fires, and
+ * `reevaluate` needs every fact in `required_facts` at once.
+ *
+ * The rest is reachability. Modonomicon throws on a node naming an unknown
+ * fact, which is loud but costs a boot; a fact nobody grants is worse, because
+ * it throws nothing and simply makes the node unreachable forever.
+ */
+async function validateResearch(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'));
+  } catch {
+    return;
+  }
+  const research = files.filter((file) =>
+    /\/modonomicon\/research\/[^/]+\/(facts|hooks|nodes|values)\.json$/.test(file.relative),
+  );
+  if (research.length === 0) return;
+
+  // Grouped by graph directory: two graphs in one pack are separate namespaces
+  // for reachability, and merging them would let a fact granted in one satisfy
+  // a node in the other.
+  const graphs = new Map();
+  for (const file of research) {
+    const [, dir, kind] = file.relative.match(/^(.*)\/([^/]+)\.json$/) ?? [];
+    if (!dir) continue;
+    let parsed;
+    try {
+      parsed = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    if (!Array.isArray(parsed)) {
+      fail(slug, `${file.relative} must be a JSON array — Modonomicon parses it with CODEC.listOf()`);
+      continue;
+    }
+    if (!graphs.has(dir)) graphs.set(dir, {});
+    graphs.get(dir)[kind] = { entries: parsed, relative: file.relative };
+  }
+
+  let checked = 0;
+  for (const [, graph] of graphs) {
+    const facts = new Set((graph.facts?.entries ?? []).map((f) => f.id));
+    const hooks = graph.hooks?.entries ?? [];
+    const granted = new Set();
+
+    for (const hook of hooks) {
+      const where = `${graph.hooks.relative}: hook "${hook.id}"`;
+      if (hook.trigger_type === 'modonomicon:entry_viewed_once' && hook.value_id) {
+        fail(
+          slug,
+          `${where} counts a value on entry_viewed_once — that trigger fires on every reopen, so the threshold is reached by opening one entry over and over. Grant a fact_id instead`,
+        );
+      }
+      if (!hook.fact_id) continue;
+      granted.add(hook.fact_id);
+      if (!facts.has(hook.fact_id)) {
+        fail(slug, `${where} grants fact "${hook.fact_id}", which no facts.json declares`);
+      }
+    }
+
+    for (const node of graph.nodes?.entries ?? []) {
+      for (const factId of node.required_facts ?? []) {
+        checked += 1;
+        if (!facts.has(factId)) {
+          fail(slug, `${graph.nodes.relative}: node "${node.id}" requires fact "${factId}", which no facts.json declares`);
+        } else if (!granted.has(factId)) {
+          fail(slug, `${graph.nodes.relative}: node "${node.id}" requires fact "${factId}", which no hook grants — that node can never unlock`);
+        }
+      }
+    }
+  }
+
+  if (checked > 0) {
+    console.log(`  \x1b[32m\u2713\x1b[0m ${checked} research fact requirement(s) declared, granted and safe from reopening`);
   }
 }
 
