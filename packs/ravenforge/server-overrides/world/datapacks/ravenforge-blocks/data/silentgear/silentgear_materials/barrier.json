@@ -1,0 +1,26 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": false,
+    "categories": [
+      "intangible"
+    ],
+    "gear_type_blacklist": [
+      "silentgear:all"
+    ],
+    "ingredient": {
+      "item": "minecraft:barrier"
+    },
+    "part_substitutes": {}
+  },
+  "display": {
+    "color": "#FFFF0000",
+    "main_texture_type": "HIGH_CONTRAST",
+    "name": {
+      "translate": "block.minecraft.barrier"
+    },
+    "name_prefix": ""
+  },
+  "properties": {}
+}

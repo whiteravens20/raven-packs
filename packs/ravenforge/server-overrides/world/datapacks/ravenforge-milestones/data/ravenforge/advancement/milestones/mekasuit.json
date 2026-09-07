@@ -1,0 +1,43 @@
+{
+  "parent": "ravenforge:milestones/reaktor",
+  "display": {
+    "icon": {
+      "id": "mekanism:mekasuit_bodyarmor"
+    },
+    "title": "Niezniszczalny",
+    "description": "Zdobądź wszystkie cztery części MekaSuita.",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "komplet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mekanism:mekasuit_helmet"
+            ]
+          },
+          {
+            "items": [
+              "mekanism:mekasuit_bodyarmor"
+            ]
+          },
+          {
+            "items": [
+              "mekanism:mekasuit_pants"
+            ]
+          },
+          {
+            "items": [
+              "mekanism:mekasuit_boots"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# RavenCoin is the only economy on this server, so the bare command names are
+# free to take — and the handbook teaches them that way (docs/shop.txt reaches
+# for /baltop, not /rc top). The mod defaults them off because two mods claiming
+# /pay is how a server ends up with a command that silently does the wrong thing.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+[commands]
+	shortCommandAliases = true

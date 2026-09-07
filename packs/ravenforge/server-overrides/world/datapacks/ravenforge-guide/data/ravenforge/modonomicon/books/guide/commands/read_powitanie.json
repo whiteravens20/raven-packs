@@ -1,0 +1,6 @@
+{
+  "command": "advancement grant @s only ravenforge:milestones/poradnik powitanie",
+  "permission_level": 2,
+  "max_uses": 1,
+  "suppress_output": true
+}

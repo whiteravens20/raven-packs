@@ -73,7 +73,7 @@
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.title": "Backpack",
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.text": "The standard one. Worn on your back and visible on your character.\\\n\\\nYou upgrade it in steps: more room, fluid tanks, a sleeping bag.",
   "book.ravenclassic.przewodnik.sprzet.plecaki.p0.title": "Backpack",
-  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack is worn on your back and shows on your character. You upgrade it in steps, it holds fluids, and with the sleeping bag out it sets your spawn.\\\n\\\nOn death it goes into your grave with everything else — nothing spills.",
+  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack is worn on your back and shows on your character. You upgrade it in steps, it holds fluids, and with the sleeping bag out it sets your spawn.\\\n\\\nOn death it goes into your grave with everything else — nothing spills.\\\n\\\nOn spawn and other server claims **right-clicking the backpack will not work** — you get a message about somebody else's claim. Backpacks are not banned there: open it with the **B key**, which works everywhere. Outside server claims right-click behaves normally.",
   "book.ravenclassic.przewodnik.sprzet.groby.name": "Graves",
   "book.ravenclassic.przewodnik.sprzet.groby.description": "Dying does not cost you your gear",
   "book.ravenclassic.przewodnik.sprzet.groby.p0.title": "Your grave",
@@ -87,5 +87,15 @@
   "book.ravenclassic.przewodnik.sprzet.shadery.p0.title": "Complementary",
   "book.ravenclassic.przewodnik.sprzet.shadery.p0.text": "The pack ships two shaders and Iris to run them. Switch them on in [#](1F4E79)Options → Video → Shaders[#]().\n\n- **Reimagined** — the default. Fine light and water, and the world still looks like Minecraft.\n- **Unbound** — stronger, closer to realism. It costs more frames.",
   "book.ravenclassic.przewodnik.sprzet.shadery.p1.title": "When frames drop",
-  "book.ravenclassic.przewodnik.sprzet.shadery.p1.text": "Drop the render distance first, shaders second. The rest of the tuning is in the pack and needs no setting up — Sodium, Lithium and a few more.\n\n- [#](1F4E79)F3[#]() — a readable debug screen\n- [#](1F4E79)C[#]() — zoom"
+  "book.ravenclassic.przewodnik.sprzet.shadery.p1.text": "Drop the render distance first, shaders second. The rest of the tuning is in the pack and needs no setting up — Sodium, Lithium and a few more.\n\n- [#](1F4E79)F3[#]() — a readable debug screen\n- [#](1F4E79)C[#]() — zoom",
+  "book.ravenclassic.przewodnik.nagroda.name": "Reward",
+  "book.ravenclassic.przewodnik.nagroda.description": "For reading all of it",
+  "book.ravenclassic.przewodnik.nagroda.p0.title": "Reward for the guide",
+  "book.ravenclassic.przewodnik.nagroda.p0.text": "Open every entry in this guide and a button appears on this page to claim a **block of diamond**.\\\n\\\nOpening an entry is what counts, not going back to it. The guide remembers what you have read, and remembers it across logouts.",
+  "book.ravenclassic.przewodnik.nagroda.p1.title": "All read",
+  "book.ravenclassic.przewodnik.nagroda.p1.text": "The whole guide is behind you. The reward is waiting.\\\n\\\n[Claim the reward](command://ravenclassic:przewodnik/ravenclassic:nagroda)",
+  "research_node.ravenclassic.poradnik_przeczytany": "Guide read",
+  "advancements.ravenclassic.poradnik.title": "To the last page",
+  "advancements.ravenclassic.poradnik.description": "Read every entry in the White Ravens guide.",
+  "ravenclassic.poradnik.nagroda": "A block of diamond for reading the guide. Thanks for not guessing."
 }

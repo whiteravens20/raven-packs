@@ -1,0 +1,8 @@
+{
+  "command": "advancement grant @s only ravenclassic:poradnik przeczytany",
+  "max_uses": 1,
+  "suppress_output": true,
+  "allowed_entries": [
+    "ravenclassic:glowna/nagroda"
+  ]
+}

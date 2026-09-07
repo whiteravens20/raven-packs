@@ -1,0 +1,6 @@
+{
+  "pack": {
+    "pack_format": 48,
+    "description": "White Ravens Forge — progression and safety blocks. Loads after mod_data, so it wins over the mods it overrides."
+  }
+}

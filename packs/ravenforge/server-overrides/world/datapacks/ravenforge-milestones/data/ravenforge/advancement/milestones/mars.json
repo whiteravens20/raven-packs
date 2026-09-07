@@ -1,0 +1,22 @@
+{
+  "parent": "ravenforge:milestones/ksiezyc",
+  "display": {
+    "icon": {
+      "id": "ad_astra:mars_globe"
+    },
+    "title": "Mars",
+    "description": "Wyląduj na Marsie.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ladowanie": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "ad_astra:mars"
+      }
+    }
+  }
+}

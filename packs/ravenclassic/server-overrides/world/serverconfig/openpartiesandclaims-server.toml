@@ -46,8 +46,32 @@
 			# block is a till, not a back door.
 			#
 			# The crafting table is the mod's own default, left as it ships.
+			#
+			# The lectern is here so the guide on spawn can be read. It opens
+			# the taking too, and no setting in this file can separate the two:
+			# Modonomicon answers the right-click itself, reading and taking are
+			# the same block interaction, and the "anything$" prefix and the
+			# server-claim Lecterns group were both measured to change nothing.
+			# The book is put back a second later instead, by the rc_pulpit
+			# marker in the ravenclassic-rules datapack.
+			#
+			# Bare rather than "anything$", like everything else that is not a
+			# shop. Bare does NOT mean "empty hand" — that is the "hand$"
+			# prefix, per the mod's own documentation in this file. Bare means
+			# the click goes through unless the held item is itself blocked by
+			# itemUseProtectionExceptionList below, so a player carrying a
+			# pickaxe is refused and one carrying the guide is not.
+			#
+			# That pairing is also what keeps this exception from opening a
+			# hole. Measured on a live server: an item that IS an item-use
+			# exception can be sneak-PLACED against a block exception inside
+			# somebody else's claim. Nothing in the item list here is a
+			# placeable block — the guide is a book — so there is nothing to
+			# place. Do not add a placeable item to that list without
+			# re-measuring this.
 			forcedBlockProtectionExceptionList = [
 				"minecraft:crafting_table",
+				"minecraft:lectern",
 				"anything$waystones:*",
 				"anything$universal_shops:trade_block",
 				"anything$universal_shops:admin_trade_block"

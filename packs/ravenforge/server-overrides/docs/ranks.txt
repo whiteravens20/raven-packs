@@ -1,0 +1,323 @@
+Ranks
+=====
+
+Four groups in one column. The player's path is the `rangi` track — you move up
+it one rung at a time, and there is nothing standing beside it yet. Why there is
+no staff column is section 6, and it is not an omission.
+
+Group names are the ones you type: `nowy`, `gracz`, `obywatel`, `technik`. They
+are identifiers on a live server and are left in Polish everywhere in this file —
+translating them here would mean commands that do not work when pasted.
+
+Unlike ravenclassic, this ladder is **not** a list of commands to paste. It ships
+as files, in config/luckperms/. Section 2 says what that costs you.
+
+
+1. The ladder
+-------------
+
+    rank            from            weight  chunks  forceload  homes
+    ------------------------------------------------------------------
+    Nowy            on arrival          10       4          0      1
+    Gracz           10 h played         20       6          2      2
+    Obywatel        40 h played         30       8          4      3
+    Technik         for RavenCoin       40      12          8      3
+    Budowniczy      appointed           50       8          4      3
+    Moderator       appointed           60       8          4      3
+    Administrator   appointed           90       8          4      3
+    Architekt       appointed          100       8          4      3
+
+The first four are the player ladder and the only ones on the promotion track.
+The last four are staff, deliberately off the track, so `lp promote` can never
+carry anybody past Technik however many times it is run. Both halves and their
+prefix colours are ravenclassic's, unchanged.
+
+Weights are not decoration. They settle conflicts when a player sits in two
+groups, and they are what kubejs/server_scripts/rank_guard.js compares to decide
+who may act on whom — see section 6.
+
+A chunk is 16×16 blocks over the full height of the world — F3+G draws the grid.
+Four chunks in a square make a 32×32 claim. OPAC does not require chunks to
+touch, so those four can just as well be four separate pieces in four places.
+
+Forceload is a chunk kept ticking while nobody is near. It only runs while the
+owner is online (decision D17) — so on this server nothing you build works
+overnight, which in a technical pack is a surprise. The guide book start_kit.js
+hands out gives it an entry of its own — "Maszyny w nocy" — for that reason.
+
+Gracz and Obywatel are granted by our own mod from `minecraft:play_time`, and
+they are **earned, never sold**: a rung with `playtimeMinutes` set cannot be
+bought at any price, whatever the ladder file says. Technik is the one rung that
+costs RavenCoin.
+
+    ! The Technik price in config/ravencoin-ranks.json is a placeholder.
+      It is set with the rest of the currency balance, not on its own.
+
+Technik has a second route in, and nobody types it. A player whose account
+reaches 500 000 RavenCoin without having bought the rank has it bought for them,
+at the same price, by kubejs/server_scripts/council.js — the reasoning is in
+docs/shop.txt section 6, under the third alarm. It goes through RankService.buy
+like any other purchase, so the prerequisite still binds: somebody who has not
+yet earned Obywatel is refused, told why, and bought in automatically once they
+have. Nothing here can hand out a rung of the ladder that was not paid for.
+
+The claim and forceload numbers are ravenclassic's. This is a technical pack and
+bases here are larger, so they may want raising — but raise them in nowy.yml and
+in openpartiesandclaims-server.toml together, see section 3.
+
+
+2. Where the ladder lives
+-------------------------
+
+    config/luckperms/luckperms.conf                  storage-method = "yaml"
+    config/luckperms/yaml-storage/groups/*.yml       the eight groups + default
+    config/luckperms/yaml-storage/tracks/rangi.yml   the promotion track
+    config/ravencoin-ranks.json                      what each rung costs
+    config/HennyEssentials/HennyEssentials.json      the two switches that
+                                                     hand permissions to LuckPerms
+
+LuckPerms defaults to H2, a binary database. The ladder would then exist only on
+whichever machine happened to run the setup commands, and no diff would ever show
+it changing. YAML makes it flat files the pack ships and a reviewer can read.
+
+**What re-extracting the server zip does.** It overwrites every file above.
+Groups and tracks are pack content, so that is the intent — the ladder goes back
+to what the pack says. Player data is not pack content: it lives in
+yaml-storage/users/, which the pack deliberately never ships and re-extracting
+therefore never touches. Nobody loses their rank to an update.
+
+If you edit a group in game with `/lp`, LuckPerms writes the change into these
+same files. Copy it back into the pack, or the next extract undoes it.
+
+
+3. The first-login trap
+-----------------------
+
+Read this one before changing any number.
+
+OPAC's own comment on `maxPlayerClaimsPermission` says a limit that comes from
+permissions "will only take effect when the player logs in". Until that first
+login after a restart, what applies is the plain value in
+config/openpartiesandclaims-server.toml.
+
+The mod ships those at **500 claims and 10 forceloads**. Left alone, every
+restart would hand everybody more than Technik gets, for as long as it took
+people to log back in. The pack therefore sets them to 4 and 0 — Nowy's numbers,
+the lowest rung.
+
+So: `maxPlayerClaims` and `maxPlayerClaimForceloads` in that toml must always
+equal what nowy.yml says. The ladder is added on top of them, per rank.
+
+For any of this to work, the same file must say permissionSystem = "luck_perms".
+The pack sets it; by default the mod hunts for Prometheus and quietly ignores
+every meta value in this document.
+
+
+4. What a rank can and cannot give
+----------------------------------
+
+Only two mods in this pack ask LuckPerms anything. Measured in the jars:
+
+    OPAC          yes  4 Integer meta keys, 7 Boolean nodes
+    RavenCoin     yes  reads inherited groups to sell and grant rungs
+    spark         yes  registers nodes, but defaults to op level 4
+    WorldEdit     NO   NeoForge build ships only VanillaPermissionsProvider;
+                       the LuckPerms-aware one exists for Fabric only
+    Chunky        NO   hasPermission(2), a plain op check
+    Henny         yes  command.he.<command> nodes, prefix and suffix from
+                       meta, and home.limit.<n> for the per-rank home ladder
+
+Henny Essentials replaced Saro's Essentials for exactly this row. Saro's asked
+LuckPerms nothing — 93 boolean config values, 12 string ones and not one number,
+so every command was op-or-everyone and there was no home limit to raise. That
+is why section 1 has a homes column now and did not before.
+
+TWO SWITCHES, BOTH REQUIRED. In HennyEssentials.json:
+
+    permissionConfigs.permissionsEnabled          true
+    permissionConfigs.luckPermsOverridePermissions true
+
+Both ship false. The jar reads them in this order: with permissions disabled it
+returns true for everything, and only with BOTH on does it ask LuckPerms. The
+home ladder sits behind the same pair — getMaxHomeLimit is not consulted unless
+both are set. Turn either off and every node in section 6 stops meaning anything,
+silently.
+
+There is no op fallback behind them either. Once LuckPerms is authoritative, an
+operator without the node is refused like anybody else, which is why Architekt
+holds the whole set by inheritance rather than by being op.
+
+The upside remains: **nothing can hang on `default` by accident**.
+WorldEdit and Chunky never consult LuckPerms, so no node of theirs can be
+granted or leaked there. Verified on a live server as well as in the jars —
+`lp group default permission info` answers that default has no permissions set,
+and a brand-new player resolves to exactly Nowy: prefix "[Nowy] ", 4 claims,
+0 forceloads.
+
+WorldEdit's two ways in besides op are `use-in-creative` and `cheat-mode` in
+worldedit.properties. Both are false by default. Leave them.
+
+
+5. Chat, tab list and nameplates
+--------------------------------
+
+The prefix in section 1 reaches chat, the player list and the floating nameplate
+through **playername-styler**, which reads it from LuckPerms and expands
+%prefix% in its three format strings. Its defaults already do the right thing, so
+the pack ships no config for it.
+
+Henny Essentials would also format chat, from the same LuckPerms prefix, and it
+ships with that on. `chatConfigs.chatFormattingEnabled` is set to false in
+HennyEssentials.json for that reason: two mods writing the same prefix into the
+same line is how you get "[Nowy] [Nowy] Steve". playername-styler keeps the job
+because it is the only one of the two that also reaches the tab list and the
+nameplate.
+
+TRAP, and it costs an hour if you meet it cold. `lp meta setprefix` cannot set a
+prefix that ends in a space:
+
+    lp group nowy meta setprefix 10 "&7[Nowy] "
+
+The command signature is `setprefix <priority> <prefix> [context...]`, so
+anything after the prefix is parsed as **context**, and a trailing space plus
+another token silently becomes a context entry — we produced `context: server:
+'&r'` this way and spent a while wondering where the space went. Quoting does not
+help; LuckPerms trims it.
+
+The space matters, because the format string is `%prefix%&r%displayname%` with
+nothing between them: without it the tab list reads "[Nowy]Steve".
+
+The fix is that the ladder ships as files. Write the space in the .yml, where it
+survives both `lp sync` and a full restart — measured. Do not try to fix it from
+the console.
+
+
+6. The staff column
+-------------------
+
+Four ranks, ravenclassic's, appointed rather than earned:
+
+    Budowniczy      ordinary player + building tools and warp management
+    Moderator       ordinary player + moderation
+    Administrator   Moderator + Budowniczy + banned items, reloads
+    Architekt       everything, the only account with op
+
+Inheritance is a diamond and it is deliberate: Budowniczy and Moderator both
+descend from Obywatel, not from Technik, so appointing somebody to staff never
+hands them a rung of the player ladder they did not earn. Administrator takes
+BOTH branches, Architekt takes Administrator. Verified live — Architekt resolves
+command.he.fly through Budowniczy and command.he.ban through Moderator, while
+Moderator does not inherit fly.
+
+What each one adds, by node, is in the group files themselves. The shape:
+
+    nowy          home / sethome / delhome / listhomes, home.limit.1,
+                  back, afk, spawn, warp, warps, listwarps,
+                  rules, playtime, page, and the pack's own two:
+                  ravenforge.rtp for the random teleport
+                  (kubejs/server_scripts/rtp.js) and ravenforge.start
+                  for the starter kit (kubejs/server_scripts/start_kit.js)
+    gracz         home.limit.2
+    obywatel      home.limit.3
+    technik       nothing new — it pays for ground, not for shortcuts
+    budowniczy    fly, heal, feed, hat, repair, and the bench commands
+                  (anvil, craftingtable, stonecutter…)
+    moderator     ban / tempban / unban, mute / tempmute / unmute, the uuid
+                  variants, vanish, invsee, viewechest, broadcsat, and tpa
+    administrator setspawn, warp management, banned items, tokens, the
+                  three reloads
+    architekt     nothing of its own; it is the sum of the two branches
+
+Two of those placements are decisions rather than defaults.
+
+**Players use warps; only Administrator makes them.** warp and warps sit in
+nowy, so everybody travels the network — but setwarp, delwarp, settempwarp and
+the two display commands are Administrator's alone. A warp is a permanent hole
+in the map's distances, and Budowniczy building the place a warp points at is a
+different job from deciding the world should have one.
+
+**Kits are one script now, not two mods.** kitsEnabled is pinned false in
+HennyEssentials.json, and no kit node is granted to anybody — they would be dead
+weight. The reason is in the mod, not in taste: `/kit <name>` is registered with
+no requires() on the claiming branch at all, so every player who knows a kit's
+name can take it, while `/kits` — the browser — IS gated, on
+command.he.listkits. Anyone can take, nobody can look. There is also no per-kit
+node anywhere in the mod, so "this kit for Technik only" cannot be expressed.
+
+Starter Kit went out with it, and Collective with Starter Kit, which was the
+only thing in the pack that wanted it. Starter Kit did the first-join kit
+correctly and nothing else: once, off a Collective tag, no cooldown and no
+second helping. Neither mod could say "once an hour, and again after a death",
+so kubejs/server_scripts/start_kit.js says it instead — `/start`, gated on
+ravenforge.start, handing out stone tools without a sword or a hoe, four bread
+and the guide book — Modonomicon's, from world/datapacks/ravenforge-guide/,
+carried by a modonomicon:modonomicon stack with the book id in a component. Its cooldown lives in the player's own NBT rather than in
+memory, so a restart does not refill it; a death clears it deliberately, because
+KubeJS copies persistent data across the respawn and would otherwise keep it.
+
+Anything repeatable and valuable still belongs in the shop, priced, where it can
+be gated properly.
+
+**tpa starts at Moderator.** Ordinary players do not get it, and neither does
+Budowniczy, who sits on the other branch. It is consent-based — the target
+clicks ACCEPT or DENY — but consent does not change what it does to the world:
+two people meet instantly anywhere, and distance stops costing anything.
+ravenclassic refused it outright for that reason. Here it is a staff tool for
+reaching a player who needs help, which is the one use that justifies it.
+
+Three things worth knowing before editing any of it.
+
+**`command.he.broadcsat` is spelled that way in the jar.** It is the mod's typo
+for broadcast. Write the node as the jar spells it or the grant does nothing.
+
+**Nobody gets the permission-editing commands.** adduserperm, addgroupperm,
+addgroupprefix and their eleven relatives are granted to no group at all, not
+even Architekt. With luckPermsOverridePermissions on, they would write to a
+store nothing reads, and having two places that appear to set permissions is
+worse than having one. LuckPerms is the single source of truth. Checked live:
+`lp group architekt permission check command.he.adduserperm` answers that
+Architekt neither holds nor inherits it.
+
+**Never grant a bare `command.he.home` style prefix as a wildcard.** The same
+trap ravenclassic documents applies here: LuckPerms reads `home.limit.*` as
+every rung at once, the home ladder quietly stops existing, and it still looks
+like it is working.
+
+One gap against ravenclassic, not invented away:
+
+  * **no /nickname of Henny's own.** playername-styler ships one, but it is
+    gated at op level 2, so it is effectively staff-only until something grants
+    it otherwise.
+
+Henny's missing /rtp was the second gap and is not one any more. The mod has no
+random-teleport node at all, so the pack writes the command itself in
+kubejs/server_scripts/rtp.js and grants ravenforge.rtp to nowy — which is also
+why two of the four nodes in the table above are the pack's own rather than
+Henny's.
+
+TARGET PROTECTION IS NOT IN THIS MOD. Henny's Ban and Mute never ask what rank
+their target holds — measured in the jar, neither class touches
+LuckPermsIntegration. So a Moderator with command.he.ban can ban the Architekt.
+Nothing stopped that before either, because moderation used to need op and only
+the owner had it; giving Moderator the node for the first time is what opens the
+hole. kubejs/server_scripts/rank_guard.js is what closes it, by comparing the
+weights in section 1 and refusing a command whose target ranks at or above the
+caller.
+
+
+7. Day-to-day
+-------------
+
+    lp user <name> promote rangi      one rung up
+    lp user <name> demote rangi       one rung down
+    lp user <name> info               what the player has and where from
+    lp user <name> meta info          the resolved claim and forceload numbers
+
+Our own mod does the automatic half: it watches `minecraft:play_time` and grants
+Gracz and Obywatel itself, and it sells Technik. It never takes a group away.
+
+TRAP when you check any of this from the console: LuckPerms answers
+**asynchronously**, so its reply never comes back through RCON — an RCON client
+sees an empty response and the command looks like it did nothing. It did. Type
+the command on the server console instead, where the reply lands in the log, or
+read the .yml files, which are the truth either way.

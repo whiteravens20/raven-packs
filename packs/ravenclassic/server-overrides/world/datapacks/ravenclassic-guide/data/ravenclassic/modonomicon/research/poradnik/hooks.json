@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ravenclassic:czytam_logowanie",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/logowanie",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_komendy",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/komendy",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_czat",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/czat",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_claim",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/claim",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_forceload",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/forceload",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_party",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/party",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_rangi",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/rangi",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_sklepy",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/sklepy",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_waystones",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/waystones",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_wsparcie",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/wsparcie",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_plecaki",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/plecaki",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_groby",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/groby",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_drzewa",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/drzewa",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  },
+  {
+    "id": "ravenclassic:czytam_shadery",
+    "trigger_type": "modonomicon:entry_viewed_once",
+    "trigger_target": "ravenclassic:glowna/shadery",
+    "value_id": "ravenclassic:wpisy_przeczytane",
+    "increment": 1
+  }
+]

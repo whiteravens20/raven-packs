@@ -1,0 +1,22 @@
+{
+  "parent": "ravenforge:milestones/root",
+  "display": {
+    "icon": {
+      "id": "ad_astra:moon_globe"
+    },
+    "title": "Księżyc",
+    "description": "Wyląduj na Księżycu.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ladowanie": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "ad_astra:moon"
+      }
+    }
+  }
+}

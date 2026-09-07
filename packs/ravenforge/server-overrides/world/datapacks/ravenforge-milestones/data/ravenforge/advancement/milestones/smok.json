@@ -1,0 +1,24 @@
+{
+  "parent": "ravenforge:milestones/root",
+  "display": {
+    "icon": {
+      "id": "minecraft:dragon_egg"
+    },
+    "title": "Smok",
+    "description": "Zabij Smoka Kresu. Na tym serwerze wraca co tydzień.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "smok": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:ender_dragon"
+        }
+      }
+    }
+  }
+}

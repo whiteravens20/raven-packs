@@ -1,0 +1,41 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "rock",
+      "organic",
+      "basic"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "c:netherracks"
+    },
+    "part_substitutes": {}
+  },
+  "display": {
+    "color": "#FF854242",
+    "main_texture_type": "LOW_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.netherrack"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:rod": {
+      "traits": [
+        {
+          "conditions": [],
+          "level": 2,
+          "trait": "silentgear:eroded"
+        },
+        {
+          "conditions": [],
+          "level": 2,
+          "trait": "silentgear:bending"
+        }
+      ]
+    }
+  }
+}

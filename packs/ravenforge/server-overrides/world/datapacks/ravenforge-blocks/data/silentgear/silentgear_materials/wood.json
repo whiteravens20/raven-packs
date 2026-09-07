@@ -1,0 +1,39 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "organic",
+      "wood"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "minecraft:planks"
+    },
+    "part_substitutes": {
+      "silentgear:rod": {
+        "item": "minecraft:stick"
+      }
+    }
+  },
+  "display": {
+    "color": "#FF896727",
+    "main_texture_type": "LOW_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.wood"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:rod": {
+      "traits": [
+        {
+          "conditions": [],
+          "level": 2,
+          "trait": "silentgear:flexible"
+        }
+      ]
+    }
+  }
+}

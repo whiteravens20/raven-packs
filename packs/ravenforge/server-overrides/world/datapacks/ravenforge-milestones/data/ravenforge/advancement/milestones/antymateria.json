@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/sps",
+  "display": {
+    "icon": {
+      "id": "mekanism:pellet_antimatter"
+    },
+    "title": "Antymateria",
+    "description": "Zdobądź pierwszą pigułkę antymaterii.",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pigulka": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mekanism:pellet_antimatter"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

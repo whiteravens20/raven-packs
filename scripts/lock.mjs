@@ -16,7 +16,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getProject, resolveVersion, findMissingDependencies } from './lib/modrinth.mjs';
+import { getProject, resolveVersion, getVersionType, findMissingDependencies } from './lib/modrinth.mjs';
 import { fetchFile } from './lib/download.mjs';
 import { readLockfile, writeLockfile, entryKey, LOCKFILE_VERSION } from './lib/lockfile.mjs';
 
@@ -74,8 +74,30 @@ async function getRequiredJava(mcVersion) {
   }
 }
 
-/** Resolve the Fabric server launcher so the server pack can be turnkey. */
+/**
+ * Resolve the server launcher so the server pack can be turnkey.
+ *
+ * The two loaders hand you different things, and the difference reaches all the
+ * way into the start script. Fabric serves a **ready jar** you run directly.
+ * NeoForge serves an **installer** that has to be run once against the server
+ * directory; it writes `libraries/` and an args file, and from then on the
+ * server is started with `java @user_jvm_args.txt @libraries/.../unix_args.txt`
+ * and never by running a jar. `kind` is what tells build.mjs which to write.
+ */
 async function getServerLauncher(pack) {
+  if (pack.loader.type === 'neoforge') {
+    const v = pack.loader.version;
+    return {
+      kind: 'installer',
+      installerVersion: v,
+      url: `https://maven.neoforged.net/releases/net/neoforged/neoforge/${v}/neoforge-${v}-installer.jar`,
+      fileName: `neoforge-${v}-installer.jar`,
+      // Where the installer leaves the file the start script points at.
+      argsFile: `libraries/net/neoforged/neoforge/${v}/unix_args.txt`,
+      argsFileWindows: `libraries/net/neoforged/neoforge/${v}/win_args.txt`,
+    };
+  }
+
   if (pack.loader.type !== 'fabric') return null;
 
   const installers = await (
@@ -89,6 +111,7 @@ async function getServerLauncher(pack) {
   if (!installer) return null;
 
   return {
+    kind: 'jar',
     installerVersion: installer.version,
     url: `https://meta.fabricmc.net/v2/versions/loader/${pack.minecraft}/${pack.loader.version}/${installer.version}/server/jar`,
     fileName: 'fabric-server-launch.jar',
@@ -132,7 +155,11 @@ async function lockEntry(entry, kind, pack) {
       sha1: file.sha1,
       sha512: file.sha512,
       sha256: file.sha256,
-      license: 'unknown',
+      // A url entry has no Modrinth project to read metadata from, so the
+      // pack states these itself. Left out, the licence notice would tell a
+      // reader "unknown" about a mod whose licence is perfectly well known.
+      license: entry.license ?? 'unknown',
+      sourceUrl: entry.sourceUrl ?? null,
       requiredDependencies: [],
     };
   }
@@ -147,6 +174,14 @@ async function lockEntry(entry, kind, pack) {
 
   // Resource packs and shaders are client-side by definition.
   const side = kind === 'mod' ? inferSide(project, entry.side) : (entry.side ?? 'client');
+
+  // Resolved to project ids so an entry can name a dependency by slug.
+  const ignoredDeps = new Set();
+  for (const ignored of entry.ignoreDependencies ?? []) {
+    const p = await getProject(ignored).catch(() => null);
+    if (p) ignoredDeps.add(p.id);
+    else warn(`${key}: ignoreDependencies lists "${ignored}", which is not on Modrinth`);
+  }
 
   const notes = [
     entry.version ? 'pinned' : null,
@@ -167,6 +202,10 @@ async function lockEntry(entry, kind, pack) {
     projectId: project.id,
     versionId: version.versionId,
     version: version.versionNumber,
+    // Modrinth's own release/beta/alpha, recorded because the version string is
+    // not a reliable stand-in: Advanced Loot Info ships betas numbered plainly
+    // as "1.21.1-1.12.0", and a check that reads the name misses them.
+    versionType: version.versionType,
     fileName: version.file.filename,
     url: version.file.url,
     size: version.file.size,
@@ -175,9 +214,17 @@ async function lockEntry(entry, kind, pack) {
     // lets the whole pipeline avoid downloading jars.
     sha512: version.file.sha512,
     license: project.license,
+    sourceUrl: project.sourceUrl,
     requiredDependencies: (version.dependencies ?? [])
       .filter((d) => d.dependency_type === 'required' && d.project_id)
-      .map((d) => d.project_id),
+      .map((d) => d.project_id)
+      // A multiloader project publishes one version entry for every loader it
+      // supports, and Modrinth's dependency list has no per-loader granularity.
+      // LambDynamicLights tags one release fabric+neoforge+quilt and lists
+      // fabric-api as required — true on Fabric, false on NeoForge, where its
+      // implementation rides along in META-INF/jars. `ignoreDependencies` is
+      // the pack author saying so out loud, in a line a reviewer can see.
+      .filter((id) => !ignoredDeps.has(id)),
   };
 }
 
@@ -214,10 +261,45 @@ async function lockPack(slug, { update }) {
 
   for (const [kind, entry] of entries) {
     const cached = previous.get(entryKey(entry));
-    if (cached) {
+    // A cached entry is reused as-is, which is the point — versions must not
+    // drift just because something else in the pack changed. The exception is a
+    // field the lockfile did not used to carry: reusing verbatim would mean it
+    // never appears for anything already locked, so it is backfilled from the
+    // project without touching the resolved version.
+    if (cached && cached.source !== 'modrinth') {
+      keep(`${cached.name} ${cached.version} (locked)`);
+      // Licence and source are authored in pack.json for a url entry, not
+      // resolved from anywhere, so they follow the pack rather than the cache.
+      files.push({ ...cached, license: entry.license ?? 'unknown', sourceUrl: entry.sourceUrl ?? null });
+      continue;
+    }
+    if (cached && cached.sourceUrl !== undefined && cached.versionType !== undefined) {
       keep(`${cached.name} ${cached.version} (locked)`);
       files.push(cached);
       continue;
+    }
+    if (cached && cached.sourceUrl !== undefined) {
+      try {
+        const versionType = await getVersionType(cached.versionId);
+        keep(`${cached.name} ${cached.version} (locked, version type added)`);
+        files.push({ ...cached, versionType });
+      } catch {
+        keep(`${cached.name} ${cached.version} (locked, version type unavailable)`);
+        files.push({ ...cached, versionType: null });
+      }
+      continue;
+    }
+    if (cached) {
+      try {
+        const project = await getProject(cached.id);
+        keep(`${cached.name} ${cached.version} (locked, source url added)`);
+        files.push({ ...cached, sourceUrl: project.sourceUrl });
+        continue;
+      } catch {
+        keep(`${cached.name} ${cached.version} (locked, source url unavailable)`);
+        files.push({ ...cached, sourceUrl: null });
+        continue;
+      }
     }
     try {
       files.push(await lockEntry(entry, kind, pack));

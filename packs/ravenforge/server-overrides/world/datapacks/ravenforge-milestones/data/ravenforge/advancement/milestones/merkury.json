@@ -1,0 +1,22 @@
+{
+  "parent": "ravenforge:milestones/wenus",
+  "display": {
+    "icon": {
+      "id": "ad_astra:mercury_globe"
+    },
+    "title": "Merkury",
+    "description": "Wyląduj na Merkurym.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ladowanie": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "ad_astra:mercury"
+      }
+    }
+  }
+}

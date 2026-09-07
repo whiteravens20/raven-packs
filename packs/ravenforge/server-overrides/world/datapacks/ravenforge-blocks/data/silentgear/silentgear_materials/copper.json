@@ -1,0 +1,83 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "metal",
+      "basic"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "c:ingots/copper"
+    },
+    "part_substitutes": {
+      "silentgear:rod": {
+        "tag": "c:rods/copper"
+      }
+    }
+  },
+  "display": {
+    "color": "#FFFD804C",
+    "main_texture_type": "HIGH_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.copper"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:rod": {
+      "harvest_speed": {
+        "operation": "MULTIPLY_TOTAL",
+        "value": 0.2
+      },
+      "traits": [
+        {
+          "conditions": [],
+          "level": 3,
+          "trait": "silentgear:bending"
+        },
+        {
+          "conditions": [],
+          "level": 3,
+          "trait": "silentgear:soft"
+        }
+      ]
+    },
+    "silentgear:tip": {
+      "armor_durability": {
+        "operation": "ADD",
+        "value": 1
+      },
+      "durability": {
+        "operation": "ADD",
+        "value": 32
+      },
+      "harvest_speed": {
+        "operation": "ADD",
+        "value": 1
+      },
+      "harvest_tier": {
+        "incorrect_blocks_for_tool": "silentgear:incorrect_for_copper_tools",
+        "level_hint": "1.5",
+        "name": "copper"
+      },
+      "rarity": {
+        "operation": "ADD",
+        "value": 4
+      },
+      "traits": [
+        {
+          "conditions": [],
+          "level": 1,
+          "trait": "silentgear:malleable"
+        },
+        {
+          "conditions": [],
+          "level": 1,
+          "trait": "silentgear:dulling"
+        }
+      ]
+    }
+  }
+}

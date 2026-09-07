@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/prad",
+  "display": {
+    "icon": {
+      "id": "mekanism:enrichment_chamber"
+    },
+    "title": "Dwa razy tyle",
+    "description": "Zdobądź Enrichment Chamber i przestań tracić połowę rudy.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "komora": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mekanism:enrichment_chamber"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

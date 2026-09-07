@@ -1,0 +1,53 @@
+{
+  "type": "silentgear:simple",
+  "parent": "silentgear:empty",
+  "crafting": {
+    "can_salvage": true,
+    "categories": [
+      "metal",
+      "basic"
+    ],
+    "gear_type_blacklist": [],
+    "ingredient": {
+      "tag": "c:ingots/zinc"
+    },
+    "part_substitutes": {
+      "silentgear:rod": {
+        "tag": "c:rods/zinc"
+      }
+    }
+  },
+  "display": {
+    "color": "#FFC9D3CE",
+    "main_texture_type": "HIGH_CONTRAST",
+    "name": {
+      "translate": "material.silentgear.zinc"
+    },
+    "name_prefix": ""
+  },
+  "properties": {
+    "silentgear:rod": {
+      "attack_damage": {
+        "operation": "MULTIPLY_TOTAL",
+        "value": 0.05
+      },
+      "durability": {
+        "operation": "MULTIPLY_TOTAL",
+        "value": -0.05
+      },
+      "rarity": 15,
+      "traits": [
+        {
+          "conditions": [],
+          "level": 2,
+          "trait": "silentgear:malleable"
+        },
+        {
+          "conditions": [],
+          "level": 3,
+          "trait": "silentgear:soft"
+        }
+      ]
+    }
+  }
+}

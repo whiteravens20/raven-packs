@@ -1,0 +1,28 @@
+{
+  "parent": "ravenforge:milestones/kopalnia",
+  "display": {
+    "icon": {
+      "id": "quarryplus:quarry"
+    },
+    "title": "Maszyna zamiast kilofa",
+    "description": "Zdobądź Quarry Plus. Działa tylko w kopalni.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "quarry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "quarryplus:quarry"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

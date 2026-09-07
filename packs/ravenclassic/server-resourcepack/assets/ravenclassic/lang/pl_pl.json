@@ -73,7 +73,7 @@
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.title": "Plecak",
   "book.ravenclassic.przewodnik.sprzet.plecaki.spot.text": "Podstawowa wersja. Nosisz go na plecach i widać go na postaci.\\\n\\\nUlepsza się go stopniowo: więcej miejsca, zbiorniki na płyny, śpiwór.",
   "book.ravenclassic.przewodnik.sprzet.plecaki.p0.title": "Plecak",
-  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack nosisz na plecach i widać go na postaci. Ulepszasz go stopniowo, mieści też płyny, a z rozłożonym śpiworem ustawisz w nim punkt odrodzenia.\\\n\\\nPrzy śmierci plecak trafia do grobu razem z resztą — nic z niego nie wypada.",
+  "book.ravenclassic.przewodnik.sprzet.plecaki.p0.text": "Traveler's Backpack nosisz na plecach i widać go na postaci. Ulepszasz go stopniowo, mieści też płyny, a z rozłożonym śpiworem ustawisz w nim punkt odrodzenia.\\\n\\\nPrzy śmierci plecak trafia do grobu razem z resztą — nic z niego nie wypada.\\\n\\\nNa spawnie i innych działkach serwera **prawy przycisk myszy plecaka nie zadziała** — dostaniesz komunikat o cudzej działce. To nie zakaz plecaków: otwórz go **klawiszem B**, który działa wszędzie. Poza działkami serwera prawy przycisk działa normalnie.",
   "book.ravenclassic.przewodnik.sprzet.groby.name": "Groby",
   "book.ravenclassic.przewodnik.sprzet.groby.description": "Śmierć nie kosztuje ekwipunku",
   "book.ravenclassic.przewodnik.sprzet.groby.p0.title": "Twój grób",
@@ -87,5 +87,15 @@
   "book.ravenclassic.przewodnik.sprzet.shadery.p0.title": "Complementary",
   "book.ravenclassic.przewodnik.sprzet.shadery.p0.text": "W paczce są dwa shadery i Iris, który je uruchamia. Włączysz je w [#](1F4E79)Opcje → Grafika → Shadery[#]().\n\n- **Reimagined** — domyślny. Ładne światło i woda, ale świat nadal wygląda jak Minecraft.\n- **Unbound** — mocniejszy, bliżej realizmu. Kosztuje więcej klatek.",
   "book.ravenclassic.przewodnik.sprzet.shadery.p1.title": "Gdy klatki spadają",
-  "book.ravenclassic.przewodnik.sprzet.shadery.p1.text": "Najpierw zejdź z zasięgu widzenia, potem wyłącz shadery. Reszta optymalizacji siedzi w paczce i działa bez ustawiania — Sodium, Lithium i kilka innych.\n\n- [#](1F4E79)F3[#]() — czytelny ekran debugowania\n- [#](1F4E79)C[#]() — przybliżenie"
+  "book.ravenclassic.przewodnik.sprzet.shadery.p1.text": "Najpierw zejdź z zasięgu widzenia, potem wyłącz shadery. Reszta optymalizacji siedzi w paczce i działa bez ustawiania — Sodium, Lithium i kilka innych.\n\n- [#](1F4E79)F3[#]() — czytelny ekran debugowania\n- [#](1F4E79)C[#]() — przybliżenie",
+  "book.ravenclassic.przewodnik.nagroda.name": "Nagroda",
+  "book.ravenclassic.przewodnik.nagroda.description": "Za przeczytanie wszystkiego",
+  "book.ravenclassic.przewodnik.nagroda.p0.title": "Nagroda za poradnik",
+  "book.ravenclassic.przewodnik.nagroda.p0.text": "Otwórz każdy wpis w tym poradniku, a na tej stronie pojawi się przycisk do odebrania **bloku diamentu**.\\\n\\\nLiczy się otwarcie wpisu, nie zaglądanie do niego po raz drugi. Poradnik pamięta, co już czytałeś, i pamięta to po wylogowaniu.",
+  "book.ravenclassic.przewodnik.nagroda.p1.title": "Przeczytane",
+  "book.ravenclassic.przewodnik.nagroda.p1.text": "Cały poradnik za tobą. Nagroda czeka.\\\n\\\n[Odbieram nagrodę](command://ravenclassic:przewodnik/ravenclassic:nagroda)",
+  "research_node.ravenclassic.poradnik_przeczytany": "Poradnik przeczytany",
+  "advancements.ravenclassic.poradnik.title": "Do ostatniej strony",
+  "advancements.ravenclassic.poradnik.description": "Przeczytaj każdy wpis w poradniku Białych Kruków.",
+  "ravenclassic.poradnik.nagroda": "Blok diamentu za przeczytanie poradnika. Dzięki, że nie zgadywałeś."
 }

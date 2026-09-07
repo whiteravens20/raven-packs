@@ -15,6 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { listFiles } from './lib/download.mjs';
+import { isCopyleft } from './lib/licences.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -44,7 +45,17 @@ const fail = (slug, msg) => problems.push(`${slug}: ${msg}`);
  * The right numbers for a given Minecraft version are not guessable; read them
  * from `version.json` in that version's client jar (`pack_version.resource_major`
  * for resource packs, `pack_version.data_major` for data packs).
+ *
+ * Which keys are correct depends on the version, so this cannot be a blanket
+ * rule. A pack for a Minecraft old enough to predate the changeover has to use
+ * `pack_format`, and `min_format`/`max_format` mean nothing to it — ravenforge
+ * is on 1.21.1, data format 48, and its datapack loads only with the old key.
+ * So the test is the declared number, not the key: below the changeover the old
+ * key is required, at or above it the new pair is.
  */
+
+/** `PackFormat.lastPreMinorVersion` — the last format before the key change. */
+const LAST_PRE_MINOR = { resource: 64, data: 81 };
 async function validatePackMeta(slug) {
   const metas = (await listFiles(path.join(PACKS_DIR, slug))).filter((f) =>
     f.relative.endsWith('pack.mcmeta'),
@@ -61,18 +72,35 @@ async function validatePackMeta(slug) {
     }
 
     const section = meta.pack ?? {};
+    const kind = file.relative.includes('datapacks/') ? 'data' : 'resource';
+    const threshold = LAST_PRE_MINOR[kind];
     const legacy = ['pack_format', 'supported_formats'].filter((k) => k in section);
-    if (legacy.length > 0) {
-      fail(slug, `${file.relative} still uses ${legacy.join(' and ')} — replace with min_format/max_format`);
-    }
-    const missing = ['min_format', 'max_format'].filter((k) => !(k in section));
-    if (missing.length > 0) {
-      fail(slug, `${file.relative} is missing ${missing.join(' and ')} — the game cannot read its metadata`);
+    const modern = ['min_format', 'max_format'].filter((k) => k in section);
+
+    // The highest format the file claims, whichever key it used to claim it.
+    const claimed = Math.max(
+      ...[section.pack_format, section.max_format, ...(section.supported_formats?.max ? [section.supported_formats.max] : [])]
+        .filter((n) => typeof n === 'number'),
+      -1,
+    );
+
+    if (claimed < 0) {
+      fail(slug, `${file.relative} declares no pack format at all — the game cannot read its metadata`);
+    } else if (claimed > threshold) {
+      if (legacy.length > 0) {
+        fail(slug, `${file.relative} claims ${kind} format ${claimed}, past ${threshold}, while still using ${legacy.join(' and ')} — replace with min_format/max_format`);
+      }
+      const missing = ['min_format', 'max_format'].filter((k) => !(k in section));
+      if (missing.length > 0) {
+        fail(slug, `${file.relative} is missing ${missing.join(' and ')} — the game cannot read its metadata`);
+      }
+    } else if (modern.length > 0) {
+      fail(slug, `${file.relative} uses ${modern.join(' and ')} at ${kind} format ${claimed}, which predates them — use pack_format`);
     }
   }
 
   if (metas.length > 0 && problems.length === before) {
-    console.log(`  \x1b[32m✓\x1b[0m ${metas.length} pack.mcmeta declare min_format/max_format`);
+    console.log(`  \x1b[32m✓\x1b[0m ${metas.length} pack.mcmeta declare a format the game can read`);
   }
 }
 
@@ -165,6 +193,10 @@ async function validatePack(slug) {
   await validateBookItems(slug, pack);
   await validateBookLayout(slug);
   await validateBookText(slug);
+  await validateBookPages(slug);
+  await validateMilestones(slug);
+  await validateShopMath(slug);
+  await validateKubeJsConst(slug);
 
   const lock = await readLockfile(PACKS_DIR, slug);
   if (!lock) {
@@ -191,7 +223,30 @@ async function validatePack(slug) {
     if (missing.length > 0) fail(slug, `locked file "${file.id}" is missing: ${missing.join(', ')}`);
   }
 
-  const prereleases = lock.files.filter((f) => /alpha|beta|snapshot|-rc/i.test(f.version));
+  // The zips carry real jars, so shipping one is conveying compiled code. For a
+  // copyleft mod that comes with an obligation to say where the source is, and
+  // the only honest way to meet it is to name the project's own repository.
+  //
+  // This is a hard failure rather than a warning because the case it catches is
+  // invisible otherwise: a mod whose published jar contains classes that were
+  // never released as source. Nothing downstream would notice, and by then the
+  // binary is already inside an archive somebody has downloaded.
+  const unsourced = lock.files.filter((f) => isCopyleft(f.license) && !f.sourceUrl);
+  if (unsourced.length > 0) {
+    for (const f of unsourced) {
+      fail(slug, `"${f.id}" is ${f.license} but publishes no source URL — the zips would convey it with no way to obtain the source`);
+    }
+    return;
+  }
+  const copyleft = lock.files.filter((f) => isCopyleft(f.license));
+  console.log(`  \x1b[32m✓\x1b[0m ${copyleft.length} copyleft component(s) name where their source lives`);
+
+  // Modrinth's own version_type where we have it. The name pattern is the
+  // fallback for url entries, which carry no type — on its own it misses a
+  // beta that happens to be numbered like a release.
+  const prereleases = lock.files.filter((f) =>
+    f.versionType ? f.versionType !== 'release' : /alpha|beta|snapshot|-rc/i.test(f.version),
+  );
   if (prereleases.length > 0) {
     console.log(`  \x1b[33m!\x1b[0m ${prereleases.length} prerelease version(s): ${prereleases.map((f) => f.id).join(', ')}`);
   }
@@ -318,6 +373,11 @@ async function validateBookLayout(slug) {
         fail(slug, `${file.rest} is not valid JSON: ${error.message}`);
         continue;
       }
+      // An entry with no `id` of its own belongs to the newer Modonomicon,
+      // where the id comes from the path and a directory under entries/ is just
+      // a directory. validateBookPages checks those; the two versions disagree
+      // about where an id comes from, so each check takes only its own.
+      if (entry.id === undefined) continue;
       const wantCategory = `${namespace}:${category}`;
       const wantId = `${namespace}:${category}/${name}`;
       if (entry.category !== wantCategory) {
@@ -349,6 +409,52 @@ async function validateBookLayout(slug) {
  * Both are invisible in the source and only show up in game, which is what
  * makes them worth a gate rather than a habit.
  */
+/**
+ * The two rules above, applied to one string.
+ *
+ * Shared because the text reaches the same renderer by two routes: behind a
+ * lang key in a resource pack (ravenclassic) and inline in the page's own JSON
+ * (ravenforge, whose Modonomicon reads `text` as a literal when it is not a
+ * translation key). The renderer does not care which, so neither does this.
+ */
+function checkMarkdownBreaks(slug, where, value) {
+  const isListItem = (line) => /^\s*[-*+]\s+/.test(line);
+  const lines = value.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim() !== '') continue;
+    const before = [...lines.slice(0, i)].reverse().find((line) => line.trim() !== '');
+    const after = lines.slice(i + 1).find((line) => line.trim() !== '');
+    if (before && after && !isListItem(before) && !isListItem(after)) {
+      fail(
+        slug,
+        `${where} splits paragraphs with a blank line, which Modonomicon renders as ` +
+          'nothing — end the line with a backslash instead',
+      );
+    }
+  }
+
+  for (let i = 0; i < lines.length - 1; i++) {
+    if (lines[i].endsWith('\\') && isListItem(lines[i + 1])) {
+      fail(slug, `${where} ends a line with a backslash right before a list, which renders as a literal "\\"`);
+    }
+  }
+
+  // One trailing backslash is Modonomicon's hard break. Two is a literal
+  // backslash followed by a hard break, and it reaches the player as a stray
+  // "\" in the middle of a sentence. Easy to write by accident, because the
+  // separator has to survive JSON escaping on the way in — measured on a live
+  // client, where a doubled one rendered as "Nagroda czeka.\ \".
+  //
+  // The check above this one only asks THAT paragraphs are separated, which is
+  // why it passed a separator that was wrong. Whether is not the same as how.
+  for (const line of lines) {
+    if (/[^\\]\\{2}$|^\\{2}$/.test(line)) {
+      fail(slug, `${where} ends a line with two backslashes — one is the line break, the second reaches the player as a literal "\\"`);
+    }
+  }
+}
+
 async function validateBookText(slug) {
   let files;
   try {
@@ -359,7 +465,6 @@ async function validateBookText(slug) {
   const langs = files.filter((file) => /\/lang\/[a-z]{2}_[a-z]{2}\.json$/.test(file.relative));
   if (langs.length === 0) return;
 
-  const isListItem = (line) => /^\s*[-*+]\s+/.test(line);
   const keysets = new Map();
   let checked = 0;
 
@@ -376,26 +481,7 @@ async function validateBookText(slug) {
     for (const [key, value] of Object.entries(lang)) {
       if (!key.endsWith('.text') || typeof value !== 'string') continue;
       checked++;
-      const lines = value.split('\n');
-
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim() !== '') continue;
-        const before = [...lines.slice(0, i)].reverse().find((line) => line.trim() !== '');
-        const after = lines.slice(i + 1).find((line) => line.trim() !== '');
-        if (before && after && !isListItem(before) && !isListItem(after)) {
-          fail(
-            slug,
-            `${file.relative}: ${key} splits paragraphs with a blank line, which Modonomicon renders as ` +
-              'nothing — end the line with a backslash instead',
-          );
-        }
-      }
-
-      for (let i = 0; i < lines.length - 1; i++) {
-        if (lines[i].endsWith('\\') && isListItem(lines[i + 1])) {
-          fail(slug, `${file.relative}: ${key} ends a line with a backslash right before a list, which renders as a literal "\\"`);
-        }
-      }
+      checkMarkdownBreaks(slug, `${file.relative}: ${key}`, value);
     }
   }
 
@@ -411,6 +497,502 @@ async function validateBookText(slug) {
   }
 
   if (checked > 0) console.log(`  \x1b[32m✓\x1b[0m ${checked} guide book text(s) render with their paragraphs separated`);
+}
+
+/**
+ * ravenforge writes its book inline, and its ids come from the file path.
+ *
+ * Modonomicon 1.120.4 has no `id` field on an entry at all — BookDataManager
+ * splits the resource path on "/", takes the first segment as the book id and
+ * keeps the whole location as the entry's own. So `<ns>:<book>/<rest>` IS the
+ * id, and a `category` or a `parents` entry that names anything else points at
+ * nothing. Its page text is inline too, read as a literal when it is not a
+ * translation key, which puts it out of reach of the lang-file check above and
+ * in reach of exactly the same two renderer traps.
+ *
+ * An entry that declares its own `id` belongs to the older layout and is left
+ * to validateBookLayout — the two Modonomicon versions in this repo disagree
+ * about where an id comes from, and only one of them can be right per pack.
+ */
+async function validateBookPages(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'));
+  } catch {
+    return;
+  }
+  const inBooks = files.filter(
+    (file) => /\/modonomicon\/books\//.test(file.relative) && file.relative.endsWith('.json'),
+  );
+  if (inBooks.length === 0) return;
+
+  // The id Modonomicon gives a file is NOT its path. BookDataManager.apply
+  // splits the resource path on "/" and takes the book from part 0, then
+  // `Arrays.stream(pathParts).skip(2)` for the rest — so
+  // `guide/categories/podstawy` registers as `<ns>:podstawy`, with the book
+  // name and the kind directory both dropped. Measured in
+  // modonomicon-1.21.1-neoforge-1.120.4.jar.
+  //
+  // This check used to build the path form instead, which is why it passed a
+  // book whose every entry pointed at a category that did not exist: the gate
+  // and the guide were wrong in the same direction. `book.getCategory()` then
+  // answers null, `category.addEntry()` throws, apply() swallows it per entry,
+  // and the book opens with nothing in it and nothing in the log to say why.
+  const idOf = (relative) => {
+    const match = relative.match(/\/data\/([^/]+)\/modonomicon\/books\/(.+)\.json$/);
+    if (!match) return null;
+    const parts = match[2].split('/');
+    if (parts.length < 3) return null;
+    return { kind: parts[1], id: `${match[1]}:${parts.slice(2).join('/')}` };
+  };
+
+  // Three maps, not one, because Modonomicon keeps three: a category and an
+  // entry may share a name without colliding, so merging them would let an
+  // entry name a category as its parent and pass.
+  const known = { categories: new Set(), entries: new Set(), commands: new Set() };
+  for (const file of inBooks) {
+    const resolved = idOf(file.relative);
+    if (resolved && known[resolved.kind]) known[resolved.kind].add(resolved.id);
+  }
+
+  let checked = 0;
+  for (const file of inBooks) {
+    const id = idOf(file.relative);
+    if (id === null || id.kind !== 'entries') continue;
+
+    let entry;
+    try {
+      entry = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    if (entry.id !== undefined) continue;
+
+    if (typeof entry.category === 'string' && !known.categories.has(entry.category)) {
+      fail(slug, `${file.relative} names category "${entry.category}", which is no file in this book — the entry renders nowhere`);
+    }
+    for (const parent of entry.parents ?? []) {
+      if (typeof parent.entry === 'string' && !known.entries.has(parent.entry)) {
+        fail(slug, `${file.relative} names parent "${parent.entry}", which is no entry in this book`);
+      }
+    }
+    // The same path rule again, and the same silence when it is wrong: a
+    // command_to_run_on_first_read that resolves to nothing simply does not run,
+    // and whatever the command was for — here, granting a milestone criterion —
+    // never happens for anybody.
+    const command = entry.command_to_run_on_first_read;
+    if (typeof command === 'string' && !known.commands.has(command)) {
+      fail(slug, `${file.relative} runs "${command}" on first read, which is no command in this book`);
+    }
+
+    const pages = Array.isArray(entry.pages) ? entry.pages : [];
+    for (let i = 0; i < pages.length; i++) {
+      for (const field of ['title', 'text']) {
+        const value = pages[i][field];
+        if (typeof value !== 'string') continue;
+        checked++;
+        checkMarkdownBreaks(slug, `${file.relative}: page ${i + 1} ${field}`, value);
+      }
+    }
+  }
+
+  if (checked > 0) {
+    console.log(`  \x1b[32m✓\x1b[0m ${checked} inline book text(s) render and point where they say`);
+  }
+}
+
+/**
+ * A milestone that pays nothing, and a payout for a milestone that does not
+ * exist, both fail in silence.
+ *
+ * The advancement decides WHEN, and kubejs/server_scripts/milestones.js decides
+ * WHAT IT IS WORTH, in two files that have to agree on a key and a title. An
+ * advancement with no row earns the player a toast and no money; a row with no
+ * advancement registers a listener for an id that will never fire. Neither
+ * writes a line to any log, and neither shows up until somebody actually
+ * reaches the milestone on a live server — which for half of these is weeks in.
+ *
+ * The titles are compared as well as the keys, because the payout message names
+ * the milestone: rename it in the datapack alone and the chat line goes on
+ * quoting the old name forever.
+ */
+async function validateMilestones(slug) {
+  let files;
+  try {
+    files = await listFiles(path.join(PACKS_DIR, slug, 'server-overrides'));
+  } catch {
+    return;
+  }
+  // Every advancement in the pack, so a parent can be resolved wherever its file
+  // lives — an advancement's parent is a ResourceLocation and does not care.
+  // Only the ones under milestones/ have to carry a price, though: the Council's
+  // hidden one CHARGES, and lives outside that folder for exactly that reason.
+  const allAdvancements = files.filter(
+    (file) => /\/advancement\/.+\.json$/.test(file.relative),
+  );
+  const advancements = allAdvancements.filter(
+    (file) => /\/advancement\/milestones\/[^/]+\.json$/.test(file.relative),
+  );
+  const script = files.find((file) => file.relative.endsWith('kubejs/server_scripts/milestones.js'));
+  if (advancements.length === 0 && !script) return;
+
+  if (advancements.length === 0 || !script) {
+    fail(slug, 'milestones need both the advancements and milestones.js — one of the two is missing');
+    return;
+  }
+
+  const source = await fs.readFile(script.absolute, 'utf8');
+  const table = source.match(/const MS_MILESTONES = \{([\s\S]*?)\n {2}\}/);
+  if (!table) {
+    fail(slug, 'milestones.js has no MS_MILESTONES table this script can read — the payouts are ungated');
+    return;
+  }
+  const paid = new Map();
+  for (const row of table[1].matchAll(/(\w+): \{ rc: (\d+), name: '([^']*)' \}/g)) {
+    paid.set(row[1], { rc: Number(row[2]), name: row[3] });
+  }
+
+  const declared = new Map();
+  const ids = new Set();
+  for (const file of allAdvancements) {
+    const id = file.relative.match(/\/data\/([^/]+)\/advancement\/(.+)\.json$/);
+    let advancement;
+    try {
+      advancement = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    if (id) ids.add(`${id[1]}:${id[2]}`);
+    if (advancements.includes(file)) {
+      declared.set(file.relative.replace(/^.*\//, '').replace(/\.json$/, ''), advancement);
+    } else if (advancement.parent !== undefined) {
+      declared.set(`\u0000${id ? `${id[1]}:${id[2]}` : file.relative}`, advancement);
+    }
+  }
+
+  for (const [name, advancement] of declared) {
+    if (advancement.parent !== undefined && !ids.has(advancement.parent)) {
+      fail(slug, `advancement ${name.replace('\u0000', '')} names parent "${advancement.parent}", which does not exist`);
+    }
+    if (name === 'root' || name.startsWith('\u0000')) continue;
+    const row = paid.get(name);
+    if (!row) {
+      fail(slug, `advancement ${name} has no row in milestones.js — earning it would pay nothing and say nothing`);
+      continue;
+    }
+    const title = advancement.display?.title;
+    if (typeof title === 'string' && title !== row.name) {
+      fail(slug, `advancement ${name} is titled "${title}" but milestones.js calls it "${row.name}" — the payout message would quote the wrong name`);
+    }
+  }
+  for (const name of paid.keys()) {
+    if (!declared.has(name)) {
+      fail(slug, `milestones.js pays for "${name}", which is no advancement — that listener can never fire`);
+    }
+  }
+
+  // An `impossible` criterion can only be granted by something outside the
+  // advancement, and here that something is a Modonomicon BookCommand. Both
+  // ends of that wiring fail in silence: a criterion nothing grants makes the
+  // whole advancement unearnable forever, and a command naming a criterion that
+  // no longer exists simply does nothing. Neither is visible until a player
+  // reads the book and nothing happens.
+  const granted = new Set();
+  for (const file of files) {
+    if (!/\/modonomicon\/books\/[^/]+\/commands\/[^/]+\.json$/.test(file.relative)) continue;
+    let command;
+    try {
+      command = JSON.parse(await fs.readFile(file.absolute, 'utf8'));
+    } catch (error) {
+      fail(slug, `${file.relative} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    const grant = String(command.command ?? '').match(
+      /^advancement grant \S+ only ravenforge:milestones\/(\S+) (\S+)$/,
+    );
+    if (!grant) continue;
+    const [, name, criterion] = grant;
+    granted.add(`${name}/${criterion}`);
+    const advancement = declared.get(name);
+    if (!advancement) {
+      fail(slug, `${file.relative} grants advancement "${name}", which does not exist`);
+    } else if (advancement.criteria?.[criterion] === undefined) {
+      fail(slug, `${file.relative} grants criterion "${criterion}" of ${name}, which has no such criterion`);
+    }
+  }
+  for (const [name, advancement] of declared) {
+    if (name.startsWith('\u0000')) continue;
+    for (const [criterion, body] of Object.entries(advancement.criteria ?? {})) {
+      if (body.trigger !== 'minecraft:impossible') continue;
+      if (!granted.has(`${name}/${criterion}`)) {
+        fail(slug, `advancement ${name} needs criterion "${criterion}", which is impossible and nothing grants — that milestone can never be earned`);
+      }
+    }
+  }
+
+  const total = [...paid.values()].reduce((sum, row) => sum + row.rc, 0);
+  console.log(`  \x1b[32m✓\x1b[0m ${paid.size} milestone(s) priced and wired, ${total.toLocaleString('pl-PL')} RavenCoin in total`);
+}
+
+/**
+ * `const` inside a nested block is a runtime crash in KubeJS's Rhino.
+ *
+ * Measured on a live 1.21.1 server with KubeJS 2101.7.2 (2026-09-06). A `const`
+ * declared directly in a function body is fine; the same declaration one brace
+ * deeper — inside `if`, `for`, `try`, `catch` or a bare block — throws
+ * `InternalError: TypeError: redeclaration of var <name>` every time it is
+ * executed. `let` in the identical position is fine, and so is `var`. The name
+ * in the message is whatever you declared; it is not a real collision, so
+ * renaming never helps and grepping for the reported identifier finds nothing.
+ *
+ * This is invisible to every other check we run. The file parses, so nothing
+ * fails to build; Rhino compiles it, so nothing fails to load; the throw only
+ * happens when that line is reached. `council.js` shipped with one and swept
+ * every ten seconds into a caught exception nobody read. `rtp.js` had one on
+ * the main surface-finding path and a second inside the handler that was meant
+ * to recover from the first. `lectern_guard.js` had one in the loop that puts
+ * the book back, which is the entire point of the script.
+ *
+ * So this is a syntactic gate, run over every KubeJS script in the pack. It
+ * blanks comments and string bodies, then tracks whether each open brace starts
+ * a function body (it follows `=>`, or a parameter list that is not a control
+ * head) or a plain block, and reports every `const` whose innermost brace is a
+ * plain block.
+ */
+const KJS_CONTROL = new Set(['if', 'for', 'while', 'switch', 'catch', 'with', 'else', 'do', 'try', 'finally']);
+
+/** Replace comment and string bodies with spaces, preserving every offset. */
+function blankLiterals(src) {
+  const out = src.split('');
+  const keep = (a, b) => {
+    for (let k = a; k < b; k++) if (out[k] !== '\n') out[k] = ' ';
+  };
+  let i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    const d = src[i + 1];
+    if (c === '/' && d === '/') {
+      let j = src.indexOf('\n', i);
+      if (j < 0) j = src.length;
+      keep(i, j);
+      i = j;
+    } else if (c === '/' && d === '*') {
+      let j = src.indexOf('*/', i + 2);
+      j = j < 0 ? src.length : j + 2;
+      keep(i, j);
+      i = j;
+    } else if (c === '"' || c === "'" || c === '`') {
+      let j = i + 1;
+      while (j < src.length) {
+        if (src[j] === '\\') j += 2;
+        else if (src[j] === c) {
+          j++;
+          break;
+        } else j++;
+      }
+      keep(i + 1, j - 1);
+      i = j;
+    } else i++;
+  }
+  return out.join('');
+}
+
+/**
+ * Is the `{` at `at` the body of a function, rather than a plain block?
+ *
+ * True when it follows `=>`, or a `(…)` whose preceding word is not a control
+ * keyword — which covers `function f() {`, `method() {` and `(function () {`.
+ */
+function opensFunctionBody(s, at) {
+  let i = at - 1;
+  while (i >= 0 && /\s/.test(s[i])) i--;
+  if (i < 0) return false;
+  if (s[i] === '>' && s[i - 1] === '=') return true;
+  if (s[i] !== ')') return false;
+  let depth = 0;
+  let j = i;
+  for (; j >= 0; j--) {
+    if (s[j] === ')') depth++;
+    else if (s[j] === '(') {
+      depth--;
+      if (depth === 0) break;
+    }
+  }
+  let k = j - 1;
+  while (k >= 0 && /\s/.test(s[k])) k--;
+  const end = k;
+  while (k >= 0 && /[A-Za-z0-9_$]/.test(s[k])) k--;
+  return !KJS_CONTROL.has(s.slice(k + 1, end + 1));
+}
+
+/** Every `const` in `src` whose innermost enclosing brace is a plain block. */
+function constInNestedBlock(src) {
+  const s = blankLiterals(src);
+  const stack = [];
+  const found = [];
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === '{') stack.push(opensFunctionBody(s, i) ? 'fn' : 'block');
+    else if (c === '}') stack.pop();
+    else if (/[A-Za-z_$]/.test(c) && (i === 0 || !/[A-Za-z0-9_$.]/.test(s[i - 1]))) {
+      let j = i;
+      while (j < s.length && /[A-Za-z0-9_$]/.test(s[j])) j++;
+      if (s.slice(i, j) === 'const' && stack.length > 0 && stack[stack.length - 1] === 'block') {
+        found.push(src.slice(0, i).split('\n').length);
+      }
+      i = j - 1;
+    }
+  }
+  return found;
+}
+
+async function validateKubeJsConst(slug) {
+  const dir = path.join(PACKS_DIR, slug, 'server-overrides', 'kubejs');
+  let files;
+  try {
+    files = await listFiles(dir);
+  } catch {
+    return;
+  }
+  const scripts = files.filter((file) => file.relative.endsWith('.js'));
+  if (scripts.length === 0) return;
+
+  let bad = 0;
+  for (const file of scripts) {
+    const src = await fs.readFile(file.absolute, 'utf8');
+    for (const line of constInNestedBlock(src)) {
+      bad++;
+      fail(
+        slug,
+        `kubejs/${file.relative}:${line} declares const inside a nested block — ` +
+          `Rhino throws "redeclaration of var" there at runtime; use let`,
+      );
+    }
+  }
+  if (bad === 0) {
+    console.log(`  \x1b[32m✓\x1b[0m ${scripts.length} KubeJS script(s) free of block-scoped const`);
+  }
+}
+
+/**
+ * The money-supply arithmetic in `docs/shop.txt` has to add up.
+ *
+ * That document is not a description of the economy, it IS the economy: the
+ * lens prices exist nowhere else, and every later number — the catalogue, the
+ * lifetime sink, the RavenCoin-per-hour the faucet has to hit — is derived
+ * from them by hand. Hand-derived numbers drift, and drift here is invisible:
+ * prose does not fail to compile, and the figure it quotes is the one the next
+ * decision gets calibrated against.
+ *
+ * It had already happened twice. The catalogue claimed 38 000 "for the rest of
+ * the lenses" from the very first commit, when the table summed to 28 800 —
+ * an error at authorship, not staleness. Then the milestone total was raised
+ * to 31 500 in one sentence and left at 23 000 in the next, three paragraphs
+ * down, when three endgame milestones were added.
+ *
+ * So every figure this checks is one that is stated twice: once where it is
+ * derived and once where it is used.
+ */
+async function validateShopMath(slug) {
+  const before = problems.length;
+  const shop = path.join(PACKS_DIR, slug, 'server-overrides', 'docs', 'shop.txt');
+  let text;
+  try {
+    text = await fs.readFile(shop, 'utf8');
+  } catch {
+    return;
+  }
+  const num = (raw) => Number(raw.replace(/[\s ]/g, ''));
+
+  // Section 3's price column: `lime  emerald, uranium  8 000`. Rows that sell
+  // nothing carry words there instead of a figure and drop out on their own.
+  const table = text.match(/\n3\. What the shop sells\n[\s\S]*?\n4\. What the shop buys\n/);
+  if (!table) {
+    fail(slug, 'shop.txt has no section 3 this script can read — the price table is ungated');
+    return;
+  }
+  const lenses = new Map();
+  for (const row of table[0].matchAll(/^ {4}(\w+) {2,}\S.*?(\d[\d\s ]*\d)\s*$/gm)) {
+    lenses.set(row[1], num(row[2]));
+  }
+  if (lenses.size < 2) {
+    fail(slug, 'shop.txt section 3 lists no priced lenses — the table format changed under this check');
+    return;
+  }
+
+  // Brown is priced with the rank rather than with the lenses, and section 6
+  // adds it separately, so it is not part of "the rest".
+  const brown = lenses.get('brown');
+  const rest = [...lenses].filter(([name]) => name !== 'brown');
+  const restSum = rest.reduce((sum, [, price]) => sum + price, 0);
+
+  const claim = text.match(
+    /The catalogue costs one fully equipped player ([\d\s ]+) once — ([\d\s ]+) for\nTechnik, ([\d\s ]+) for brown, and ([\d\s ]+) for the (\w+) remaining lens rows/,
+  );
+  if (!claim) {
+    fail(slug, 'shop.txt section 6 no longer states the catalogue the way this check reads it');
+    return;
+  }
+  const [, catalogue, technik, brownClaim, restClaim, countWord] = claim.map((part) =>
+    typeof part === 'string' ? part.trim() : part,
+  );
+  const COUNTS = { five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
+
+  if (num(restClaim) !== restSum) {
+    fail(slug, `shop.txt section 6 puts the lenses at ${restClaim}, but section 3 sums to ${restSum.toLocaleString('pl-PL')}`);
+  }
+  if (COUNTS[countWord] !== rest.length) {
+    fail(slug, `shop.txt section 6 says "${countWord} remaining lens rows", but section 3 prices ${rest.length} besides brown`);
+  }
+  if (brown !== undefined && num(brownClaim) !== brown) {
+    fail(slug, `shop.txt section 6 puts brown at ${brownClaim}, but section 3 prices it at ${brown.toLocaleString('pl-PL')}`);
+  }
+  const sum = num(technik) + num(brownClaim) + num(restClaim);
+  if (num(catalogue) !== sum) {
+    fail(slug, `shop.txt section 6 calls the catalogue ${catalogue}, but its own three parts add to ${sum.toLocaleString('pl-PL')}`);
+  }
+
+  // Technik's price is real config, not prose — the Council reads it back from
+  // there when it levies the fee, so a reprice would leave the document
+  // quoting a number the game no longer charges.
+  try {
+    const ranks = JSON.parse(
+      await fs.readFile(path.join(PACKS_DIR, slug, 'server-overrides', 'config', 'ravencoin-ranks.json'), 'utf8'),
+    );
+    const rank = (ranks.ranks ?? ranks).find?.((entry) => entry.id === 'technik');
+    if (rank && rank.price !== num(technik)) {
+      fail(slug, `shop.txt prices Technik at ${technik}, but ravencoin-ranks.json charges ${rank.price.toLocaleString('pl-PL')}`);
+    }
+  } catch {
+    // No rank config in this pack; the three-part sum above still stands.
+  }
+
+  // The milestone total is stated twice, paragraphs apart. Both come from the
+  // payout table, which is the one place it is not prose.
+  const script = path.join(PACKS_DIR, slug, 'server-overrides', 'kubejs', 'server_scripts', 'milestones.js');
+  let payouts = null;
+  try {
+    const source = await fs.readFile(script, 'utf8');
+    const rows = [...source.matchAll(/\w+: \{ rc: (\d+), name: '[^']*' \}/g)];
+    if (rows.length > 0) payouts = rows.reduce((total, row) => total + Number(row[1]), 0);
+  } catch {
+    // No milestones in this pack.
+  }
+  if (payouts === null) return;
+  const mentions = [...text.matchAll(/([\d\s ]+?) (?:in total to a player|against a lifetime faucet)/g)];
+  if (mentions.length < 2) {
+    fail(slug, 'shop.txt section 6 no longer states the milestone total twice — this check reads both');
+  }
+  for (const mention of mentions) {
+    if (num(mention[1]) !== payouts) {
+      fail(slug, `shop.txt says milestones pay ${mention[1].trim()}, but milestones.js totals ${payouts.toLocaleString('pl-PL')}`);
+    }
+  }
+
+  if (problems.length !== before) return;
+  console.log(`  \x1b[32m✓\x1b[0m shop.txt adds up: ${rest.length} lenses ${restSum.toLocaleString('pl-PL')}, catalogue ${num(catalogue).toLocaleString('pl-PL')}`);
 }
 
 /**

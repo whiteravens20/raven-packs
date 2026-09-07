@@ -1,0 +1,19 @@
+{
+  "parent": "ravenforge:milestones/root",
+  "display": {
+    "icon": {
+      "id": "ravencoin:coin_block"
+    },
+    "title": "Rada zdecydowała",
+    "description": "Rada Białych Kruków nadała Ci rangę Technik z urzędu i pobrała za to opłatę.",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "dekret": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+name: technik
+permissions:
+- weight.40
+parents:
+- obywatel
+prefixes:
+- '&6[Technik] ':
+    priority: 40
+meta:
+- xaero.pac_max_claims:
+    value: '12'
+- xaero.pac_max_forceloads:
+    value: '8'

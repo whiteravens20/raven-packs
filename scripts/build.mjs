@@ -36,6 +36,7 @@ import { fetchFile, sha1, sha256, listFiles } from './lib/download.mjs';
 import { readLockfile, diffLockfile } from './lib/lockfile.mjs';
 import { ZipWriter } from './lib/zip.mjs';
 import { buildServersDat, serverAddress } from './lib/servers-dat.mjs';
+import { isCopyleft } from './lib/licences.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
@@ -356,6 +357,21 @@ function buildMrpackIndex(pack, lock) {
 
 // ── Build one pack ─────────────────────────────────────────
 
+/**
+ * A pack's definition, or null if there is no readable one.
+ *
+ * Deliberately quiet about a broken file: this only decides whether a pack
+ * joins an unasked-for sweep, and `buildPack` fails loudly on the same file a
+ * moment later with a message that says which pack and why.
+ */
+async function readPackMeta(slug) {
+  try {
+    return JSON.parse(await fs.readFile(path.join(PACKS_DIR, slug, 'pack.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 async function buildPack(slug, { withZip }) {
   const packFile = path.join(PACKS_DIR, slug, 'pack.json');
   let pack;
@@ -490,6 +506,7 @@ async function buildPack(slug, { withZip }) {
     for (const file of overrideContents) clientZip.add(file.relative, file.data);
     // Most players opening this are on Windows, reading it in Notepad.
     clientZip.add('INSTALL.txt', crlf(clientInstructions(pack, clientFiles)));
+    clientZip.add('LICENSES.txt', crlf(licenceNotice(pack, clientFiles)));
 
     const zipName = `${slug}-${pack.version}.zip`;
     const zipBuffer = clientZip.toBuffer();
@@ -528,7 +545,9 @@ async function buildPack(slug, { withZip }) {
       if (launcher) {
         const jar = await fetchFile(launcher.url);
         serverZip.add(launcher.fileName, jar.data, { store: true });
-        ok(`bundled ${launcher.fileName} (Fabric installer ${launcher.installerVersion})`);
+        ok(
+          `bundled ${launcher.fileName} (${pack.loader.type} ${launcher.kind === 'installer' ? 'installer' : `installer ${launcher.installerVersion}`})`,
+        );
       } else {
         warn(`no server launcher for loader "${pack.loader.type}" — admins must install it manually`);
       }
@@ -538,6 +557,7 @@ async function buildPack(slug, { withZip }) {
       serverZip.add('start.sh', startScriptUnix(pack, launcher, requiredJava), { mode: 0o755 });
       serverZip.add('start.bat', crlf(startScriptWindows(pack, launcher, requiredJava)));
       serverZip.add('SERVER-INSTALL.txt', crlf(serverInstructions(pack, serverFiles, launcher, requiredJava)));
+      serverZip.add('LICENSES.txt', crlf(licenceNotice(pack, serverFiles)));
 
       const serverZipName = `${slug}-${pack.version}-server.zip`;
       const serverBuffer = serverZip.toBuffer();
@@ -630,6 +650,32 @@ fi
 `
     : '';
 
+  // NeoForge ships an installer, not a runnable jar. It has to be run once
+  // against this directory; afterwards the server starts from the args file the
+  // installer wrote, and the jar is never executed again. Doing it inside the
+  // start script keeps the server pack turnkey, which is the whole point.
+  const neoInstall =
+    launcher?.kind === 'installer'
+      ? `
+if [ ! -f "${launcher.argsFile}" ]; then
+  echo "First run: installing ${pack.loader.type} ${pack.loader.version}…"
+  java -jar "${jar}" --install-server . || {
+    echo "The ${pack.loader.type} installer failed. See the output above." >&2
+    exit 1
+  }
+fi
+`
+      : '';
+
+  const launch =
+    launcher?.kind === 'installer'
+      ? `exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
+  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
+  @"${launcher.argsFile}" nogui`
+      : `exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
+  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
+  -jar "${jar}" nogui`;
+
   return `#!/usr/bin/env sh
 # ${pack.name} ${pack.version} — Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}
 set -e
@@ -647,9 +693,8 @@ if [ ! -f eula.txt ]; then
   exit 1
 fi
 
-exec java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M \\
-  -XX:+UseG1GC -XX:MaxGCPauseMillis=50 \\
-  -jar "${jar}" nogui
+${neoInstall}
+${launch}
 `;
 }
 
@@ -667,6 +712,26 @@ if errorlevel 1 (
 )
 `
     : '';
+
+  // Same installer dance as the shell script; see the comment there.
+  const neoInstall =
+    launcher?.kind === 'installer'
+      ? `
+if not exist "${launcher.argsFileWindows}" (
+  echo First run: installing ${pack.loader.type} ${pack.loader.version}...
+  java -jar "${jar}" --install-server .
+  if errorlevel 1 (
+    echo The ${pack.loader.type} installer failed. See the output above.
+    pause
+    exit /b 1
+  )
+)
+
+`
+      : '';
+
+  const launchArgs =
+    launcher?.kind === 'installer' ? `@"${launcher.argsFileWindows}"` : `-jar "${jar}"`;
 
   return `@echo off
 REM ${pack.name} ${pack.version} — Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}
@@ -687,7 +752,7 @@ if not exist eula.txt (
   exit /b 1
 )
 
-java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -jar "${jar}" nogui
+${neoInstall}java -Xms${Math.min(ram, 2048)}M -Xmx${ram}M -XX:+UseG1GC -XX:MaxGCPauseMillis=50 ${launchArgs} nogui
 pause
 `;
 }
@@ -708,8 +773,9 @@ function serverInstructions(pack, serverFiles, launcher, requiredJava) {
     '3. Run start.sh (Linux/macOS) or start.bat (Windows).',
     '   The first run stops and asks you to accept the Minecraft EULA:',
     '   create a file named eula.txt containing exactly:  eula=true',
-    '4. Run the start script again. Fabric downloads the Minecraft server and',
-    '   its libraries on first launch, so allow a few minutes and keep it online.',
+    `4. Run the start script again. ${pack.loader.type} downloads the Minecraft`,
+    '   server and its libraries on first launch, so allow a few minutes and',
+    '   keep it online.',
     '',
     `RAM: the scripts allocate ${ram} MB. Edit start.sh / start.bat to change it.`,
     'Do not raise it far beyond this — oversized heaps cause longer GC pauses,',
@@ -718,7 +784,9 @@ function serverInstructions(pack, serverFiles, launcher, requiredJava) {
     'WHAT IS IN HERE',
     '',
     `  mods/     ${serverFiles.filter((f) => f.kind === 'mod').length} server-side mods`,
-    launcher ? `  ${launcher.fileName}  Fabric server launcher` : '  (no launcher bundled)',
+    launcher
+      ? `  ${launcher.fileName}  ${launcher.kind === 'installer' ? `${pack.loader.type} installer, run once by the start script` : `${pack.loader.type} server launcher`}`
+      : '  (no launcher bundled)',
     '  start.sh / start.bat',
     '',
     'Client-only mods are deliberately absent — installing them here would waste',
@@ -730,8 +798,51 @@ function serverInstructions(pack, serverFiles, launcher, requiredJava) {
     '  25565/tcp must be reachable for players to connect.',
     '  Edit server.properties after the first run to change it.',
     '',
-    'Every mod keeps its own license.',
+    'Every mod keeps its own license — see LICENSES.txt.',
   ].join('\n');
+}
+
+/**
+ * The third-party notice that travels inside the zips.
+ *
+ * This exists because of what the zips actually are. The `.mrpack` only names
+ * files and lets the launcher fetch them, but the client and server archives
+ * carry the real jars — so handing someone a zip is handing them the binaries,
+ * and roughly a quarter of them are copyleft. Those licences ask that whoever
+ * receives a binary can also get its source; naming where each one is published
+ * is how that is answered without hosting anything ourselves.
+ *
+ * Nothing here relicenses anything. Every mod keeps its own terms.
+ */
+function licenceNotice(pack, files) {
+  const copyleft = files.filter((f) => isCopyleft(f.license));
+  const lines = [
+    `${pack.name} ${pack.version} — third-party components`,
+    '',
+    `Minecraft ${pack.minecraft} — ${pack.loader.type} ${pack.loader.version}`,
+    '',
+    `This archive redistributes the ${files.length} files listed below. Each keeps its`,
+    'own licence and copyright holders; being packaged together changes neither.',
+    '',
+    `${copyleft.length} of them are copyleft (GPL / LGPL / AGPL family). Those licences`,
+    'ask that anyone given the compiled form can also obtain the source, so the',
+    'source line below says where each is published.',
+    '',
+    'Licence identifiers are the ones the projects publish on Modrinth. Where a',
+    'file was not resolved through Modrinth, its licence is stated as unknown and',
+    "the project's own page is the reference.",
+    '',
+    ''.padEnd(70, '-'),
+    '',
+  ];
+  for (const file of [...files].sort((a, b) => a.name.localeCompare(b.name))) {
+    lines.push(`${file.name} ${file.version}`);
+    lines.push(`  file     ${file.fileName}`);
+    lines.push(`  licence  ${file.license ?? 'unknown'}`);
+    lines.push(`  source   ${file.sourceUrl ?? 'not published by the project'}`);
+    lines.push('');
+  }
+  return lines.join('\n');
 }
 
 function clientInstructions(pack, clientFiles) {
@@ -757,7 +868,7 @@ function clientInstructions(pack, clientFiles) {
     `Contents: ${clientFiles.length} files (client-side only — server-only mods`,
     'are excluded, and are shipped in the separate server pack instead).',
     '',
-    'Every mod keeps its own license — see pack.json for the list.',
+    'Every mod keeps its own license — see LICENSES.txt.',
   ].join('\n');
 }
 
@@ -853,11 +964,22 @@ async function main() {
   const withZip = args.includes('--with-zip');
   const requested = args.filter((a) => !a.startsWith('-'));
 
+  // A slug on the command line is an explicit instruction and always wins — it
+  // is how an unlisted pack is built for testing, and how the release workflow
+  // builds the one pack a tag names. Only the sweep that nobody asked to be
+  // specific about honours `unlisted`, because that sweep is what feeds the
+  // catalogue: deploy-pages replaces the whole site, so a pack that reaches
+  // dist/ is a pack the launcher offers to everyone.
   const slugs = requested.length
     ? requested
-    : (await fs.readdir(PACKS_DIR, { withFileTypes: true }))
-        .filter((e) => e.isDirectory())
-        .map((e) => e.name)
+    : (
+        await Promise.all(
+          (await fs.readdir(PACKS_DIR, { withFileTypes: true }))
+            .filter((e) => e.isDirectory())
+            .map(async (e) => ((await readPackMeta(e.name))?.unlisted ? null : e.name)),
+        )
+      )
+        .filter((slug) => slug !== null)
         .sort();
 
   if (slugs.length === 0) {

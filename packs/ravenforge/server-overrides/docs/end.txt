@@ -1,0 +1,118 @@
+The End
+=======
+
+Three decisions and one setup job. The End is a stage, not a place to live: the
+dragon comes back once a week, the egg drops every time because it is a crafting
+ingredient here, and nobody owns the arena.
+
+None of this ships in the pack except the script. The claim lives in world data,
+which the server writes, so server-overrides/ cannot deliver it — it is a
+one-time command you run on the live world, like the mine platform's claim.
+
+
+1. The dimension is never reset
+-------------------------------
+
+Resetting End chunks regenerates End Cities, which would turn elytra and
+shulkers into a weekly farm, and the pack keeps the End as a stage — the Silent
+Gear elytra recipe is banned. It would also wipe player enderman farms, so
+nobody would build out there at all.
+
+Only the dragon comes back.
+
+
+2. Weekly respawn
+-----------------
+
+    /dragon respawn
+
+Console only (permission level 4). Put it on a weekly scheduler task; it is the
+same shape as the mine's chat warnings — one console line, no lifecycle.
+
+What it does: puts the four end crystals back on the exit portal frame and calls
+the vanilla respawn. It is idempotent, so a task that fires while a respawn is
+already pending places nothing and changes nothing. Crystals that are already
+standing are left alone.
+
+What it refuses to do:
+
+  * nothing happens while a dragon is alive,
+  * nothing happens before the first dragon has been killed by a player —
+    vanilla only sets up the fight when somebody is actually in the End.
+
+The respawn animation itself only runs while a player is within 192 blocks of
+the arena; that is vanilla, not us. So on an empty server the crystals are set
+and the animation starts the moment somebody arrives. That is the intended
+behaviour: the fight is not spent on an empty island.
+
+The animation rebuilds all ten obsidian pillars and explodes a 21x21x21 box
+around each one. Anything built near a pillar is destroyed every week — which is
+the other reason nobody should be able to claim the island.
+
+Crystals are consumed by the animation, so nothing accumulates.
+
+
+3. The egg drops every time
+---------------------------
+
+Vanilla drops the dragon egg on the FIRST kill only. Here the egg is a crafting
+ingredient, so kubejs/server_scripts/dragon.js places one after every later
+kill, in the same spot vanilla uses — on top of the bedrock pillar above the
+exit portal.
+
+It waits for the exit portal to come back rather than counting ticks: the portal
+blocks reappear in the same call that ends the fight, so that is an exact signal
+and it survives the chunk unloading mid-animation. An egg left uncollected is
+not replaced in place — the next one stacks on top of it.
+
+Nothing to configure. The first kill is left to vanilla, so there is never a
+double egg.
+
+
+4. The main island cannot be claimed
+------------------------------------
+
+Run this once, on the live world, after the End exists:
+
+    /opac server-claims-config sub create arena
+    /opac server-claims-config sub set arena playerConfig.claims.protectClaimedChunks false
+
+    /execute in minecraft:the_end positioned -64.0 64.0 -64.0 run oclaims server claim with arena in minecraft:the_end -112 -112 -1 -1
+    /execute in minecraft:the_end positioned 48.0 64.0 -64.0 run oclaims server claim with arena in minecraft:the_end 0 -112 111 -1
+    /execute in minecraft:the_end positioned -64.0 64.0 48.0 run oclaims server claim with arena in minecraft:the_end -112 0 -1 111
+    /execute in minecraft:the_end positioned 48.0 64.0 48.0 run oclaims server claim with arena in minecraft:the_end 0 0 111 111
+
+That claims chunks -7..6 on both axes — blocks -112..111, the whole central
+island including the gateway ring at radius 96 — as a Server Claim, so no player
+can claim any of it. 196 chunks; server claims have no limit.
+
+Why the sub-config: a plain server claim refuses every interaction to anyone who
+is not an operator, which would make the arena unusable — no towers, no hitting
+the dragon, no picking up the egg. The "arena" sub-config turns protection off
+for these chunks only. The mine platform keeps the main config and stays
+protected. Verified with OPAC's own access check: a stranger has access to the
+arena chunks and not to the mine platform, both being server claims.
+
+Why four commands: an area claim only reaches maxClaimDistance (5) chunks from
+where the command is run, so one command from spawn silently claims 11x11 and
+stops. "execute positioned" moves that centre. Do not raise maxClaimDistance to
+avoid this — it is the limit players get too.
+
+Repeating any of it is safe; already-claimed chunks answer "already claimed by
+Server Claim".
+
+Check with:
+
+    /oclaims about
+
+Claims should go up by 196.
+
+
+5. What is deliberately not here
+--------------------------------
+
+  * End crystals cannot be crafted (recipe banned), so no player summons the
+    dragon on their own schedule. The weekly task is the only source.
+  * The dragon breaks blocks as an entity, so OPAC protects normal claims from
+    it without any help from us.
+  * Beds and respawn anchors: vanilla behaviour, unchanged.

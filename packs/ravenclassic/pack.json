@@ -2,7 +2,7 @@
   "$schema": "../../docs/pack.schema.json",
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "summary": {
     "pl": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
     "en": "Classic Minecraft with a handful of quality-of-life mods chosen by our community."
@@ -32,6 +32,11 @@
     {
       "slug": "forge-config-api-port",
       "reason": "Config format used by Traveler's Backpack and Open Parties and Claims"
+    },
+    {
+      "slug": "configured",
+      "side": "client",
+      "reason": "Edits Forge Config API Port settings in game — without it the settings button just says to install this. Modrinth tags it server-only, which is backwards: the jar declares environment \"*\" and the screen it adds is the client's"
     },
     { "slug": "placeholder-api", "reason": "Text placeholders — Styled Chat and Mod Menu" },
     {

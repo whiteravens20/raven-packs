@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "modonomicon:modonomicon"
+    },
+    "title": {
+      "translate": "advancements.ravenclassic.poradnik.title"
+    },
+    "description": {
+      "translate": "advancements.ravenclassic.poradnik.description"
+    },
+    "background": "minecraft:textures/block/deepslate_tiles.png",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "przeczytany": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "function": "ravenclassic:nagroda_poradnik"
+  }
+}

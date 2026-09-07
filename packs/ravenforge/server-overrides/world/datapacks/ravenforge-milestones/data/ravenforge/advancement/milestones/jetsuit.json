@@ -1,0 +1,43 @@
+{
+  "parent": "ravenforge:milestones/glacio",
+  "display": {
+    "icon": {
+      "id": "ad_astra:jet_suit"
+    },
+    "title": "Iron Man",
+    "description": "Zdobądź wszystkie cztery części Jet Suita.",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "komplet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ad_astra:jet_suit_helmet"
+            ]
+          },
+          {
+            "items": [
+              "ad_astra:jet_suit"
+            ]
+          },
+          {
+            "items": [
+              "ad_astra:jet_suit_pants"
+            ]
+          },
+          {
+            "items": [
+              "ad_astra:jet_suit_boots"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

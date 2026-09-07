@@ -16,4 +16,7 @@ execute as @a[scores={rc_kit=1..}] run function ravenclassic:kit_komenda
 # Znaczników może być dowolnie wiele — jeden na spawn, jeden na market.
 execute as @e[type=minecraft:marker,tag=rc_nomobs] at @s run kill @e[type=#ravenclassic:wrogie_moby,distance=..48]
 
+# Poradnik wraca na pulpit. Powody i sposób ustawienia znacznika — w pulpit.mcfunction.
+function ravenclassic:pulpit
+
 schedule function ravenclassic:tick 1s replace

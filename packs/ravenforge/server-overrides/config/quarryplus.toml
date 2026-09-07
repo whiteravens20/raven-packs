@@ -1,0 +1,57 @@
+# Chunk loading is a rank reward bought with RavenCoin, tracked through the
+# Open Parties and Claims forceload allowance. A machine that loads its own
+# chunk for free routes around that entirely.
+#
+# The marker ranges are the only bound on how much ground one quarry — or one
+# Chunk Destroyer, which reads the same markers — can be pointed at. These are
+# distances in BLOCKS, not chunks: the value goes straight into
+# `BlockPos.relative(axis, i)` as the furthest a marker will look for its
+# partner, so it is the longest edge an area can have. The mod ships 256, which
+# is a 16-chunk edge — 256 chunks of ground for one machine.
+#
+# 32 is a two-chunk edge: four chunks of ground for one machine. It is set one
+# step above the obvious floor on purpose. The floor is 16, one chunk — but the
+# Chunk Destroyer already takes the chunk it stands in for free and without any
+# markers, so a 16-block cap would leave markers doing nothing for it at all.
+# 32 keeps them worth placing while still costing a player four machines to
+# cover what one machine covered at the mod's default of 256.
+# This cap is the condition the Chunk Destroyer was let into the mine on
+# (`kubejs/server_scripts/mining_gate.js`).
+#
+# Only the keys we change are listed. QuarryPlus reads this TOML itself
+# (`QuarryConfigLoader`, NightConfig) rather than through NeoForge's
+# ConfigTracker, but it still rewrites the file: on the first use of one of its
+# machines it logs `Config loaded from` and then `Config saved to`, filling in
+# every remaining default and keeping the values written here. Measured — the
+# file grew from 27 lines to 110 and all three of ours survived. A value out of
+# range is corrected and logged as `Config corrected '<key>'`; 64 is inside both
+# ranges (min 8 and 16).
+
+#Enable Chunk Loader in machines. Default: true
+enableChunkLoader = false
+
+#Range of Marker Plus. Default: 256, Min: 8, Max: 1048576
+markerPlusRange = 32
+
+#Range of Flexible Marker. Default: 256, Min: 16, Max: 16777216
+flexibleMarkerRange = 32
+
+# The four parts that must never reach a survival world. `bans.js` already takes
+# their recipes out; this closes the other half, because it works on the machine
+# rather than on the way to get one — so a stray `/give`, a creative-mode slip
+# or a recipe we failed to match cannot arm one.
+#
+# Measured, so nobody expects more than it does: the block can still be PLACED.
+# What it cannot do is work. Right-clicking it answers `Placer Plus is disabled.
+# Please enable it in config.` on the action bar and nothing else happens. So
+# the recipe ban stays as well — without it the item is craftable, just inert,
+# and people would waste a nether star finding that out.
+[enableMap]
+    #remove_bedrock_module Default: true
+    remove_bedrock_module = false
+    #repeat_tick_module Default: true
+    repeat_tick_module = false
+    #placer_plus Default: true
+    placer_plus = false
+    #remote_placer Default: true
+    remote_placer = false

@@ -1,0 +1,22 @@
+{
+  "parent": "ravenforge:milestones/mars",
+  "display": {
+    "icon": {
+      "id": "ad_astra:venus_globe"
+    },
+    "title": "Wenus",
+    "description": "Wyląduj na Wenus.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ladowanie": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "ad_astra:venus"
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+# allowTouchingClaims = false is the one that matters: it forces a chunk of gap
+# between two players' claims. Every area machine in the pack tops out at a
+# 12-13 block radius (range_addon0..11), so that gap puts a neighbour's land out
+# of reach of a machine standing legally on your own.
+#
+# permissionSystem is named rather than auto-detected so a second permission mod
+# arriving later cannot quietly win the election.
+#
+# The claim and forceload limits here are the floor. The ladder that lifts them
+# lives in LuckPerms as meta (xaero.pac_max_claims, xaero.pac_max_forceloads) —
+# see docs/ranks.txt.
+#
+# Only the keys we change are listed. NeoForge fills the rest in from the mod's
+# own defaults on first load and rewrites the file with them, so this stays a
+# statement of intent rather than a copy that goes stale.
+
+[serverConfig]
+	#The permission system to use for everything that requires permission checks (e.g. permission_api, ftb_ranks, luck_perms, prometheus). Non-built-in permission systems can be registered through the API with an addon.
+	permissionSystem = "luck_perms"
+
+[serverConfig.claims]
+	#Whether players should be able to claim chunks that are directly next to claimed chunks owned by another player/party.
+	#Disallowing it can prevent players from doing so without realizing that chunks next to claims can also be partially protected,
+	#e.g. from item use and mob griefing, making them not ideal for some purposes.
+	#Only affects claiming wilderness, so reclaimable claims can still work.
+	allowTouchingClaims = false
+	#For how long a player/party can stay completely inactive on the server until their claims are expired (in hours). This improves performance for servers running for years.
+	playerClaimsExpirationTime = 2160
+	#The base limits, deliberately set to the lowest rung of the ladder (nowy).
+	#
+	#The mod's own comment on maxPlayerClaimsPermission says a permission-supplied
+	#limit "will only take effect when the player logs in". Until that first login
+	#after a restart, whatever stands here is what every player gets — so the
+	#shipped defaults of 500 and 10 would hand out Technik limits and better to
+	#everyone, every restart, for as long as it took people to log back in.
+	#
+	#Keep these equal to nowy in config/luckperms/yaml-storage/groups/nowy.yml.
+	#The rest of the ladder is added on top, per rank, as LuckPerms meta.
+	maxPlayerClaims = 4
+	maxPlayerClaimForceloads = 0
+	#Whether to convert expired player chunk claims to "expired claims" instead of completely freeing them. This shouldn't be too bad for performance because it still reduces the number of unique claims.
+	playerClaimsConvertExpiredClaims = true
+
+	[serverConfig.claims.protection]
+		#The three RavenCoin blocks are the one thing a claim must not stop, and
+		#the exception is deliberately global ("across the server", in the mod's
+		#own words) because it has to cover two opposite cases at once:
+		#
+		#  * the market at spawn stands on a SERVER claim, which refuses every
+		#    right-click from anyone without OP. Measured before this line existed:
+		#    a renter at their own stall got "You are not allowed to interact with
+		#    this block (ravencoin:server_shop)!" and could neither restock nor
+		#    sell, and no customer could buy;
+		#  * a shop on a PLAYER's own plot has to be usable by everybody else, or
+		#    it is not a shop. The same line does that, and being "forced" it also
+		#    means the owner cannot switch it off for their claim.
+		#
+		#"anything$" because a customer walks up holding something. It is safe
+		#here for a reason worth writing down: the block consumes the interaction
+		#before the held item is ever used, so the item does nothing at it.
+		#
+		#What this does NOT open, all measured on a live server: breaking these
+		#blocks is still refused, chests and everything else in the claim are
+		#still refused (even empty-handed), and placing blocks is still refused.
+		#The barrel behind a stall is deliberately absent from this list — the
+		#shop opens it server-side for its own renter, which is the whole point
+		#of the "Zaopatrz" button.
+		#
+		#The lectern is the noticeboard on a server claim, and it is listed BARE,
+		#with no "anything$". Bare does NOT mean "empty hand" — that is the
+		#"hand$" prefix, per the mod's own documentation further down this file.
+		#Bare means the click goes through unless the held item is itself blocked
+		#by itemUseProtectionExceptionList, so a hand holding a pickaxe, a block
+		#or a plain written book is refused and cannot put anything on the
+		#noticeboard. The one hand that is NOT refused is one holding a
+		#Modonomicon book, because that namespace is an item-use exception below.
+		#That is deliberate — a player should not have to stow the guide to read
+		#the noticeboard — and it is harmless: vanilla only places a book on an
+		#EMPTY lectern, and lectern_guard.js refills this one the moment it is
+		#emptied. Every other hand still cannot decide what the noticeboard says.
+		#
+		#Reading is all this line can open. The "Take Book" button lives inside
+		#LecternMenu, and OPAC subscribes to no container or menu event at all
+		#(measured in the 0.30.3 jar), so it cannot see the take, let alone stop
+		#it. kubejs/server_scripts/lectern_guard.js is what puts the book back,
+		#and only on server claims.
+		forcedBlockProtectionExceptionList = ["minecraft:crafting_table", "minecraft:lectern", "anything$ravencoin:shop", "anything$ravencoin:server_shop", "anything$ravencoin:atm"]
+
+		#The guide is an item, not a block, so the list above does not reach it.
+		#OPAC disables most right-click item uses inside a protected chunk, and spawn
+		#IS a server claim — so a new player who runs /start, is handed the book and
+		#is told to read it gets "You are not allowed to use this item this close to
+		#somebody else's claim (modonomicon:modonomicon)! Try empty hand?" and cannot
+		#open it at all. Measured on a live client 2026-09-06; the default for this
+		#list is just the firework rocket, and the pack had never overridden it.
+		#Opening a guide changes nothing in the world, so there is nothing to protect.
+		#
+		#Wildcard rather than the one item, copied from Classic, which had this list
+		#right first. Modonomicon registers six items — `modonomicon`, four colours
+		#and `leaflet` — and `model` in book.json only picks which one a generated
+		#book looks like, so naming a single id leaves five that still refuse to
+		#open. Nothing in this namespace places, breaks or throws anything.
+		itemUseProtectionExceptionList = ["minecraft:firework_rocket", "modonomicon:*"]

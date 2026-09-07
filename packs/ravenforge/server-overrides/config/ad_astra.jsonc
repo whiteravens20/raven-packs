@@ -1,0 +1,36 @@
+// A flag can display an image fetched from the internet. The server side of
+// that is sound — the packet handler holds a hard allowlist
+// (^https://i\.imgur\.com/…\.(png|jpeg|jpg|webp)$), checks that the player is
+// the flag's owner, and refuses beyond 8 blocks. What it cannot check is what
+// the picture shows, and every client in render range downloads it.
+//
+// Know what turning it off is worth: the gate that reads this key sits in
+// FlagBlock inside an `if (level.isClientSide())` branch, which makes it a UI
+// lock, not a server one. A modified client still gets through, and only
+// CoreProtect will say who placed the flag.
+//
+// The six orbits are off because a space station is placed straight into the
+// world by StructureTemplate — it fires no block-place event, and the only
+// claim check Ad Astra makes is against Cadmus, which this pack does not run.
+// Open Parties and Claims therefore has nowhere to hook in, and a station can
+// be stamped over chunks somebody claimed and left empty. Ad Astra does stop a
+// station being built within 2 chunks of an existing one, so the hole is
+// narrow, but the fix is one key rather than a mixin.
+//
+// This key is a real server-side gate, whatever its own comment says:
+// ModUtils.canTeleportToPlanet splits it and every one of the three packets —
+// land, land on a station, construct a station — goes through that method.
+// Staff still pass, via creative, spectator or permission level. Entries are
+// compared with String.equals, so no spaces after the commas.
+//
+// Planets are untouched. Landing on one never involves a station: the rocket
+// is swapped for a Lander that carries the player and the rocket's inventory
+// down. Building and claiming happen on the surface, as everywhere else.
+//
+// Only the keys we change are listed. Resourceful Config fills the rest in
+// from the mod's own defaults and rewrites the file with them.
+{
+  "rconfig:version": 0,
+  "allowFlagImages": false,
+  "disabledPlanets": "ad_astra:earth_orbit,ad_astra:moon_orbit,ad_astra:mars_orbit,ad_astra:venus_orbit,ad_astra:mercury_orbit,ad_astra:glacio_orbit"
+}

@@ -1,0 +1,17 @@
+{
+  "permissionConfigs": {
+    "permissionsEnabled": true,
+    "luckPermsOverridePermissions": true
+  },
+  "chatConfigs": {
+    "chatFormattingEnabled": false
+  },
+  "moderationConfigs": {
+    "restartConfigs": { "autoRestartEnabled": false },
+    "afkConfigs": { "enableAFKKick": false }
+  },
+  "commandConfigs": {
+    "teleportConfigs": { "defaultNumberOfHomes": 1 },
+    "kitConfigs": { "kitsEnabled": false }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "parent": "ravenforge:milestones/merkury",
+  "display": {
+    "icon": {
+      "id": "ad_astra:glacio_globe"
+    },
+    "title": "Glacio",
+    "description": "Wyląduj na Glacio — koniec drogi.",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ladowanie": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "ad_astra:glacio"
+      }
+    }
+  }
+}
