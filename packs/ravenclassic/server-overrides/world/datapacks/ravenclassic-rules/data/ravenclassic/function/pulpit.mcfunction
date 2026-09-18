@@ -3,10 +3,17 @@
 # Modonomicon przejmuje kliknięcie w pulpit i sam decyduje, co się stanie:
 # prawy przycisk otwiera poradnik, shift + prawy zabiera książkę do ekwipunku.
 # Jedno i drugie jest dla Open Parties and Claims tą samą interakcją z blokiem,
-# więc wpis "minecraft:lectern" w forcedBlockProtectionExceptionList otwiera obie
-# naraz — zmierzone na żywym serwerze, tak samo z prefiksem "anything$" i tak
-# samo po ustawieniu grupy Lecterns w configu działek serwerowych. OPAC nie umie
-# tego rozdzielić, a Classic nie ma KubeJS, którym Forge zamyka to od środka.
+# więc wpis pulpitu w forcedBlockProtectionExceptionList otwiera obie naraz —
+# zmierzone na żywym serwerze, tak samo z prefiksem "anything$" i tak samo po
+# ustawieniu grupy Lecterns w configu działek serwerowych. OPAC nie umie tego
+# rozdzielić, a Classic nie ma KubeJS, którym Forge zamyka to od środka.
+#
+# Od 1.8.0 wpis ma prefiks "anything$", żeby poradnik dało się otworzyć z
+# czymkolwiek w ręce. Na odkładanie książki to nie wpływa i nie otwiera dziury:
+# osiem sekund trzymania prawego przycisku ze stosem książek, w kucnięciu, nie
+# położyło na pulpicie ani jednej — ta funkcja odkłada poradnik szybciej, niż
+# przychodzi kolejne kliknięcie. Szczegóły pomiaru w komentarzu przy tym wpisie
+# w openpartiesandclaims-server.toml.
 #
 # Więc książki się nie broni — odkłada się ją z powrotem. Gracz, który ją zabrał,
 # zostaje z egzemplarzem, ale zestaw startowy i tak daje poradnik każdemu, więc

@@ -49,29 +49,51 @@
 			#
 			# The lectern is here so the guide on spawn can be read. It opens
 			# the taking too, and no setting in this file can separate the two:
-			# Modonomicon answers the right-click itself, reading and taking are
-			# the same block interaction, and the "anything$" prefix and the
-			# server-claim Lecterns group were both measured to change nothing.
-			# The book is put back a second later instead, by the rc_pulpit
-			# marker in the ravenclassic-rules datapack.
+			# Modonomicon answers the right-click itself, so reading and taking
+			# are the same block interaction, and the server-claim Lecterns
+			# group was measured to change nothing. The book is put back a tick
+			# later instead, by the rc_pulpit marker in the ravenclassic-rules
+			# datapack.
 			#
-			# Bare rather than "anything$", like everything else that is not a
-			# shop. Bare does NOT mean "empty hand" — that is the "hand$"
-			# prefix, per the mod's own documentation in this file. Bare means
-			# the click goes through unless the held item is itself blocked by
-			# itemUseProtectionExceptionList below, so a player carrying a
-			# pickaxe is refused and one carrying the guide is not.
+			# It was bare until 1.8.0, and bare meant the guide could only be
+			# opened with an empty hand — which is not what "bare" sounds like.
+			# Bare is not "hand$" either. Bare lets the click through and then
+			# applies the held-item protection on top, and that protection
+			# refuses far more than anyone would guess: every block item, and
+			# everything that is not food, a potion, a bow, a trident, a
+			# shield, an axe, a hoe, a boat, armour, a music disc or an item
+			# carrying the WEAPON component. A sword passes. A pickaxe does
+			# not. Players hit this constantly and it reads as a broken spawn.
 			#
-			# That pairing is also what keeps this exception from opening a
-			# hole. Measured on a live server: an item that IS an item-use
-			# exception can be sneak-PLACED against a block exception inside
-			# somebody else's claim. Nothing in the item list here is a
-			# placeable block — the guide is a book — so there is nothing to
-			# place. Do not add a placeable item to that list without
-			# re-measuring this.
+			# "anything$" skips that second check, and nothing else. Measured
+			# on a stand against this exact file, as a stranger inside somebody
+			# else's claim, before and after the switch:
+			#
+			#   breaking the lectern         refused, both ways
+			#   sneak-placing a block on it  refused, both ways — the mod
+			#                                excludes a sneaking player from
+			#                                the shortcut, which is what keeps
+			#                                placing shut
+			#   putting your own book on an
+			#     EMPTY lectern              refused bare, allowed now
+			#
+			# That last line is the whole change. On the spawn lectern it buys
+			# an attacker nothing: eight seconds of holding right-click with a
+			# stack of books, sneaking, landed none of them — the datapack puts
+			# the guide back faster than a second click can arrive, and the
+			# lectern was never empty on the tick the click was processed.
+			#
+			# The crafting table is the mod's own default, left as it ships,
+			# and it has the same empty-hand quirk. Left alone deliberately:
+			# nobody has reported it, and a change here is a world restart.
+			#
+			# NOTE: the mod REWRITES this file on first load — comments gone,
+			# arrays collapsed to one line. What you are reading lives in the
+			# repo, not on the server. Edit the server copy while it is
+			# stopped, and re-copy this file whenever the pack changes it.
 			forcedBlockProtectionExceptionList = [
 				"minecraft:crafting_table",
-				"minecraft:lectern",
+				"anything$minecraft:lectern",
 				"anything$waystones:*",
 				"anything$universal_shops:trade_block",
 				"anything$universal_shops:admin_trade_block"
@@ -83,8 +105,17 @@
 			# server claim, was told to empty their hand instead of reading it.
 			# A book that exists to be opened has to be an exception.
 			#
+			# This list is still what lets the guide be opened while standing
+			# anywhere in a claim, holding it. The lectern's "anything$" above
+			# is a different thing: that one is about what is in your hand when
+			# you click the lectern, this one is about the guide itself being
+			# used at all.
+			#
 			# The wildcard covers the coloured variants too. Nothing in this
-			# namespace places, breaks or throws anything.
+			# namespace places, breaks or throws anything — which matters,
+			# because an item on this list can be sneak-PLACED against a block
+			# that has a block exception above. Do not add a placeable item
+			# here without re-measuring that.
 			itemUseProtectionExceptionList = [
 				"modonomicon:*"
 			]
