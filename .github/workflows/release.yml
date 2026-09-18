@@ -17,7 +17,7 @@ name: publish
 # Two outputs, deliberately different in scope:
 #
 #   GitHub Release — the tagged pack only: .mrpack, client zip, server zip,
-#                    manifest.json.
+#                    manifest.json, and their provenance attestation bundle.
 #   GitHub Pages   — *every* pack plus site/, because deploy-pages replaces the
 #                    whole site. Publishing only one pack's dist/ would take
 #                    every other pack's manifest offline, breaking the launcher
@@ -51,6 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # create the GitHub Release
+      id-token: write # sign the provenance attestation
+      attestations: write # record it
     outputs:
       slug: ${{ steps.meta.outputs.slug }}
     steps:
@@ -200,6 +202,27 @@ jobs:
             fs.appendFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
           ' "${{ steps.meta.outputs.slug }}" "${{ github.ref_name }}"
 
+      # SLSA build provenance for the release assets, signed through Sigstore. The
+      # launcher trusts the manifest's Ed25519 signature; this records where the
+      # zips and the .mrpack were built. Verify with:
+      #   gh attestation verify <file> --repo whiteravens20/raven-packs
+      - name: Attest build provenance
+        id: attest
+        if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: |
+            dist/${{ steps.meta.outputs.slug }}/*.mrpack
+            dist/${{ steps.meta.outputs.slug }}/*.zip
+            dist/${{ steps.meta.outputs.slug }}/manifest.json
+
+      - name: Keep the attestation bundle
+        if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
+        env:
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
+          SLUG: ${{ steps.meta.outputs.slug }}
+        run: cp "$BUNDLE" "dist/$SLUG/$SLUG-${GITHUB_REF_NAME##*-v}.sigstore.json"
+
       - name: Publish release
         uses: softprops/action-gh-release@v3
         if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
@@ -208,6 +231,7 @@ jobs:
             dist/${{ steps.meta.outputs.slug }}/*.mrpack
             dist/${{ steps.meta.outputs.slug }}/*.zip
             dist/${{ steps.meta.outputs.slug }}/manifest.json
+            dist/${{ steps.meta.outputs.slug }}/*.sigstore.json
           fail_on_unmatched_files: true
           generate_release_notes: true
           name: ${{ steps.channel.outputs.title }}

@@ -1,0 +1,37 @@
+{
+  "starting_rank_node_id": "mistrz",
+  "no_rank_status_text": "",
+  "graph": [
+    {
+      "enable": true,
+      "id": "mistrz",
+      "display_name": "<gold>Mistrz</gold>",
+      "description": "<gold>Ranga Mistrz</gold>\n<grey>12 działek zamiast 8 i 8 forceloadów zamiast 4.\n<grey>Kupujesz ją sam: stań gdziekolwiek, miej przy sobie\n<grey>64 bloki diamentu i wpisz <white>/rank up mistrz --confirm true<grey>.",
+      "next_rank_nodes": [],
+      "requirements": [
+        {
+          "description": "<grey>Jesteś Obywatelem i nie masz jeszcze Mistrza.",
+          "commands": [
+            "has-perm? %player:name% ravenclassic.rank.mistrz.kupno"
+          ]
+        },
+        {
+          "description": "<grey>Masz przy sobie 64 bloki diamentu.",
+          "commands": [
+            "has-item? %player:name% minecraft:diamond_block 64"
+          ]
+        }
+      ],
+      "events": {
+        "on_enter_this_rank_node_commands": [
+          "lp user %player:name% parent add mistrz",
+          "lp user %player:name% parent remove obywatel",
+          "clear %player:name% minecraft:diamond_block 64",
+          "send-broadcast <gold>%player:name% <grey>kupił rangę <gold>Mistrz<grey>."
+        ],
+        "on_leave_this_rank_node_commands": [],
+        "on_first_enter_this_rank_node_commands": []
+      }
+    }
+  ]
+}

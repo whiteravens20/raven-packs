@@ -19,7 +19,7 @@ here would mean commands that do not work when pasted.
     Nowy        on arrival           4           0       1
     Gracz       10 h played          6           2       2
     Obywatel    40 h played          8           4       3
-    Mistrz      for diamonds        12           8       3
+    Mistrz      64 diamond blocks   12           8       3
 
 A chunk is 16×16 blocks over the full height of the world — F3+G draws the grid.
 Four chunks in a square make a 32×32 claim. OPAC does not require chunks to
@@ -34,15 +34,21 @@ claim? One command below — but look at /spark first and see what the server is
 doing now.
 
 Promotion to Gracz and Obywatel is automatic (the Playtime Rewards mod) — it
-counts time in game and switches the group in LuckPerms itself. Mistrz is
-manual: it costs 64 diamond blocks, the player comes to an admin or a moderator,
-pays in the admin shop, and staff runs `promote`. On Fabric 26.2 there is no mod
-that would take items and grant a group, so this one rung goes through a person
-by choice, not by omission.
+counts time in game and switches the group in LuckPerms itself. Mistrz is bought
+by the player, from anywhere, with no staff involved:
 
-The same price is in the in-game guide — entry "Ranks", page "Mistrz". If you
-change it here, change it there too, or the player will turn up with a different
-figure.
+    /rank up mistrz --confirm true
+
+That is Fuji's `rank` module, and it is the only thing on Fabric 26.2 that can
+take payment and grant a LuckPerms group. Until 1.8.0 this rung went through a
+person, because nothing could. Section 12 is the whole setup and the reasoning.
+
+The price is 64 diamond blocks, taken from the inventory. The same figure is in
+the in-game guide — entry "Rangi", page "Mistrz". If you change it, change it in
+three places: the `has-item?` line and the `clear` line in
+config/fuji/modules/rank/config.json, and the guide. Two of the three are in the
+same file, and a mismatch between them is the bad one: the check and the charge
+would disagree, and a player would pay a different price than they were shown.
 
 Obywatel gets one waystone on promotion. It is the only item reward on the
 ladder and it is here for a reason: there are no waystone recipes (the
@@ -481,9 +487,25 @@ is what admin mode is for (docs/claims.txt), not a limit of their own.
     playtime <name>                   hours logged and how far to the next rank
     playtime reload                   after changing thresholds in the config
 
+    rank progress <name>              how far the player is from Mistrz
+    rank list walked-rank-nodes <n>   whether they ever bought it
+
 Playtime Rewards manages only the groups it has in its own config — that is
 nowy, gracz and obywatel. It leaves Mistrz and every staff rank alone, so a
 promotion paid for in materials will not be undone overnight by the automation.
+
+Giving Mistrz to somebody for free — a prize, an apology, a test account — is
+two LuckPerms lines and nothing else:
+
+    lp user <name> parent add mistrz
+    lp user <name> parent remove obywatel
+
+Do NOT use `/rank set <name> mistrz` for that. It skips the requirements, which
+is what it is for, but it still runs the reward commands — including the one
+that takes 64 diamond blocks. Measured: a player with the blocks on them is
+charged by it. Leaving Fuji's own rank state unset is harmless and in fact
+safer, because the permission in section 12 then keeps them from buying what
+they already have.
 
 
 11. Chat prefixes
@@ -507,3 +529,97 @@ The prefix will not show up in chat without config/styled-chat.json from the
 pack, though — Styled Chat writes `<Name> message` by default and does not ask
 about rank. If you set a prefix and chat is still white, start by checking that
 this file is in config/. Details in docs/staff.txt, section 10.
+
+
+12. Selling Mistrz
+------------------
+
+One rung of the ladder is bought rather than earned, and Fuji's `rank` module is
+what takes the payment. Everything about it lives in two files that ship with
+the pack — config/fuji/config.json turns the module on, and
+config/fuji/modules/rank/config.json is the rung itself.
+
+The command a player types:
+
+    /rank up mistrz --confirm true
+
+`--confirm true` is not optional and that is deliberate — without it the mod
+answers "confirm this" and does nothing, so nobody spends 64 diamond blocks by
+autocompleting into it.
+
+There is one permission to add, and it is the gate:
+
+    lp group obywatel       permission set ravenclassic.rank.mistrz.kupno true
+    lp group mistrz         permission set ravenclassic.rank.mistrz.kupno false
+    lp group budowniczy     permission set ravenclassic.rank.mistrz.kupno false
+    lp group moderator      permission set ravenclassic.rank.mistrz.kupno false
+
+The node is ours, not the mod's — it exists only to be asked about. Read the
+four lines as one sentence: a Citizen may buy this, and nobody who is already
+past that rung may. The three `false` lines are needed because mistrz,
+budowniczy and moderator all inherit from obywatel and would otherwise inherit
+the `true` with it; a node set directly on the group a player is in beats an
+inherited one, and where two apply directly the higher weight wins, which is why
+section 3's weights are not decoration.
+
+This is one of the two locks. The other is Fuji's own: the rung has no next
+rank, so once a player is on it `/rank up` has nothing left to offer, and
+`/rank down` has nothing to go back to. Either lock alone would do. Both are
+there because they fail in different directions — the permission covers a player
+who was given Mistrz by hand and has no Fuji state at all, and the graph covers
+a player whose groups were edited underneath it.
+
+What it does when it fires, in this order:
+
+    lp user <name> parent add mistrz
+    lp user <name> parent remove obywatel
+    clear <name> minecraft:diamond_block 64
+    send-broadcast ...
+
+Granting first and charging second, on purpose. The charge cannot fail — the
+requirement checked the same inventory microseconds earlier, in the same tick,
+with no chance for the player to act in between — so the only interesting
+failure is LuckPerms refusing, and this order puts that refusal in the log
+before the money moves.
+
+`parent add` + `parent remove` rather than `promote rangi`, also on purpose.
+`promote` walks the track from wherever the player happens to stand, so a player
+who was somehow on Gracz would pay 64 diamond blocks to be moved to Obywatel.
+The explicit pair can only ever produce Mistrz, and if the `remove` half were to
+fail the player is left in both groups, where the weights in section 3 still
+give them Mistrz's limits. It fails towards the player, not away from them.
+
+All of this is measured, on a stand running this pack's own configs, from a real
+non-op player command source:
+
+    0 blocks, 63 blocks              refused, nothing taken
+    64 blocks, no --confirm          nothing happens
+    64 blocks, --confirm true        Mistrz granted, exactly 64 taken
+    128 blocks                       exactly 64 taken, 64 left
+    a second attempt afterwards      refused, nothing taken
+    Nowy, Gracz, Moderator           refused, nothing taken
+    someone already on Mistrz        refused, nothing taken
+    /rank set, /rank remove,
+      /rank list, /rank info         not offered to a player at all —
+                                     brigadier rejects them before parsing
+
+The last line is Fuji's own doing: those commands require permission level 4,
+and the check lets the console through unconditionally. Which means the console,
+RCON, a command block and a datapack function can all run `/rank set`. Keep that
+in mind before wiring `/rank set` into anything.
+
+Two more things worth knowing before they surprise you:
+
+  * Fuji keys its rank state by player NAME, not UUID
+    (config/fuji/modules/rank/rank-data.json). On this server that is fine —
+    it is offline mode behind EasyAuth, so a name is an identity. If that ever
+    changes, this file does not follow a rename.
+  * Turning a Fuji module on or off needs a server restart. The mod says so
+    itself at start-up and it means it.
+
+Everything else Fuji can do — /home, /tpa, warps, kits, chat, nicknames, an
+economy — ships disabled and should stay disabled. Those jobs already belong to
+Essential Commands, Starter Kit, Styled Chat and Styled Nicknames here, and two
+mods answering /home is a support ticket nobody enjoys. Fuji disables every
+module by default, so this is a matter of not adding lines to
+config/fuji/config.json rather than of removing any.

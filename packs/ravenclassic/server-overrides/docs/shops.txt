@@ -79,8 +79,15 @@ you can let through anything else "from rank X upwards".
 
 The rest runs through a person: staff keeps goods for higher ranks outside the
 shop and hands them over on the spot (`/sk give <name> <kit>`), after checking
-the rank in `/lp user <name> info`. Less elegant, but predictable — and
-promotion to Mistrz works the same way.
+the rank in `/lp user <name> info`. Less elegant, but predictable.
+
+Selling the Mistrz rank does not, since 1.8.0 — that one is Fuji's `rank`
+module, which takes the 64 diamond blocks itself and grants the group. It is not
+a shop and does not appear in one; the player types a command from wherever they
+are. docs/ranks.txt, section 12. Nothing else on this server is sold that way,
+and the shop block still cannot do it: Universal Shops can hand over an item and
+nothing else — its stock is an ItemStack all the way down, with no notion of
+running a command.
 
 
 4. Shops and claims

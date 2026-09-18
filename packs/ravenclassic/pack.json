@@ -2,7 +2,7 @@
   "$schema": "../../docs/pack.schema.json",
   "slug": "ravenclassic",
   "name": "White Ravens Classic",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "summary": {
     "pl": "Klasyczny Minecraft z kilkoma modami Quality of Life wybranymi przez naszą społeczność.",
     "en": "Classic Minecraft with a handful of quality-of-life mods chosen by our community."
@@ -108,6 +108,11 @@
     {
       "slug": "playtime-ranks",
       "reason": "Moves a player up the LuckPerms ladder once they have played long enough",
+      "side": "server"
+    },
+    {
+      "slug": "fuji",
+      "reason": "Sells the Mistrz rank. Only its `rank` module is on, because it is the one thing on Fabric 26.2 that can take payment and grant a LuckPerms group: requirements and reward commands both run as console, so the player needs no LuckPerms node to be promoted. Every other Fuji module ships disabled and stays that way — /home, /tpa, chat and nicknames already belong to other mods here",
       "side": "server"
     },
     {
