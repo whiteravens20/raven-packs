@@ -45,7 +45,7 @@
   "book.ravenclassic.przewodnik.dzialki.rangi.p1.title": "Earned by playing",
   "book.ravenclassic.przewodnik.dzialki.rangi.p1.text": "Gracz and Obywatel arrive on their own, for time spent in game — there is nobody to ask.\n\n- **Gracz** — after 10 hours\n- **Obywatel** — after 40 hours\n\nEach step up means more ground and more farms running without you. Obywatel also comes with a waystone.",
   "book.ravenclassic.przewodnik.dzialki.rangi.p2.title": "Mistrz",
-  "book.ravenclassic.przewodnik.dzialki.rangi.p2.text": "Mistrz is the one rank you buy: [#](8B2500)64 diamond blocks[#](). Ask an admin or a moderator.\n\n- 12 chunks to claim\n- 8 forceloads\n- 3 homes, same as Obywatel\n\nA person grants it, not a machine. You pay in game, in materials — ranks are never sold for real money.",
+  "book.ravenclassic.przewodnik.dzialki.rangi.p2.text": "Mistrz is the one rank you buy: [#](8B2500)64 diamond blocks[#](). You have to be Obywatel, carry the blocks, and type:\\\n\\\n[#](8B2500)/rank up mistrz --confirm true[#]()\n\n- 12 chunks to claim\n- 8 forceloads\n- 3 homes, same as Obywatel\n\nYou can do it anywhere, any time, without asking anyone. The blocks leave your inventory the moment the rank lands.\\\n\\\nWithout [#](8B2500)--confirm true[#]() the command does nothing — that is the guard against buying it by accident. You pay in game, in materials; ranks are never sold for real money.",
   "book.ravenclassic.przewodnik.handel.sklepy.name": "Shops",
   "book.ravenclassic.przewodnik.handel.sklepy.description": "Trading without waiting for each other",
   "book.ravenclassic.przewodnik.handel.sklepy.p0.title": "Your own shop",
