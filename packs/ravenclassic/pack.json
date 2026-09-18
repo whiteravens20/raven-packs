@@ -111,6 +111,11 @@
       "side": "server"
     },
     {
+      "slug": "fuji",
+      "reason": "Sells the Mistrz rank. Only its `rank` module is on, because it is the one thing on Fabric 26.2 that can take payment and grant a LuckPerms group: requirements and reward commands both run as console, so the player needs no LuckPerms node to be promoted. Every other Fuji module ships disabled and stays that way — /home, /tpa, chat and nicknames already belong to other mods here",
+      "side": "server"
+    },
+    {
       "slug": "staffsee-moderation",
       "reason": "Mute, warn and freeze — vanilla offers only kick and ban",
       "side": "server"

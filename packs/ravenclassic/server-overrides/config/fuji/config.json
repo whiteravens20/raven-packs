@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "rank": { "enable": true },
+    "predicate": { "enable": true },
+    "placeholder": { "enable": true }
+  }
+}

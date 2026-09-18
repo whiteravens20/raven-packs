@@ -3,7 +3,7 @@
   "pack": {
     "slug": "ravenclassic",
     "name": "White Ravens Classic",
-    "version": "1.6.2",
+    "version": "1.7.1",
     "minecraft": "26.2",
     "loader": {
       "type": "fabric",
@@ -17,7 +17,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-09-04T16:11:47.353Z",
+  "generatedAt": "2026-09-18T12:25:20.647Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -1165,6 +1165,28 @@
       ],
       "sourceUrl": null,
       "versionType": "release"
+    },
+    {
+      "requestKey": "{\"slug\":\"fuji\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
+      "kind": "mod",
+      "side": "server",
+      "clientSide": "unsupported",
+      "serverSide": "required",
+      "id": "fuji",
+      "name": "Fuji (Essentials)",
+      "source": "modrinth",
+      "projectId": "1TowMm2v",
+      "versionId": "ZADNcjA6",
+      "version": "14.11.2",
+      "versionType": "release",
+      "fileName": "fuji-fabric-14.11.2-7924eeb918-mc26.2.jar",
+      "url": "https://cdn.modrinth.com/data/1TowMm2v/versions/ZADNcjA6/fuji-fabric-14.11.2-7924eeb918-mc26.2.jar",
+      "size": 5871317,
+      "sha1": "b4240bce0257ffae1dc5c742ae034df5d7554635",
+      "sha512": "65028396ff8bda21b55be9e24f6e0c5579067dbd4d0881e9e0a7cfda75479a447c23e65e6538fed3c948340adf1306b7c2a791747199f5a431cce2a9742735ee",
+      "license": "GPL-3.0-only",
+      "sourceUrl": "https://github.com/fuji-fabric/fuji",
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"staffsee-moderation\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"server\"}",
