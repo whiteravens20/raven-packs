@@ -727,6 +727,100 @@ async function checkScriptClasses(slug, jars) {
   return unresolved.length;
 }
 
+/**
+ * Two mod jars must not carry classes in the same package.
+ *
+ * NeoForge gives every jar in `mods/` its own module, and an automatic module
+ * exports every package it contains. Two modules exporting one package is not
+ * a warning to the module system, it is an unresolvable graph, and the server
+ * stops before a single mod loads:
+ *
+ *   ResolutionException: Modules aci and ali export package
+ *     com.yanny.aci.tooltip to module autosizedgui
+ *
+ * That is a real one. Modrinth lists Advanced Core Info as a required
+ * dependency of Advanced Loot Info, which is true of the project and false of
+ * the jar: ALI shades `com/yanny/aci` — 50 classes — straight into itself. So
+ * the dependency reads as missing to anything that only asks the API, adding
+ * it is the obvious fix, and the obvious fix is what stops the pack booting.
+ *
+ * `lock.mjs` cannot see this; it has only Modrinth's answer. Nothing else here
+ * could see it either, because every declared dependency genuinely was present.
+ * Only the jars show it.
+ *
+ * Scope is deliberately the top-level jars. Nested jars go through JarJar,
+ * which picks one artifact per dependency before any module is built, so the
+ * duplicates it resolves are not duplicates at runtime and counting them would
+ * bury the real ones. Sides are separate because a server never loads a
+ * client-only jar.
+ *
+ * Fabric is the same measurement with a different verdict. There the mods
+ * share one flat class loader: a duplicated package shadows rather than
+ * crashes, so whichever jar wins is whichever was scanned first. Worth saying
+ * out loud, not worth failing a pack that starts.
+ */
+async function checkSplitPackages(jars, loaderType) {
+  const bySide = { server: new Map(), client: new Map() };
+
+  for (const { file, jar } of jars) {
+    const { stdout } = await execFileAsync("unzip", ["-Z1", jar, "*.class"], {
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+    }).catch(() => ({ stdout: "" }));
+
+    const packages = new Set();
+    for (const line of stdout.split("\n")) {
+      if (!line.endsWith(".class")) continue;
+      const cut = line.lastIndexOf("/");
+      if (cut < 0) continue; // default package — no module conflict to have
+      packages.add(line.slice(0, cut).replace(/\//g, "."));
+    }
+
+    for (const side of file.side === "both" ? ["server", "client"] : [file.side]) {
+      const map = bySide[side];
+      if (!map) continue;
+      for (const pkg of packages) {
+        if (!map.has(pkg)) map.set(pkg, new Set());
+        map.get(pkg).add(file.name);
+      }
+    }
+  }
+
+  // One line per pair of jars, not per package: ALI and ACI share five, and
+  // five lines saying the same thing is five chances to miss the one that
+  // matters.
+  const clashes = [];
+  for (const [side, map] of Object.entries(bySide)) {
+    const pairs = new Map();
+    for (const [pkg, names] of map) {
+      if (names.size < 2) continue;
+      const key = [...names].sort().join(" + ");
+      if (!pairs.has(key)) pairs.set(key, []);
+      pairs.get(key).push(pkg);
+    }
+    for (const [names, packages] of pairs) {
+      clashes.push({ side, names, packages });
+    }
+  }
+
+  const fatal = loaderType === "neoforge" || loaderType === "forge";
+  for (const c of clashes) {
+    const detail =
+      `${c.names} both carry ${c.packages.length} package(s) on the ${c.side} side, ` +
+      `starting with '${c.packages.sort()[0]}'`;
+    if (fatal) {
+      bad(`${detail} — the module system refuses to resolve this and the pack will not start`);
+    } else {
+      warn(`${detail} — on ${loaderType} one silently shadows the other`);
+    }
+  }
+
+  if (!clashes.length) {
+    ok(`no package is carried by two jars`);
+  }
+  return fatal ? clashes.length : 0;
+}
+
 async function checkPack(slug) {
   const lock = JSON.parse(
     await fs.readFile(path.join(PACKS_DIR, slug, "pack.lock.json"), "utf8"),
@@ -867,7 +961,11 @@ async function checkPack(slug) {
   if (!missing.length && !problems.length)
     ok("every declared dependency is present");
 
-  return problems.length + (await checkScriptClasses(slug, jars));
+  return (
+    problems.length +
+    (await checkSplitPackages(jars, loaderType)) +
+    (await checkScriptClasses(slug, jars))
+  );
 }
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith("-"));
