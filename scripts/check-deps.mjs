@@ -736,7 +736,7 @@ async function checkPack(slug) {
   );
 
   console.log(
-    `\n\x1b[1m\x1b[36m${lock.pack.name}\x1b[0m v${lock.pack.version}`,
+    `\n\x1b[1m\x1b[36m${pack.name}\x1b[0m v${pack.version}`,
   );
 
   const loaderType = pack.loader.type;

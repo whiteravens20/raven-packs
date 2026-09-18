@@ -3,7 +3,6 @@
   "pack": {
     "slug": "ravenforge",
     "name": "White Ravens Forge",
-    "version": "0.1.0",
     "minecraft": "1.21.1",
     "loader": {
       "type": "neoforge",
@@ -19,7 +18,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-18T16:51:41.917Z",
+  "generatedAt": "2026-09-18T17:12:03.370Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",

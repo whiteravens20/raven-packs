@@ -395,10 +395,6 @@ async function buildPack(slug, { withZip }) {
     if (drift.packChanged) console.log('  \x1b[33m~ Minecraft/loader version changed\x1b[0m');
     throw new Error(`${slug}: pack.json and pack.lock.json disagree — run: node scripts/lock.mjs ${slug}`);
   }
-  if (lock.pack.version !== pack.version) {
-    warn(`lockfile records pack version ${lock.pack.version}, definition says ${pack.version}`);
-  }
-
   console.log(
     `\n\x1b[1m\x1b[36m${pack.name}\x1b[0m v${pack.version} — ` +
       `Minecraft ${pack.minecraft}, ${pack.loader.type} ${pack.loader.version}`,
