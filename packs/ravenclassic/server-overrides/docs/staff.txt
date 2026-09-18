@@ -139,6 +139,15 @@ of bread and **the server guide** in the first slot. That last item is the most
 important thing here: Modonomicon has no command to open a book, so if nobody
 gave the player one, the whole guide would have been written for the drawer.
 
+Since 1.8.0 the kit is the **only** way the guide reaches anybody. Between 1.7.0
+and 1.8.0 there was a second one — a lectern on spawn, held full by a datapack —
+and it is gone on purpose. The exception in the claim protection that made a
+lectern clickable could not be limited to that one lectern: it applied to every
+lectern in every claim on the server, and it let a stranger sneak the book out
+of any of them. The reasoning is written out in full in
+world/serverconfig/openpartiesandclaims-server.toml, above
+forcedBlockProtectionExceptionList. A lectern is now protected like a chest.
+
 File: config/starterkit/kits/Start.txt, the description in
 config/starterkit/descriptions/. The format is one line per slot, and the value
 goes straight through the ItemStack codec, so items with components work — that
@@ -433,3 +442,12 @@ Test both separately, because they are two different paths: join on a fresh name
 (world spawn), and check `/spawn` from a staff account (the EC spawn). On a
 fresh name `/spawn` will fail, and that is the correct result of the test, not a
 fault.
+
+If this server ran 1.7.x, there is a lectern standing on spawn with the guide on
+it, and a marker inside that block keeping it full. Both stopped working in
+1.8.0 — the lectern is protected like any other block now and nothing refills
+it. Take them away rather than leaving a lectern nobody can open:
+
+    /kill @e[type=minecraft:marker,tag=rc_pulpit]
+
+and break the lectern yourself in creative. Why it went, in section 5.
