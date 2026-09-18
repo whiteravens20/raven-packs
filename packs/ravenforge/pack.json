@@ -39,6 +39,8 @@
     { "slug": "libipn", "reason": "Required by Inventory Profiles Next" },
     { "slug": "kotlin-for-forge", "side": "client", "reason": "Kotlin runtime — Inventory Profiles Next is written in it. Pinned client: scanning every jar for kotlin/jvm/internal/Intrinsics finds only IPN and libipn, both client, so no server mod is written in Kotlin" },
     { "slug": "searchables", "reason": "Required by Controlling" },
+    { "slug": "mezzconfig", "reason": "Required by JEI — the config library mezz split out of it. Every 1.21.1 build is a beta" },
+    { "slug": "advanced-core-info", "reason": "Required by Advanced Loot Info. Every 1.21.1 build is a beta" },
     { "slug": "konkrete", "side": "client", "reason": "Required by Just Zoom — its only caller in this pack, measured in bytecode, so it is pinned client" },
     { "slug": "rhino", "reason": "JavaScript engine KubeJS runs on" },
 
