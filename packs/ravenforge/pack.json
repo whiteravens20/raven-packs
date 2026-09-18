@@ -135,8 +135,16 @@
     { "slug": "dynamic-fps", "reason": "Throttles FPS when the window is unfocused" },
     { "slug": "servercore", "reason": "Dynamic server-side performance tuning", "side": "server" },
 
-    { "slug": "xaeros-minimap", "reason": "Minimap — draws Open Parties and Claims claims natively", "side": "client" },
-    { "slug": "xaeros-world-map", "reason": "Full-screen map, same claim integration", "side": "client" },
+    {
+      "slug": "xaeros-minimap",
+      "version": "neoforge-1.21.1-26.4.2",
+      "reason": "Minimap — draws Open Parties and Claims claims natively. Not pinned client, against what Modrinth suggests: the jar carries a real server half, and it is the half that makes party members visible to each other. xaero.common.server.mods.opac.SupportOPACServer answers isPositionSyncAllowed and getReceiveLocationsFromParty/MutualAllies, so with the mod on the server a player sees their party and allies on the minimap past render distance, and without it that never happens. Each player opts in through their own OPAC config, so nobody is tracked who did not ask to be. Pinned: 26.5.0 and later want Open Parties and Claims 0.31.6, and this pack is on 0.30.3. Moving the claim system is its own decision, not a side effect of putting a map on the server"
+    },
+    {
+      "slug": "xaeros-world-map",
+      "version": "neoforge-1.21.1-1.45.0",
+      "reason": "Full-screen map, same claim integration, and the same server half as the minimap. It also keeps per-level map ids on the server, which matters here because the mining dimension is deleted every month. Pinned for the same reason as the minimap above"
+    },
     { "slug": "mouse-tweaks", "reason": "Drag-to-move stacks in every inventory", "side": "client" },
     { "slug": "inventory-profiles-next", "reason": "Inventory sorting — worth more in a tech pack than anywhere else", "side": "client" },
     { "slug": "controlling", "reason": "Searchable, conflict-aware key bindings. This many mods guarantee conflicts", "side": "client" },

@@ -18,7 +18,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-18T17:20:33.642Z",
+  "generatedAt": "2026-09-18T17:47:00.041Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -2070,9 +2070,9 @@
       "versionType": "release"
     },
     {
-      "requestKey": "{\"slug\":\"xaeros-minimap\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "requestKey": "{\"slug\":\"xaeros-minimap\",\"url\":null,\"version\":\"neoforge-1.21.1-26.4.2\",\"allowPrerelease\":false,\"side\":null}",
       "kind": "mod",
-      "side": "client",
+      "side": "both",
       "clientSide": "required",
       "serverSide": "optional",
       "id": "xaeros-minimap",
@@ -2081,20 +2081,20 @@
       "projectId": "1bokaNcj",
       "versionId": "JXvcT1hp",
       "version": "neoforge-1.21.1-26.4.2",
+      "versionType": "release",
       "fileName": "xaerominimap-neoforge-1.21.1-26.4.2.jar",
       "url": "https://cdn.modrinth.com/data/1bokaNcj/versions/JXvcT1hp/xaerominimap-neoforge-1.21.1-26.4.2.jar",
       "size": 2185409,
       "sha1": "21b3232e62dabcbb5bf28866481e8de2c0ccb780",
       "sha512": "7ece42b6665cb3a83d77bca1ae9ab31e9f418a7e0ee73f4be1839b62a8dde7e2727d554b6ed056ca4e7510c1aaa6603e5caaa62355bca9ff202171df73ac49ee",
       "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [],
       "sourceUrl": null,
-      "versionType": "release"
+      "requiredDependencies": []
     },
     {
-      "requestKey": "{\"slug\":\"xaeros-world-map\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "requestKey": "{\"slug\":\"xaeros-world-map\",\"url\":null,\"version\":\"neoforge-1.21.1-1.45.0\",\"allowPrerelease\":false,\"side\":null}",
       "kind": "mod",
-      "side": "client",
+      "side": "both",
       "clientSide": "required",
       "serverSide": "optional",
       "id": "xaeros-world-map",
@@ -2103,15 +2103,15 @@
       "projectId": "NcUtCpym",
       "versionId": "fOv9QzLO",
       "version": "neoforge-1.21.1-1.45.0",
+      "versionType": "release",
       "fileName": "xaeroworldmap-neoforge-1.21.1-1.45.0.jar",
       "url": "https://cdn.modrinth.com/data/NcUtCpym/versions/fOv9QzLO/xaeroworldmap-neoforge-1.21.1-1.45.0.jar",
       "size": 1422531,
       "sha1": "f243d6877ab32333f27bf27ad1e9eb600361e6aa",
       "sha512": "57a3175d91c237682b65e1b9df78be23ad8cd03f1c8ca074fc61e1672d280df8fa7335c88a173b46b1e17834af621e5121b80ac0d12cd7c9aba3e3ceb367d1eb",
       "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [],
       "sourceUrl": null,
-      "versionType": "release"
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"mouse-tweaks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
