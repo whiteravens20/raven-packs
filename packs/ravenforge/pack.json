@@ -40,7 +40,6 @@
     { "slug": "kotlin-for-forge", "side": "client", "reason": "Kotlin runtime — Inventory Profiles Next is written in it. Pinned client: scanning every jar for kotlin/jvm/internal/Intrinsics finds only IPN and libipn, both client, so no server mod is written in Kotlin" },
     { "slug": "searchables", "reason": "Required by Controlling" },
     { "slug": "mezzconfig", "reason": "Required by JEI — the config library mezz split out of it. Every 1.21.1 build is a beta" },
-    { "slug": "advanced-core-info", "reason": "Required by Advanced Loot Info. Every 1.21.1 build is a beta" },
     { "slug": "konkrete", "side": "client", "reason": "Required by Just Zoom — its only caller in this pack, measured in bytecode, so it is pinned client" },
     { "slug": "rhino", "reason": "JavaScript engine KubeJS runs on" },
 
@@ -109,7 +108,11 @@
       "side": "both"
     },
     { "slug": "silentgearjei", "reason": "Browsable Silent Gear materials and traits in JEI. Not a duplicate of the mod's own SGearJeiPlugin, which only registers recipes — this adds the Materials, Material Traits and Traits categories, and Silent Gear is the pack's only tool system" },
-    { "slug": "advanced-loot-info", "reason": "Required by SilentGearJEI. Loot tables with their conditions and rolls, which overlaps JER on mob drops and chests but goes deeper. Beta is the only 1.21.1 build" },
+    {
+      "slug": "advanced-loot-info",
+      "ignoreDependencies": ["advanced-core-info"],
+      "reason": "Required by SilentGearJEI. Loot tables with their conditions and rolls, which overlaps JER on mob drops and chests but goes deeper. Beta is the only 1.21.1 build. Modrinth lists Advanced Core Info as required and it is not: this jar already carries com/yanny/aci — 50 classes, shaded in rather than jar-in-jarred, so nothing on the outside can see them. Adding ACI as its own jar is what the loader will not have. Measured: the pack boots to a ResolutionException, \"Modules aci and ali export package com.yanny.aci.tooltip to module autosizedgui\", and the server never starts"
+    },
     { "slug": "just-enough-effect-descriptions-jeed", "reason": "Says what a potion effect actually does", "side": "client" },
     { "slug": "enchantment-descriptions", "reason": "Says what an enchantment actually does", "side": "client" },
     { "slug": "justenoughbreeding", "reason": "Shows what each animal breeds with", "side": "client" },

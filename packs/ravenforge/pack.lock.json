@@ -18,7 +18,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-18T17:12:03.370Z",
+  "generatedAt": "2026-09-18T17:20:33.642Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -554,28 +554,6 @@
       "sha512": "83951a19cd38030771c4081605cb66c67a66a32a526b4ffbd438919abb7d7b753ade216bcf6cec847c2a7ca275e6d7a25119a568007deb023df89019f1c5f93e",
       "license": "MIT",
       "sourceUrl": "https://github.com/mezz/MezzConfig",
-      "requiredDependencies": []
-    },
-    {
-      "requestKey": "{\"slug\":\"advanced-core-info\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
-      "kind": "mod",
-      "side": "both",
-      "clientSide": "required",
-      "serverSide": "required",
-      "id": "advanced-core-info",
-      "name": "Advanced Core Info (ACI)",
-      "source": "modrinth",
-      "projectId": "BaR4ijFC",
-      "versionId": "qMVPGs9O",
-      "version": "1.21.1-1.2.0",
-      "versionType": "beta",
-      "fileName": "AdvancedCoreInfo-neoforge-1.21.1-1.2.0.jar",
-      "url": "https://cdn.modrinth.com/data/BaR4ijFC/versions/qMVPGs9O/AdvancedCoreInfo-neoforge-1.21.1-1.2.0.jar",
-      "size": 105784,
-      "sha1": "4e3b71bb3a2d320cfe41966249abf4cbaca7531b",
-      "sha512": "d2cbd51551185737bf59e923fa79edccef56b9238cec1812938f3ec46a7b7eb44a29d0b9d75d54e66e7580a896d51d467149bc4739a14a419c80c65b19405e88",
-      "license": "MIT",
-      "sourceUrl": "https://github.com/yanny7/AdvancedLootInfo",
       "requiredDependencies": []
     },
     {
