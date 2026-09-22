@@ -3,7 +3,6 @@
   "pack": {
     "slug": "ravenclassic",
     "name": "White Ravens Classic",
-    "version": "1.7.1",
     "minecraft": "26.2",
     "loader": {
       "type": "fabric",
@@ -17,7 +16,7 @@
       "fileName": "fabric-server-launch.jar"
     }
   },
-  "generatedAt": "2026-09-18T12:25:20.647Z",
+  "generatedAt": "2026-09-18T17:12:03.081Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",

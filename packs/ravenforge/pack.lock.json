@@ -3,7 +3,6 @@
   "pack": {
     "slug": "ravenforge",
     "name": "White Ravens Forge",
-    "version": "0.1.0",
     "minecraft": "1.21.1",
     "loader": {
       "type": "neoforge",
@@ -19,7 +18,7 @@
       "argsFileWindows": "libraries/net/neoforged/neoforge/21.1.248/win_args.txt"
     }
   },
-  "generatedAt": "2026-09-07T13:59:36.898Z",
+  "generatedAt": "2026-09-18T20:36:28.316Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"architectury-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
@@ -534,6 +533,28 @@
       "requiredDependencies": [],
       "sourceUrl": "https://github.com/jaredlll08/searchables",
       "versionType": "release"
+    },
+    {
+      "requestKey": "{\"slug\":\"mezzconfig\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",
+      "kind": "mod",
+      "side": "both",
+      "clientSide": "optional",
+      "serverSide": "optional",
+      "id": "mezzconfig",
+      "name": "MezzConfig",
+      "source": "modrinth",
+      "projectId": "7tEfOcA7",
+      "versionId": "XK83qXpJ",
+      "version": "0.5.9",
+      "versionType": "beta",
+      "fileName": "mezz_config-1.21.1-neoforge-0.5.9.jar",
+      "url": "https://cdn.modrinth.com/data/7tEfOcA7/versions/XK83qXpJ/mezz_config-1.21.1-neoforge-0.5.9.jar",
+      "size": 323969,
+      "sha1": "49225b1f619f82d3530d00b8120ac7db166e9697",
+      "sha512": "83951a19cd38030771c4081605cb66c67a66a32a526b4ffbd438919abb7d7b753ade216bcf6cec847c2a7ca275e6d7a25119a568007deb023df89019f1c5f93e",
+      "license": "MIT",
+      "sourceUrl": "https://github.com/mezz/MezzConfig",
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"konkrete\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2049,9 +2070,9 @@
       "versionType": "release"
     },
     {
-      "requestKey": "{\"slug\":\"xaeros-minimap\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "requestKey": "{\"slug\":\"xaeros-minimap\",\"url\":null,\"version\":\"neoforge-1.21.1-26.4.2\",\"allowPrerelease\":false,\"side\":null}",
       "kind": "mod",
-      "side": "client",
+      "side": "both",
       "clientSide": "required",
       "serverSide": "optional",
       "id": "xaeros-minimap",
@@ -2060,20 +2081,20 @@
       "projectId": "1bokaNcj",
       "versionId": "JXvcT1hp",
       "version": "neoforge-1.21.1-26.4.2",
+      "versionType": "release",
       "fileName": "xaerominimap-neoforge-1.21.1-26.4.2.jar",
       "url": "https://cdn.modrinth.com/data/1bokaNcj/versions/JXvcT1hp/xaerominimap-neoforge-1.21.1-26.4.2.jar",
       "size": 2185409,
       "sha1": "21b3232e62dabcbb5bf28866481e8de2c0ccb780",
       "sha512": "7ece42b6665cb3a83d77bca1ae9ab31e9f418a7e0ee73f4be1839b62a8dde7e2727d554b6ed056ca4e7510c1aaa6603e5caaa62355bca9ff202171df73ac49ee",
       "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [],
       "sourceUrl": null,
-      "versionType": "release"
+      "requiredDependencies": []
     },
     {
-      "requestKey": "{\"slug\":\"xaeros-world-map\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
+      "requestKey": "{\"slug\":\"xaeros-world-map\",\"url\":null,\"version\":\"neoforge-1.21.1-1.45.0\",\"allowPrerelease\":false,\"side\":null}",
       "kind": "mod",
-      "side": "client",
+      "side": "both",
       "clientSide": "required",
       "serverSide": "optional",
       "id": "xaeros-world-map",
@@ -2082,15 +2103,15 @@
       "projectId": "NcUtCpym",
       "versionId": "fOv9QzLO",
       "version": "neoforge-1.21.1-1.45.0",
+      "versionType": "release",
       "fileName": "xaeroworldmap-neoforge-1.21.1-1.45.0.jar",
       "url": "https://cdn.modrinth.com/data/NcUtCpym/versions/fOv9QzLO/xaeroworldmap-neoforge-1.21.1-1.45.0.jar",
       "size": 1422531,
       "sha1": "f243d6877ab32333f27bf27ad1e9eb600361e6aa",
       "sha512": "57a3175d91c237682b65e1b9df78be23ad8cd03f1c8ca074fc61e1672d280df8fa7335c88a173b46b1e17834af621e5121b80ac0d12cd7c9aba3e3ceb367d1eb",
       "license": "LicenseRef-All-Rights-Reserved",
-      "requiredDependencies": [],
       "sourceUrl": null,
-      "versionType": "release"
+      "requiredDependencies": []
     },
     {
       "requestKey": "{\"slug\":\"mouse-tweaks\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":\"client\"}",
@@ -2516,19 +2537,19 @@
       "versionType": "release"
     },
     {
-      "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.2.0-beta.1/ravencoin-1.21.1-0.2.0-beta.1.jar\",\"version\":\"0.2.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
+      "requestKey": "{\"slug\":null,\"url\":\"https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.3.0-beta.1/ravencoin-1.21.1-0.3.0-beta.1.jar\",\"version\":\"0.3.0-beta.1\",\"allowPrerelease\":false,\"side\":\"both\"}",
       "kind": "mod",
       "side": "both",
       "id": "ravencoin",
       "name": "RavenCoin",
       "source": "url",
-      "version": "0.2.0-beta.1",
-      "fileName": "ravencoin-1.21.1-0.2.0-beta.1.jar",
-      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.2.0-beta.1/ravencoin-1.21.1-0.2.0-beta.1.jar",
-      "size": 195118,
-      "sha1": "c012f4c07609090938efde5a0c6f72a13501f7eb",
-      "sha512": "e782be06eeaaef4e4d6cbbba72f1d87391a8957b377bcfc0a8b271468bf08684cebaa7c7a807b19656f9a503727044d6e4c49c5dad57474dd5cdb33b27b15562",
-      "sha256": "a929b08c604668c8a4c99eea361ca850c0d72267abe49de3242f2a740b524931",
+      "version": "0.3.0-beta.1",
+      "fileName": "ravencoin-1.21.1-0.3.0-beta.1.jar",
+      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.3.0-beta.1/ravencoin-1.21.1-0.3.0-beta.1.jar",
+      "size": 195860,
+      "sha1": "54546cf6cd633eb3e0862eb4eab03a750a9b3ecd",
+      "sha512": "a8a7b6c25e26967379b2643cd19dceb320331e8a90349a7b16ea3848583596f015012a1216d0d48bca0c29efa24fe41f36bad69db099f8756f559980b1090b29",
+      "sha256": "bda46e9fbccaf75dbde53e0115dd4fa2198c3fa674a9fda385eab9aa674c64b2",
       "license": "Apache-2.0",
       "sourceUrl": "https://github.com/pavlojs/raven-economy",
       "requiredDependencies": []

@@ -353,10 +353,13 @@ async function lockPack(slug, { update }) {
 
   const lock = {
     lockfileVersion: LOCKFILE_VERSION,
+    // Deliberately no pack version here. This file records the mod set, which
+    // is what `diffLockfile` compares; the release number lives in pack.json
+    // and moves in its own commit, after the set is locked. Recording it here
+    // guaranteed a stale copy in every release.
     pack: {
       slug: pack.slug,
       name: pack.name,
-      version: pack.version,
       minecraft: pack.minecraft,
       loader: pack.loader,
       requiredJava,

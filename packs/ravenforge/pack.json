@@ -8,7 +8,6 @@
     "en": "A modded tech server with a currency, mods and scripts of our own."
   },
   "author": "White Ravens",
-  "unlisted": true,
   "minecraft": "1.21.1",
   "loader": {
     "type": "neoforge",
@@ -39,6 +38,7 @@
     { "slug": "libipn", "reason": "Required by Inventory Profiles Next" },
     { "slug": "kotlin-for-forge", "side": "client", "reason": "Kotlin runtime — Inventory Profiles Next is written in it. Pinned client: scanning every jar for kotlin/jvm/internal/Intrinsics finds only IPN and libipn, both client, so no server mod is written in Kotlin" },
     { "slug": "searchables", "reason": "Required by Controlling" },
+    { "slug": "mezzconfig", "reason": "Required by JEI — the config library mezz split out of it. Every 1.21.1 build is a beta" },
     { "slug": "konkrete", "side": "client", "reason": "Required by Just Zoom — its only caller in this pack, measured in bytecode, so it is pinned client" },
     { "slug": "rhino", "reason": "JavaScript engine KubeJS runs on" },
 
@@ -107,7 +107,11 @@
       "side": "both"
     },
     { "slug": "silentgearjei", "reason": "Browsable Silent Gear materials and traits in JEI. Not a duplicate of the mod's own SGearJeiPlugin, which only registers recipes — this adds the Materials, Material Traits and Traits categories, and Silent Gear is the pack's only tool system" },
-    { "slug": "advanced-loot-info", "reason": "Required by SilentGearJEI. Loot tables with their conditions and rolls, which overlaps JER on mob drops and chests but goes deeper. Beta is the only 1.21.1 build" },
+    {
+      "slug": "advanced-loot-info",
+      "ignoreDependencies": ["advanced-core-info"],
+      "reason": "Required by SilentGearJEI. Loot tables with their conditions and rolls, which overlaps JER on mob drops and chests but goes deeper. Beta is the only 1.21.1 build. Modrinth lists Advanced Core Info as required and it is not: this jar already carries com/yanny/aci — 50 classes, shaded in rather than jar-in-jarred, so nothing on the outside can see them. Adding ACI as its own jar is what the loader will not have. Measured: the pack boots to a ResolutionException, \"Modules aci and ali export package com.yanny.aci.tooltip to module autosizedgui\", and the server never starts"
+    },
     { "slug": "just-enough-effect-descriptions-jeed", "reason": "Says what a potion effect actually does", "side": "client" },
     { "slug": "enchantment-descriptions", "reason": "Says what an enchantment actually does", "side": "client" },
     { "slug": "justenoughbreeding", "reason": "Shows what each animal breeds with", "side": "client" },
@@ -130,8 +134,16 @@
     { "slug": "dynamic-fps", "reason": "Throttles FPS when the window is unfocused" },
     { "slug": "servercore", "reason": "Dynamic server-side performance tuning", "side": "server" },
 
-    { "slug": "xaeros-minimap", "reason": "Minimap — draws Open Parties and Claims claims natively", "side": "client" },
-    { "slug": "xaeros-world-map", "reason": "Full-screen map, same claim integration", "side": "client" },
+    {
+      "slug": "xaeros-minimap",
+      "version": "neoforge-1.21.1-26.4.2",
+      "reason": "Minimap — draws Open Parties and Claims claims natively. Not pinned client, against what Modrinth suggests: the jar carries a real server half, and it is the half that makes party members visible to each other. xaero.common.server.mods.opac.SupportOPACServer answers isPositionSyncAllowed and getReceiveLocationsFromParty/MutualAllies, so with the mod on the server a player sees their party and allies on the minimap past render distance, and without it that never happens. Each player opts in through their own OPAC config, so nobody is tracked who did not ask to be. Pinned: 26.5.0 and later want Open Parties and Claims 0.31.6, and this pack is on 0.30.3. Moving the claim system is its own decision, not a side effect of putting a map on the server"
+    },
+    {
+      "slug": "xaeros-world-map",
+      "version": "neoforge-1.21.1-1.45.0",
+      "reason": "Full-screen map, same claim integration, and the same server half as the minimap. It also keeps per-level map ids on the server, which matters here because the mining dimension is deleted every month. Pinned for the same reason as the minimap above"
+    },
     { "slug": "mouse-tweaks", "reason": "Drag-to-move stacks in every inventory", "side": "client" },
     { "slug": "inventory-profiles-next", "reason": "Inventory sorting — worth more in a tech pack than anywhere else", "side": "client" },
     { "slug": "controlling", "reason": "Searchable, conflict-aware key bindings. This many mods guarantee conflicts", "side": "client" },
@@ -172,10 +184,10 @@
     { "slug": "henny-essentials", "reason": "Homes, warps, spawn, kits and moderation, replacing Saro's Essentials. Measured in jar 1.0.4-H3: it has the real LuckPerms integration Saro's never had. LuckPermsIntegration resolves permissions through CachedPermissionData.checkPermission as a Tristate, reads prefix and suffix from meta, and getMaxHomeLimit parses the highest home.limit.<n> node a player holds — so the per-rank home ladder ravenclassic runs on is finally possible here. Its own nodes are command.he.<command>. Saro's could only do op-or-everyone per command, with no numeric value anywhere in its config and so no limit to hand out per rank; its entry claimed nothing else on NeoForge 1.21.1 covered this ground, and that was wrong. Also a licence improvement: MIT with published source against All Rights Reserved with none. Two things configured rather than accepted: it starts a server restart task every 360 minutes by default, and its addgroupperm/addgroupprefix commands duplicate LuckPerms, so those nodes go to nobody and LuckPerms stays the single source of truth. It carries no target protection at all — Ban and Mute never ask about rank — which is what kubejs/server_scripts/rank_guard.js is for", "side": "server" },
 
     {
-      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.2.0-beta.1/ravencoin-1.21.1-0.2.0-beta.1.jar",
+      "url": "https://github.com/pavlojs/raven-economy/releases/download/v1.21.1-0.3.0-beta.1/ravencoin-1.21.1-0.3.0-beta.1.jar",
       "id": "ravencoin",
       "name": "RavenCoin",
-      "version": "0.2.0-beta.1",
+      "version": "0.3.0-beta.1",
       "license": "Apache-2.0",
       "sourceUrl": "https://github.com/pavlojs/raven-economy",
       "reason": "The pack's economy: a currency that is also an item, an ATM, player and server shops, and ranks bought through the LuckPerms API. Written for this pack because no published mod combines them. Carried as a url because it is not on Modrinth",

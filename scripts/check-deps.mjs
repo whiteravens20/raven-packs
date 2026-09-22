@@ -41,7 +41,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { fetchFile } from "./lib/download.mjs";
+import { fetchFile, listFiles } from "./lib/download.mjs";
 
 const execFileAsync = promisify(execFile);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -532,6 +532,85 @@ async function collectProvided(jarPath, into, preferred, depth = 0) {
 }
 
 /**
+ * Every class name a jar carries, its nested jars included on request.
+ *
+ * Listing reads the central directory only, so a 40 MB mod costs single-digit
+ * milliseconds. Nested jars are the expensive part — they have to be written
+ * out before they can be listed — so they are a second pass, taken only when
+ * the first one leaves something unresolved.
+ *
+ * Inner classes arrive already in the shape a script asks for them:
+ * `LedgerEntry$Kind` is a real entry, `LedgerEntry\$Kind.class`.
+ */
+async function collectClasses(jarPath, into, { nested = false, depth = 0 } = {}) {
+  const { stdout } = await execFileAsync("unzip", ["-Z1", jarPath, "*.class"], {
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+  }).catch(() => ({ stdout: "" }));
+
+  for (const line of stdout.split("\n")) {
+    if (!line.endsWith(".class")) continue;
+    into.add(line.slice(0, -".class".length).replace(/\//g, "."));
+  }
+
+  if (!nested || depth >= 3) return;
+  for (const jar of await listNestedJars(jarPath)) {
+    const tmp = path.join(
+      CACHE,
+      "nested",
+      `${path.basename(jarPath)}!${path.basename(jar)}`,
+    );
+    await fs.mkdir(path.dirname(tmp), { recursive: true });
+    const bytes = await execFileAsync("unzip", ["-p", jarPath, jar], {
+      encoding: "buffer",
+      maxBuffer: 64 * 1024 * 1024,
+    }).catch(() => null);
+    if (!bytes) continue;
+    await fs.writeFile(tmp, bytes.stdout);
+    await collectClasses(tmp, into, { nested, depth: depth + 1 });
+    await fs.rm(tmp, { force: true });
+  }
+}
+
+/**
+ * Classes that exist at runtime but ship in no mod jar: the game itself, the
+ * libraries Minecraft bundles, and the JDK. Nothing here can be checked from
+ * the pack's own files, so these are counted and reported rather than failed.
+ */
+const RUNTIME_PACKAGES = [
+  "net.minecraft.",
+  "com.mojang.",
+  "java.",
+  "javax.",
+  "jdk.",
+  "sun.",
+];
+
+/**
+ * Which jars a script may reach for, by the directory it sits in. KubeJS runs
+ * `server_scripts` on the server, `client_scripts` on the client and
+ * `startup_scripts` on both — so a startup script naming a server-only class
+ * is broken on the client, and the side a script runs on is part of the test.
+ */
+const SCRIPT_SIDES = {
+  server_scripts: ["server"],
+  client_scripts: ["client"],
+  startup_scripts: ["server", "client"],
+};
+
+/** `Java.loadClass('...')` call sites, with the line each one is on. */
+function loadClassRefs(src) {
+  const found = [];
+  const lines = src.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    for (const m of lines[i].matchAll(/Java\.loadClass\(\s*(['"`])([^'"`]+)\1\s*\)/g)) {
+      found.push({ line: i + 1, className: m[2] });
+    }
+  }
+  return found;
+}
+
+/**
  * The mod id the loader itself answers to, and the file each jar is read from.
  * Getting this wrong is the failure mode this script exists to prevent: seed
  * `fabricloader` into a NeoForge pack and every jar's `neoforge` dependency
@@ -544,6 +623,204 @@ const LOADER_ID = {
   neoforge: "neoforge",
 };
 
+/**
+ * Every class a KubeJS script loads has to exist in a jar the pack ships.
+ *
+ * This is the gate that was missing when the pack shipped dead milestone
+ * payouts. `milestones.js` asks for
+ * `net.whiteravens.ravencoin.economy.LedgerEntry$Kind`; the locked RavenCoin
+ * jar predated the ledger and had 56 classes, none of them that one. KubeJS
+ * answered with "Class could not be found!", the whole script failed to load,
+ * and because the failure is a script that never runs rather than an exception
+ * at a call site, nothing downstream said a word: advancements still granted,
+ * toasts still appeared, and no balance ever moved. It survived every check in
+ * this repo and was found by reading a boot log.
+ *
+ * Nothing about it was specific to our own mod. `Java.loadClass` is how these
+ * scripts reach into OPAC, LuckPerms and Henny Essentials too, and a class
+ * renamed in any of them lands exactly the same way on the next bump: silent,
+ * and only in the one feature that mod carried.
+ *
+ * So the test is the whole set, not RavenCoin: take every `Java.loadClass`
+ * call site in the pack's scripts and resolve it against the classes actually
+ * present in the locked jars for the side that script runs on.
+ */
+async function checkScriptClasses(slug, jars) {
+  const dir = path.join(PACKS_DIR, slug, "server-overrides", "kubejs");
+  let files;
+  try {
+    files = await listFiles(dir);
+  } catch {
+    return 0;
+  }
+
+  const scripts = files.filter((f) => f.relative.endsWith(".js"));
+  const refs = [];
+  for (const file of scripts) {
+    const side = SCRIPT_SIDES[file.relative.split("/")[0]];
+    const src = await fs.readFile(file.absolute, "utf8");
+    for (const ref of loadClassRefs(src)) {
+      refs.push({ ...ref, file: file.relative, side });
+    }
+  }
+  if (!refs.length) return 0;
+
+  // Unknown directory before anything else: resolving its scripts against the
+  // wrong side would answer confidently and wrongly.
+  const stray = refs.filter((r) => !r.side);
+  for (const r of stray) {
+    bad(
+      `kubejs/${r.file}:${r.line} sits in a directory this check does not know — ` +
+        `expected one of ${Object.keys(SCRIPT_SIDES).join(", ")}`,
+    );
+  }
+  if (stray.length) return stray.length;
+
+  const runtime = refs.filter((r) =>
+    RUNTIME_PACKAGES.some((pkg) => r.className.startsWith(pkg)),
+  );
+  const checkable = refs.filter((r) => !runtime.includes(r));
+
+  const bySide = { server: new Set(), client: new Set() };
+  const readSide = async (opts) => {
+    for (const { file, jar } of jars) {
+      const targets =
+        file.side === "both" ? ["server", "client"] : [file.side];
+      for (const target of targets) {
+        if (!bySide[target]) continue;
+        await collectClasses(jar, bySide[target], opts);
+      }
+    }
+  };
+
+  await readSide({ nested: false });
+  const resolves = (r) => r.side.every((side) => bySide[side].has(r.className));
+
+  // Nested jars are only worth unpacking if something is still missing —
+  // normally nothing is, and this second pass never runs.
+  let unresolved = checkable.filter((r) => !resolves(r));
+  if (unresolved.length) {
+    bySide.server.clear();
+    bySide.client.clear();
+    await readSide({ nested: true });
+    unresolved = checkable.filter((r) => !resolves(r));
+  }
+
+  for (const r of unresolved) {
+    const where = r.side.join(" and ");
+    bad(
+      `kubejs/${r.file}:${r.line} loads '${r.className}', which no ${where} jar in the pack provides — ` +
+        `KubeJS fails the whole script at load, silently`,
+    );
+  }
+
+  if (!unresolved.length) {
+    ok(
+      `${checkable.length} class(es) loaded by ${scripts.length} KubeJS script(s) exist in the locked jars`,
+    );
+  }
+  if (runtime.length) {
+    dim(
+      `${runtime.length} reference(s) to game or JDK classes not checked — they ship in no mod jar`,
+    );
+  }
+  return unresolved.length;
+}
+
+/**
+ * Two mod jars must not carry classes in the same package.
+ *
+ * NeoForge gives every jar in `mods/` its own module, and an automatic module
+ * exports every package it contains. Two modules exporting one package is not
+ * a warning to the module system, it is an unresolvable graph, and the server
+ * stops before a single mod loads:
+ *
+ *   ResolutionException: Modules aci and ali export package
+ *     com.yanny.aci.tooltip to module autosizedgui
+ *
+ * That is a real one. Modrinth lists Advanced Core Info as a required
+ * dependency of Advanced Loot Info, which is true of the project and false of
+ * the jar: ALI shades `com/yanny/aci` — 50 classes — straight into itself. So
+ * the dependency reads as missing to anything that only asks the API, adding
+ * it is the obvious fix, and the obvious fix is what stops the pack booting.
+ *
+ * `lock.mjs` cannot see this; it has only Modrinth's answer. Nothing else here
+ * could see it either, because every declared dependency genuinely was present.
+ * Only the jars show it.
+ *
+ * Scope is deliberately the top-level jars. Nested jars go through JarJar,
+ * which picks one artifact per dependency before any module is built, so the
+ * duplicates it resolves are not duplicates at runtime and counting them would
+ * bury the real ones. Sides are separate because a server never loads a
+ * client-only jar.
+ *
+ * Fabric is the same measurement with a different verdict. There the mods
+ * share one flat class loader: a duplicated package shadows rather than
+ * crashes, so whichever jar wins is whichever was scanned first. Worth saying
+ * out loud, not worth failing a pack that starts.
+ */
+async function checkSplitPackages(jars, loaderType) {
+  const bySide = { server: new Map(), client: new Map() };
+
+  for (const { file, jar } of jars) {
+    const { stdout } = await execFileAsync("unzip", ["-Z1", jar, "*.class"], {
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+    }).catch(() => ({ stdout: "" }));
+
+    const packages = new Set();
+    for (const line of stdout.split("\n")) {
+      if (!line.endsWith(".class")) continue;
+      const cut = line.lastIndexOf("/");
+      if (cut < 0) continue; // default package — no module conflict to have
+      packages.add(line.slice(0, cut).replace(/\//g, "."));
+    }
+
+    for (const side of file.side === "both" ? ["server", "client"] : [file.side]) {
+      const map = bySide[side];
+      if (!map) continue;
+      for (const pkg of packages) {
+        if (!map.has(pkg)) map.set(pkg, new Set());
+        map.get(pkg).add(file.name);
+      }
+    }
+  }
+
+  // One line per pair of jars, not per package: ALI and ACI share five, and
+  // five lines saying the same thing is five chances to miss the one that
+  // matters.
+  const clashes = [];
+  for (const [side, map] of Object.entries(bySide)) {
+    const pairs = new Map();
+    for (const [pkg, names] of map) {
+      if (names.size < 2) continue;
+      const key = [...names].sort().join(" + ");
+      if (!pairs.has(key)) pairs.set(key, []);
+      pairs.get(key).push(pkg);
+    }
+    for (const [names, packages] of pairs) {
+      clashes.push({ side, names, packages });
+    }
+  }
+
+  const fatal = loaderType === "neoforge" || loaderType === "forge";
+  for (const c of clashes) {
+    const detail =
+      `${c.names} both carry ${c.packages.length} package(s) on the ${c.side} side, ` +
+      `starting with '${c.packages.sort()[0]}'`;
+    if (fatal) {
+      bad(`${detail} — the module system refuses to resolve this and the pack will not start`);
+    } else {
+      warn(`${detail} — on ${loaderType} one silently shadows the other`);
+    }
+  }
+
+  if (!clashes.length) {
+    ok(`no package is carried by two jars`);
+  }
+  return fatal ? clashes.length : 0;
+}
+
 async function checkPack(slug) {
   const lock = JSON.parse(
     await fs.readFile(path.join(PACKS_DIR, slug, "pack.lock.json"), "utf8"),
@@ -553,7 +830,7 @@ async function checkPack(slug) {
   );
 
   console.log(
-    `\n\x1b[1m\x1b[36m${lock.pack.name}\x1b[0m v${lock.pack.version}`,
+    `\n\x1b[1m\x1b[36m${pack.name}\x1b[0m v${pack.version}`,
   );
 
   const loaderType = pack.loader.type;
@@ -574,10 +851,12 @@ async function checkPack(slug) {
     ["java", "25"],
   ]);
   const metas = [];
+  const jars = [];
   let unreadable = 0;
 
   for (const f of mods) {
     const jar = await download(f);
+    jars.push({ file: f, jar });
     const meta = await collectProvided(jar, provided, loaderType);
     if (!meta) {
       warn(`${f.name}: no readable mod metadata — skipped`);
@@ -682,7 +961,11 @@ async function checkPack(slug) {
   if (!missing.length && !problems.length)
     ok("every declared dependency is present");
 
-  return problems.length;
+  return (
+    problems.length +
+    (await checkSplitPackages(jars, loaderType)) +
+    (await checkScriptClasses(slug, jars))
+  );
 }
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith("-"));
@@ -698,8 +981,8 @@ for (const slug of slugs) failures += await checkPack(slug);
 console.log("");
 if (failures) {
   console.log(
-    `\x1b[31m✗ ${failures} dependency conflict(s) — the mod loader would refuse to start\x1b[0m`,
+    `\x1b[31m✗ ${failures} problem(s) — the mod loader would refuse to start, or a script would fail to load\x1b[0m`,
   );
   process.exit(1);
 }
-console.log("\x1b[32m✓ dependencies resolve\x1b[0m");
+console.log("\x1b[32m✓ dependencies resolve and every loaded class exists\x1b[0m");
