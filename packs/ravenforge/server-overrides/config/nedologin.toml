@@ -1,0 +1,17 @@
+# Nedologin asks the client for its password as soon as a player joins, and
+# disconnects them with "Login timeout" if the answer has not arrived after this
+# many seconds. The default is 5, and the request is re-sent only every 5
+# seconds, so at the default a client gets one chance and no margin. The client
+# answers from its main thread, which is still busy while a pack this size
+# finishes joining the world.
+#
+# A longer wait opens nothing: until the password checks out the player is put
+# in spectator mode and held in place (the restrict_game_type and
+# restrict_movement plugins), and no command is allowed (whitelist_commands).
+#
+# Only the keys we change are listed. Nedologin reads this file itself, not
+# through NeoForge's config system: on first start it adds every missing key
+# with the mod's default and rewrites the file, keeping the values set here.
+
+[login]
+	timeout_seconds = 30
