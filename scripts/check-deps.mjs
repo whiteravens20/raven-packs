@@ -848,7 +848,10 @@ async function checkPack(slug) {
   const provided = new Map([
     ["minecraft", pack.minecraft],
     [loaderId, pack.loader.version],
-    ["java", "25"],
+    // The Java this Minecraft version runs on, as the lockfile recorded it. It
+    // was 25 for every pack, which is right for 26.2 alone: a mod that needs
+    // Java 22 would have passed here in a 1.21.1 pack, which runs on 21.
+    ["java", String(lock.pack.requiredJava ?? 25)],
   ]);
   const metas = [];
   const jars = [];
