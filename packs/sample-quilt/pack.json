@@ -1,0 +1,34 @@
+{
+  "$schema": "../../docs/pack.schema.json",
+  "slug": "sample-quilt",
+  "name": "Sample Quilt Pack",
+  "version": "0.1.0",
+  "summary": {
+    "pl": "Mała paczka do sprawdzania launchera na Quilcie: kilka modów, shader, paczka zasobów i plik ustawień.",
+    "en": "A small pack for trying the launcher on Quilt: a few mods, a shader, a resource pack and a settings file."
+  },
+  "author": "White Ravens",
+  "unlisted": true,
+  "minecraft": "1.21.1",
+  "loader": {
+    "type": "quilt",
+    "version": "0.30.1"
+  },
+  "recommendedRamMb": 3072,
+  "mods": [
+    { "slug": "fabric-api", "reason": "Required by Mod Menu and Jade. Tagged for Fabric alone on Modrinth, and Quilt Loader runs it as it is — which is half of what this pack is here to exercise" },
+    { "slug": "placeholder-api", "side": "client", "reason": "Required by Mod Menu — its only caller here, so it is pinned client" },
+
+    { "slug": "sodium", "reason": "Renderer. The other mod with no build tagged for Quilt" },
+    { "slug": "iris", "allowPrerelease": true, "reason": "Shader loader — what makes the shader below something the game reads. A beta on purpose: 1.8.8, the last release for 1.21.1, asks for Sodium 0.6, and Sodium 0.8 refuses any Iris older than 1.8.13" },
+    { "slug": "lithium", "reason": "Game-logic optimisations. Tagged for Quilt as well as Fabric, and ships to both sides" },
+    { "slug": "modmenu", "reason": "The list of what the loader actually loaded, one click from the title screen" },
+    { "slug": "jade", "side": "client", "reason": "Block and entity tooltip. Pinned client: nothing for a server to do" }
+  ],
+  "resourcePacks": [
+    { "slug": "fast-better-grass", "reason": "Ten kilobytes, and visible at a glance: grass that covers the sides of its block" }
+  ],
+  "shaders": [
+    { "slug": "complementary-reimagined", "reason": "Half a megabyte, and the pack most players reach for first" }
+  ]
+}
