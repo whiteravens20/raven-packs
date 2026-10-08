@@ -67,6 +67,22 @@ export async function getVersionType(versionId) {
 }
 
 /**
+ * The loaders whose builds a pack on `loader` can run.
+ *
+ * Quilt runs Fabric's mods, and most of them are tagged for Fabric alone:
+ * Sodium and Fabric API have no build tagged `quilt` for 1.21.1 at all. Asked
+ * for `quilt` by name, the lookup found nothing for either and fell through to
+ * the unfiltered one meant for resource packs — which hands back the newest
+ * file for that Minecraft version whatever it was built for.
+ *
+ * The launcher makes the same call when it installs a mod, and the two have to
+ * agree: a pack must not lock what the launcher would refuse, or the reverse.
+ */
+export function acceptedLoaders(loader) {
+  return loader === 'quilt' ? ['quilt', 'fabric'] : [loader];
+}
+
+/**
  * Pick the version of a project to ship.
  *
  * With `pin` set, matches `version_number` first and the opaque version `id`
@@ -78,7 +94,7 @@ export async function getVersionType(versionId) {
 export async function resolveVersion(slug, { mcVersion, loader, pin, allowPrerelease = false }) {
   const query = new URLSearchParams({
     game_versions: JSON.stringify([mcVersion]),
-    loaders: JSON.stringify([loader]),
+    loaders: JSON.stringify(acceptedLoaders(loader)),
   });
 
   let versions = await apiFetch(`/project/${slug}/version?${query}`);

@@ -38,6 +38,12 @@ continue otherwise, since the slug becomes part of the published manifest URL.
 > For both of them `loader.version` is the **plain build number** —
 > `21.1.248`, not `1.21.1-21.1.248`. The launcher composes the Maven
 > coordinate itself, and prefixing it here produces a URL that does not exist.
+>
+> A **Quilt** pack is made of Fabric's mods as much as of its own: Quilt Loader
+> runs them, and most are tagged for Fabric alone. `lock.mjs` therefore takes a
+> build tagged for either, and `check-deps.mjs` holds every `fabricloader`
+> requirement to the Fabric Loader version that Quilt Loader says it stands in
+> for.
 
 ## A pack that is not ready yet
 
@@ -62,6 +68,38 @@ scripts/build.mjs ravenforge --with-zip` builds it for testing, and a
 Publishing it for real is deleting the line. Do that in the commit that releases
 it, not before — until `main` has the pack, keeping the flag is the only thing
 standing between a half-finished pack and every launcher's pack list.
+
+## The two sample packs
+
+`packs/sample-quilt` and `packs/sample-forge` are small on purpose and stay
+`unlisted` for good. No White Ravens server runs Quilt or Forge, so these are
+what those two loaders are tried with: a handful of mods, a shader together
+with the mod that reads it, a resource pack and one settings file — between
+them, every kind of entry a manifest has. They are also the shortest
+definitions here to start a new pack from.
+
+To try one in Raven Forge, build it by name and import the pack file:
+
+```bash
+node scripts/build.mjs sample-forge
+# in the launcher: new profile → Import → "A pack file (.mrpack)" —
+#   dist/sample-forge/sample-forge-0.1.0.mrpack
+```
+
+The manifest route needs the build served, because a manifest names the address
+of every settings file it carries:
+
+```bash
+PACK_BASE_URL=http://127.0.0.1:8765 node scripts/build.mjs sample-forge
+python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
+# in the launcher: new profile → Import → "A pack link" —
+#   http://127.0.0.1:8765/sample-forge/manifest.json
+```
+
+Built like that the manifest is unsigned and comes from your own machine. A
+launcher with no trusted keys added installs it and says it is unsigned; one
+with keys added refuses it until it is signed with one of them
+(`node scripts/sign.mjs dist/sample-forge/manifest.json <your key>`).
 
 ## Entries
 

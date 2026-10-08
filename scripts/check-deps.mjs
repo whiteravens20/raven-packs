@@ -24,11 +24,13 @@
  * another mod — most of `fabric-api` is exactly that, and treating those as
  * missing would bury the real failures.
  *
- * Both loaders are handled, and the difference is not cosmetic. Fabric declares
- * dependencies as semver-ish predicates in `fabric.mod.json`; NeoForge declares
- * them as **Maven version ranges** in `META-INF/neoforge.mods.toml`. Reading a
- * NeoForge jar with the Fabric path finds nothing, and a script that skips every
- * jar still prints a green tick — which is worse than no check at all.
+ * Both loader families are handled, and the difference is not cosmetic. Fabric
+ * declares dependencies as semver-ish predicates in `fabric.mod.json`; NeoForge
+ * declares them as **Maven version ranges** in `META-INF/neoforge.mods.toml`.
+ * Reading a NeoForge jar with the Fabric path finds nothing, and a script that
+ * skips every jar still prints a green tick — which is worse than no check at
+ * all. Quilt reads the Fabric file, since Fabric's mods are what a Quilt pack
+ * is made of, and Forge the TOML one under its older name, `mods.toml`.
  *
  * That is not hypothetical. `sdm-shop` 3.2.0 declares zero dependencies on
  * Modrinth and names only `architectury` in its TOML, while its bytecode
@@ -623,6 +625,46 @@ const LOADER_ID = {
   neoforge: "neoforge",
 };
 
+/** What each loader calls the file a jar describes itself in. */
+const META_FILE = {
+  fabric: "fabric.mod.json",
+  quilt: "fabric.mod.json",
+  forge: "mods.toml",
+  neoforge: "neoforge.mods.toml",
+};
+
+/**
+ * What Quilt Loader answers to besides its own name.
+ *
+ * It runs Fabric's mods by standing in for Fabric Loader: its own
+ * `quilt.mod.json` says `provides fabricloader 0.19.3`, and that is the version
+ * every `fabricloader >=…` in a Fabric mod is held to at startup. Nothing about
+ * a Quilt version says which Fabric one it speaks for, so the loader's jar is
+ * read like every other jar here. Left out, each mod of a Quilt pack reported
+ * `fabricloader` as missing, and none of those ranges was ever tested.
+ */
+async function quiltLoaderProvides(version) {
+  const url =
+    "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/" +
+    `${version}/quilt-loader-${version}.jar`;
+  const { data } = await fetchFile(url);
+
+  const tmp = path.join(CACHE, "nested", `quilt-loader-${version}.jar`);
+  await fs.mkdir(path.dirname(tmp), { recursive: true });
+  await fs.writeFile(tmp, data);
+  const raw = await unzipEntry(tmp, "quilt.mod.json");
+  await fs.rm(tmp, { force: true });
+
+  const provides = (raw && parseModJson(raw))?.quilt_loader?.provides;
+  if (!Array.isArray(provides)) {
+    throw new Error(`Quilt Loader ${version} does not say what it provides`);
+  }
+  // An entry is an id, or an id with the version it is provided as.
+  return provides.map((p) =>
+    typeof p === "string" ? { id: p, version } : { id: p.id, version: String(p.version ?? version) },
+  );
+}
+
 /**
  * Every class a KubeJS script loads has to exist in a jar the pack ships.
  *
@@ -837,10 +879,7 @@ async function checkPack(slug) {
   const loaderId = LOADER_ID[loaderType];
   if (!loaderId) throw new Error(`Loader "${loaderType}" is not handled here`);
 
-  const metaFile =
-    loaderType === "fabric" || loaderType === "quilt"
-      ? "fabric.mod.json"
-      : "neoforge.mods.toml";
+  const metaFile = META_FILE[loaderType];
 
   const mods = lock.files.filter((f) => f.kind === "mod");
   dim(`${mods.length} mods — reading ${metaFile} from each jar`);
@@ -848,8 +887,17 @@ async function checkPack(slug) {
   const provided = new Map([
     ["minecraft", pack.minecraft],
     [loaderId, pack.loader.version],
-    ["java", "25"],
+    // The Java this Minecraft version runs on, as the lockfile recorded it. It
+    // was 25 for every pack, which is right for 26.2 alone: a mod that needs
+    // Java 22 would have passed here in a 1.21.1 pack, which runs on 21.
+    ["java", String(lock.pack.requiredJava ?? 25)],
   ]);
+  if (loaderType === "quilt") {
+    for (const { id, version } of await quiltLoaderProvides(pack.loader.version)) {
+      provided.set(id, version);
+      dim(`Quilt Loader ${pack.loader.version} stands in for ${id} ${version}`);
+    }
+  }
   const metas = [];
   const jars = [];
   let unreadable = 0;
