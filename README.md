@@ -265,6 +265,50 @@ vulnerability privately.
 
 ---
 
+## How this repository is written and checked
+
+Raven Packs is maintained by one person using AI coding tools. The tools write
+most of the scripts, configuration and documentation; the maintainer chooses and
+tests the mods and is responsible for everything that is published. The mods
+themselves are other people's work: this repository stores references to their
+files, never their code.
+
+**What a change goes through**
+
+- Every push validates each pack definition against its lockfile and builds
+  every pack ([validate.yml](.github/workflows/validate.yml)).
+- Commits are signed.
+
+**What the maintainer decided and read**
+
+- Which mods a pack holds, and in which version. An entry resolves to the mod's
+  newest stable release, a prerelease is used only when it is allowed for that
+  mod or nothing else exists, and a locked entry stays put until it is updated
+  on purpose.
+- A pack lists every jar it ships: locking fails when a required dependency is
+  missing instead of pulling it in silently.
+- Changes come from one person. The repository takes no pull requests, because a
+  published manifest decides which files run on a player's machine
+  ([CONTRIBUTING.md](CONTRIBUTING.md)).
+- The maintainer reads the change to a pack's definition and lockfile before it
+  is published.
+
+**Before a release**
+
+- CI validates every lockfile, checks that every mod's dependencies resolve,
+  builds every pack and signs every manifest with an Ed25519 key that only the
+  maintainer holds. An unsigned manifest is never published, and Raven Forge
+  checks the signature when it syncs a pack.
+- The maintainer tests a pack before it is published, and the packs published
+  here are the ones White Ravens runs itself.
+- Release assets carry a Sigstore build provenance that `gh attestation verify`
+  checks.
+
+If something looks wrong, open an issue. For a vulnerability, follow
+[SECURITY.md](SECURITY.md).
+
+---
+
 ## Licensing
 
 The tooling and pack definitions in this repository are MIT (see [LICENSE](LICENSE)).
