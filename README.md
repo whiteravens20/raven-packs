@@ -269,9 +269,10 @@ vulnerability privately.
 
 Raven Packs is maintained using AI coding tools. The tools write most of the
 scripts, configuration and documentation; the maintainer chooses and tests the
-mods and is responsible for everything that is published. The mods themselves
-are other people's work: this repository stores references to their files, never
-their code.
+mods and is responsible for everything that is published. Before a pack release
+is published, a group of human testers tries the pack at the maintainer's
+request. The mods themselves are other people's work: this repository stores
+references to their files, never their code.
 
 **What a change goes through**
 
@@ -292,19 +293,6 @@ their code.
   ([CONTRIBUTING.md](CONTRIBUTING.md)).
 - The maintainer reads the change to a pack's definition and lockfile before it
   is published.
-
-**Before a release**
-
-- CI validates every lockfile, checks that every mod's dependencies resolve,
-  builds every pack and signs every manifest with an Ed25519 key that only the
-  maintainer holds. An unsigned manifest is never published, and Raven Forge
-  checks the signature when it syncs a pack.
-- The maintainer tests a pack before it is published, and the packs published
-  here are the ones White Ravens runs itself.
-- Before a pack release is published, a group of human testers tries the pack at
-  the maintainer's request and reports what they find.
-- Release assets carry a Sigstore build provenance that `gh attestation verify`
-  checks.
 
 If something looks wrong, open an issue. For a vulnerability, follow
 [SECURITY.md](SECURITY.md).
