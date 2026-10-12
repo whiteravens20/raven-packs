@@ -301,6 +301,8 @@ their code.
   checks the signature when it syncs a pack.
 - The maintainer tests a pack before it is published, and the packs published
   here are the ones White Ravens runs itself.
+- Before a pack release is published, a group of human testers tries the pack at
+  the maintainer's request and reports what they find.
 - Release assets carry a Sigstore build provenance that `gh attestation verify`
   checks.
 
