@@ -267,11 +267,11 @@ vulnerability privately.
 
 ## How this repository is written and checked
 
-Raven Packs is maintained by one person using AI coding tools. The tools write
-most of the scripts, configuration and documentation; the maintainer chooses and
-tests the mods and is responsible for everything that is published. The mods
-themselves are other people's work: this repository stores references to their
-files, never their code.
+Raven Packs is maintained using AI coding tools. The tools write most of the
+scripts, configuration and documentation; the maintainer chooses and tests the
+mods and is responsible for everything that is published. The mods themselves
+are other people's work: this repository stores references to their files, never
+their code.
 
 **What a change goes through**
 
@@ -287,8 +287,8 @@ files, never their code.
   on purpose.
 - A pack lists every jar it ships: locking fails when a required dependency is
   missing instead of pulling it in silently.
-- Changes come from one person. The repository takes no pull requests, because a
-  published manifest decides which files run on a player's machine
+- Changes come only from the maintainer. The repository takes no pull requests,
+  because a published manifest decides which files run on a player's machine
   ([CONTRIBUTING.md](CONTRIBUTING.md)).
 - The maintainer reads the change to a pack's definition and lockfile before it
   is published.
