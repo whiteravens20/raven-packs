@@ -234,6 +234,11 @@ the launcher**: a feed needs no website behind it, and `url` is an optional
 subset — `## headings`, `- lists`, `**bold**`, `*italic*`, `` `code` `` and
 `[links](https://…)` — which the launcher parses into elements, never into HTML.
 
+An entry is written in Polish, and `translations.en` says it again in English;
+a launcher set to English shows that, field by field, and any other shows the
+Polish. The format is in the launcher's
+[configuration docs](https://github.com/whiteravens20/raven-forge/blob/dev/docs/CONFIGURATION.md#in-more-than-one-language).
+
 Edit them by hand and push to `dev`; the site republishes when `dev` is synced
 into `main`, with no tag and no pack release. They are **not signed**, unlike
 manifests: whoever can write here controls the headlines and links shown inside
