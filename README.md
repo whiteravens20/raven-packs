@@ -234,6 +234,11 @@ the launcher**: a feed needs no website behind it, and `url` is an optional
 subset — `## headings`, `- lists`, `**bold**`, `*italic*`, `` `code` `` and
 `[links](https://…)` — which the launcher parses into elements, never into HTML.
 
+An entry is written in Polish, and `translations.en` says it again in English;
+a launcher set to English shows that, field by field, and any other shows the
+Polish. The format is in the launcher's
+[configuration docs](https://github.com/whiteravens20/raven-forge/blob/dev/docs/CONFIGURATION.md#in-more-than-one-language).
+
 Edit them by hand and push to `dev`; the site republishes when `dev` is synced
 into `main`, with no tag and no pack release. They are **not signed**, unlike
 manifests: whoever can write here controls the headlines and links shown inside
@@ -267,11 +272,11 @@ vulnerability privately.
 
 ## How this repository is written and checked
 
-Raven Packs is maintained by one person using AI coding tools. The tools write
-most of the scripts, configuration and documentation; the maintainer chooses and
-tests the mods and is responsible for everything that is published. The mods
-themselves are other people's work: this repository stores references to their
-files, never their code.
+Raven Packs is maintained using AI coding tools. The maintainer chooses and
+tests the mods and is responsible for everything that is published. Before a
+pack release is published, a group of human testers tries the pack at the
+maintainer's request. The mods themselves are other people's work: this repository stores
+references to their files, never their code.
 
 **What a change goes through**
 
@@ -287,22 +292,11 @@ files, never their code.
   on purpose.
 - A pack lists every jar it ships: locking fails when a required dependency is
   missing instead of pulling it in silently.
-- Changes come from one person. The repository takes no pull requests, because a
-  published manifest decides which files run on a player's machine
+- Changes come only from the maintainer. The repository takes no pull requests,
+  because a published manifest decides which files run on a player's machine
   ([CONTRIBUTING.md](CONTRIBUTING.md)).
 - The maintainer reads the change to a pack's definition and lockfile before it
   is published.
-
-**Before a release**
-
-- CI validates every lockfile, checks that every mod's dependencies resolve,
-  builds every pack and signs every manifest with an Ed25519 key that only the
-  maintainer holds. An unsigned manifest is never published, and Raven Forge
-  checks the signature when it syncs a pack.
-- The maintainer tests a pack before it is published, and the packs published
-  here are the ones White Ravens runs itself.
-- Release assets carry a Sigstore build provenance that `gh attestation verify`
-  checks.
 
 If something looks wrong, open an issue. For a vulnerability, follow
 [SECURITY.md](SECURITY.md).
