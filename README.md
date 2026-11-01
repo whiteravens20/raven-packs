@@ -267,11 +267,10 @@ vulnerability privately.
 
 ## How this repository is written and checked
 
-Raven Packs is maintained using AI coding tools. The tools write most of the
-scripts, configuration and documentation; the maintainer chooses and tests the
-mods and is responsible for everything that is published. Before a pack release
-is published, a group of human testers tries the pack at the maintainer's
-request. The mods themselves are other people's work: this repository stores
+Raven Packs is maintained using AI coding tools. The maintainer chooses and
+tests the mods and is responsible for everything that is published. Before a
+pack release is published, a group of human testers tries the pack at the
+maintainer's request. The mods themselves are other people's work: this repository stores
 references to their files, never their code.
 
 **What a change goes through**
