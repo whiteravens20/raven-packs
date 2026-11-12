@@ -3,8 +3,9 @@
 # empty `dependencies` and `devDependencies` and there is no lockfile; the
 # scripts run on plain node. An npm entry here would have nothing to update.
 #
-# The actions are a real surface even so: they are pinned to moving major tags
-# (`actions/checkout@v5`), and a tag can be repointed at any commit.
+# The actions are a real surface even so. Each is pinned to the commit of its
+# version (`actions/checkout@<sha> # v7.0.1`), because a tag can be repointed at
+# any commit; Dependabot moves the pin and the comment together.
 #
 # Supply-chain quarantine: `cooldown: default-days: 7` means Dependabot will not
 # propose a version until it has been public for a week, so a too-fresh release

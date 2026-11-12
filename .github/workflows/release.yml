@@ -56,9 +56,9 @@ jobs:
     outputs:
       slug: ${{ steps.meta.outputs.slug }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
 
@@ -113,7 +113,7 @@ jobs:
       # Only the zips need the actual jars; keyed on the lockfiles so the cache
       # invalidates exactly when a mod set changes.
       - name: Cache downloaded mod jars
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .cache/downloads
           key: mods-${{ hashFiles('packs/*/pack.lock.json') }}
@@ -209,7 +209,7 @@ jobs:
       - name: Attest build provenance
         id: attest
         if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
             dist/${{ steps.meta.outputs.slug }}/*.mrpack
@@ -224,7 +224,7 @@ jobs:
         run: cp "$BUNDLE" "dist/$SLUG/$SLUG-${GITHUB_REF_NAME##*-v}.sigstore.json"
 
       - name: Publish release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         if: github.ref_type == 'tag' && steps.meta.outputs.slug != ''
         with:
           files: |
@@ -269,7 +269,7 @@ jobs:
 
       # Only main can deploy to Pages, so only main uploads the artifact — see
       # `deploy-pages` below for why the tag run does not.
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         if: github.ref == 'refs/heads/main'
         with:
           path: dist/
@@ -298,4 +298,4 @@ jobs:
       # Publishing dist/ to Pages is what gives each pack a stable manifest URL:
       #   https://<owner>.github.io/<repo>/<slug>/manifest.json
       - id: deploy
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
