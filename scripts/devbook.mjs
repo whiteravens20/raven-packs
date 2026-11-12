@@ -76,6 +76,16 @@ function copyTree(from, to) {
 
 const sha1 = (buf) => crypto.createHash('sha1').update(buf).digest('hex');
 
+/** A file's contents, or null when there is no such file: read once, never looked for first. */
+function readIfThere(file, encoding) {
+  try {
+    return fs.readFileSync(file, encoding);
+  } catch (err) {
+    if (err.code === 'ENOENT') return null;
+    throw err;
+  }
+}
+
 // The lockfile already records every URL and hash, so this needs no API calls
 // and can prove it downloaded the jar the pack is pinned to.
 async function installMods(minecraftDir) {
@@ -88,7 +98,8 @@ async function installMods(minecraftDir) {
     if (!file) throw new Error(`${id} is not in ${path.basename(SRC.lock)} — has the pack changed?`);
     const dest = path.join(mods, file.fileName);
 
-    if (fs.existsSync(dest) && sha1(fs.readFileSync(dest)) === file.sha1) {
+    const present = readIfThere(dest);
+    if (present && sha1(present) === file.sha1) {
       console.log(`mods      ${file.fileName} (already there)`);
       continue;
     }
@@ -104,7 +115,8 @@ async function installMods(minecraftDir) {
 
 function createProfile(dir) {
   const file = path.join(dir, 'profiles.json');
-  const profiles = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : [];
+  const saved = readIfThere(file, 'utf8');
+  const profiles = saved ? JSON.parse(saved) : [];
 
   let profile = profiles.find((p) => p.name === PROFILE_NAME);
   if (!profile) {
@@ -132,8 +144,9 @@ function createProfile(dir) {
 
 function findProfile(dir) {
   const file = path.join(dir, 'profiles.json');
-  if (!fs.existsSync(file)) return null;
-  const profile = JSON.parse(fs.readFileSync(file, 'utf8')).find((p) => p.name === PROFILE_NAME);
+  const saved = readIfThere(file, 'utf8');
+  if (!saved) return null;
+  const profile = JSON.parse(saved).find((p) => p.name === PROFILE_NAME);
   return profile ? path.join(dir, 'profiles', profile.id, '.minecraft') : null;
 }
 
@@ -151,10 +164,14 @@ if (has('create')) {
 
   // The book is written in Polish first, so open in Polish; and switch the pack
   // on so it does not have to be found in the menus.
+  // `wx` writes it only where the game has not made one yet, with no moment
+  // between looking for the file and writing it.
   const options = path.join(minecraftDir, 'options.txt');
-  if (!fs.existsSync(options)) {
-    fs.writeFileSync(options, `lang:pl_pl\nresourcePacks:["file/${SLUG}-guide-dev"]\n`);
+  try {
+    fs.writeFileSync(options, `lang:pl_pl\nresourcePacks:["file/${SLUG}-guide-dev"]\n`, { flag: 'wx' });
     console.log('options   language pl_pl, guide pack switched on');
+  } catch (err) {
+    if (err.code !== 'EEXIST') throw err;
   }
 } else {
   minecraftDir = findProfile(dir);
