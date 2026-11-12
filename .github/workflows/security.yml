@@ -1,0 +1,45 @@
+name: Security
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  schedule:
+    # Weekly on Monday at 09:00 UTC
+    - cron: '0 9 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  # Every action in these workflows is pinned to a commit SHA, with its version
+  # in a comment. This checks that each SHA is the commit of the version named
+  # beside it, so a wrong SHA and a tag moved upstream both fail here.
+  pins:
+    name: Pinned actions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check each SHA against the tag it names
+        run: .github/scripts/verify-pins.sh
+
+  # Dependabot raises no alert for an action pinned by SHA, so this asks GitHub's
+  # advisory database about every pinned version in its place.
+  actions-audit:
+    name: Actions audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Look up each pinned version in the advisory database
+        run: .github/scripts/verify-pins.sh --advisories
+        env:
+          GH_TOKEN: ${{ github.token }}
