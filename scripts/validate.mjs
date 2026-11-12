@@ -226,6 +226,11 @@ async function validatePack(slug) {
     if (missing.length > 0) fail(slug, `locked file "${file.id}" is missing: ${missing.join(', ')}`);
   }
 
+  // The server zip runs this jar, so it is pinned like every file above.
+  if (lock.pack.serverLauncher && !lock.pack.serverLauncher.sha1) {
+    fail(slug, `the server launcher is missing a sha1 — run: node scripts/lock.mjs ${slug}`);
+  }
+
   // The zips carry real jars, so shipping one is conveying compiled code. For a
   // copyleft mod that comes with an obligation to say where the source is, and
   // the only honest way to meet it is to name the project's own repository.

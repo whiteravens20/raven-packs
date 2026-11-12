@@ -13,10 +13,11 @@
       "kind": "jar",
       "installerVersion": "1.1.2",
       "url": "https://meta.fabricmc.net/v2/versions/loader/26.2/0.19.3/1.1.2/server/jar",
-      "fileName": "fabric-server-launch.jar"
+      "fileName": "fabric-server-launch.jar",
+      "sha1": "738622dd42fbb0d39619e13b4c375f442e0570a2"
     }
   },
-  "generatedAt": "2026-09-18T17:12:03.081Z",
+  "generatedAt": "2026-11-12T18:36:22.279Z",
   "files": [
     {
       "requestKey": "{\"slug\":\"fabric-api\",\"url\":null,\"version\":null,\"allowPrerelease\":false,\"side\":null}",

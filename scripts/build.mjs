@@ -539,7 +539,10 @@ async function buildPack(slug, { withZip }) {
 
       const launcher = lock.pack.serverLauncher;
       if (launcher) {
-        const jar = await fetchFile(launcher.url);
+        if (!launcher.sha1) {
+          throw new Error(`${slug}: the server launcher in pack.lock.json has no sha1 — run: node scripts/lock.mjs ${slug}`);
+        }
+        const jar = await fetchFile(launcher.url, { sha1: launcher.sha1 });
         serverZip.add(launcher.fileName, jar.data, { store: true });
         ok(
           `bundled ${launcher.fileName} (${pack.loader.type} ${launcher.kind === 'installer' ? 'installer' : `installer ${launcher.installerVersion}`})`,

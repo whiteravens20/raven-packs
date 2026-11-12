@@ -118,6 +118,17 @@ async function getServerLauncher(pack) {
   };
 }
 
+/**
+ * The launcher with the sha1 of the jar it names. The server zip runs that jar,
+ * so it is held to a hash like every mod the pack ships. Fabric's is generated
+ * on request, and it is the same file each time.
+ */
+async function pinned(launcher) {
+  if (!launcher) return null;
+  const { sha1 } = await fetchFile(launcher.url);
+  return { ...launcher, sha1 };
+}
+
 async function readPack(slug) {
   const file = path.join(PACKS_DIR, slug, 'pack.json');
   const pack = JSON.parse(await fs.readFile(file, 'utf8'));
@@ -346,7 +357,7 @@ async function lockPack(slug, { update }) {
     );
   }
 
-  const serverLauncher = await getServerLauncher(pack);
+  const serverLauncher = await pinned(await getServerLauncher(pack));
   const requiredJava = await getRequiredJava(pack.minecraft);
   if (requiredJava) ok(`Minecraft ${pack.minecraft} requires Java ${requiredJava}`);
   else warn(`could not determine the Java version for Minecraft ${pack.minecraft}`);
