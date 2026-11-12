@@ -1,0 +1,8 @@
+# Trivy suppressions.
+#
+# The Security workflow runs Trivy with `scanners: secret,misconfig` only. The
+# repository has no npm dependencies, and its actions are checked against the
+# advisory database by .github/scripts/verify-pins.sh.
+#
+# Format: one finding ID per line, each with a comment explaining why.
+# Currently empty.
