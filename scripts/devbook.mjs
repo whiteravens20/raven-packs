@@ -52,10 +52,13 @@ const opt = (name) => {
   return i === -1 ? null : args[i + 1];
 };
 
+// The launcher's home since 0.8.0, which renames an older install's
+// `Raven Forge Launcher` to it on first start. A data folder moved in Settings
+// → Data is given with --launcher.
 function launcherDir() {
   const override = opt('launcher');
   if (override) return path.resolve(override);
-  const name = 'Raven Forge Launcher';
+  const name = 'raven-forge-launcher';
   if (process.platform === 'darwin') return path.join(os.homedir(), 'Library', 'Application Support', name);
   if (process.platform === 'win32') return path.join(process.env.APPDATA ?? os.homedir(), name);
   return path.join(os.homedir(), '.config', name);
