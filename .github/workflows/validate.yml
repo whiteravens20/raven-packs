@@ -34,8 +34,12 @@ jobs:
           path: dist/
           retention-days: 14
 
-  # Separate, non-blocking: tells us when unpinned mods have newer releases
-  # upstream, without failing anyone's pull request.
+  # Separate, and a report rather than a gate: it tells us when unpinned mods
+  # have newer releases upstream, and when a newer release needs a mod the pack
+  # does not have yet, without failing the commit it runs on. Each pack is
+  # re-resolved by itself, so a pack that cannot move does not hide the others.
+  # A pack that cannot be re-resolved for any other reason, such as Modrinth not
+  # answering or a fault in lock.mjs, still fails the job.
   check-updates:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -47,14 +51,30 @@ jobs:
         with:
           node-version: 22
 
-      - name: Re-resolve against Modrinth
-        run: node scripts/lock.mjs --update
-
-      - name: Report drift
+      - name: Re-resolve each pack against Modrinth
         run: |
-          if git diff --quiet -- 'packs/*/pack.lock.json'; then
-            echo "All packs are on the newest releases."
-          else
-            echo "::notice::Newer mod versions are available — run 'node scripts/lock.mjs --update' and commit."
-            git diff --stat -- 'packs/*/pack.lock.json'
-          fi
+          failed=0
+          for dir in packs/*/; do
+            slug=$(basename "$dir")
+            log="$RUNNER_TEMP/lock-$slug.log"
+            if node scripts/lock.mjs "$slug" --update > "$log" 2>&1; then
+              if git diff --quiet -- "packs/$slug/pack.lock.json"; then
+                echo "$slug: every mod is on its newest release."
+              else
+                echo "::notice title=$slug::Newer mod versions are available. Run 'node scripts/lock.mjs $slug --update' and commit."
+                git diff --stat -- "packs/$slug/pack.lock.json"
+              fi
+            elif grep -q 'required dependencies are not in the pack' "$log"; then
+              # lock.mjs will not lock a pack that lacks a mod a newer release
+              # requires: news about upstream, decided on in the pack, not a fault here.
+              missing=$(sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -o 'missing required dependency: .*' || true)
+              while read -r line; do
+                [ -n "$line" ] && echo "::warning title=$slug::Its newest releases need a mod it does not have: ${line#missing required dependency: }"
+              done <<< "$missing"
+            else
+              cat "$log"
+              echo "::error title=$slug::lock.mjs could not re-resolve this pack."
+              failed=1
+            fi
+          done
+          exit "$failed"
