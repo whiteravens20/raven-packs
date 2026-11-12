@@ -58,11 +58,12 @@ jobs:
             slug=$(basename "$dir")
             log="$RUNNER_TEMP/lock-$slug.log"
             if node scripts/lock.mjs "$slug" --update > "$log" 2>&1; then
-              if git diff --quiet -- "packs/$slug/pack.lock.json"; then
+              # generatedAt moves with every lock, so it says nothing about the mods.
+              if git diff --quiet -I '"generatedAt"' -- "packs/$slug/pack.lock.json"; then
                 echo "$slug: every mod is on its newest release."
               else
                 echo "::notice title=$slug::Newer mod versions are available. Run 'node scripts/lock.mjs $slug --update' and commit."
-                git diff --stat -- "packs/$slug/pack.lock.json"
+                git diff --stat -I '"generatedAt"' -- "packs/$slug/pack.lock.json"
               fi
             elif grep -q 'required dependencies are not in the pack' "$log"; then
               # lock.mjs will not lock a pack that lacks a mod a newer release
