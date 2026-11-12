@@ -23,9 +23,14 @@
     { "slug": "fabric-api", "reason": "Required by most of the list" },
     {
       "slug": "fabric-language-kotlin",
-      "reason": "Kotlin runtime — Zoomify and Inventory Profiles Next are written in it"
+      "version": "1.13.14+kotlin.2.4.20",
+      "reason": "Kotlin runtime — Zoomify and Inventory Profiles Next are written in it. Held to 1.13.14: 1.14 and later need Fabric Loader 0.19.5, and this pack is on 0.19.3. Moving the loader is its own decision"
     },
-    { "slug": "yacl", "reason": "Config screens for Zoomify and friends" },
+    {
+      "slug": "yacl",
+      "version": "3.9.6+26.2-fabric",
+      "reason": "Config screens for Zoomify and friends. Held to 3.9.6: with 3.9.7 the game crashes at start on Fabric Loader 0.19.3. Its mixin into ContainerEventHandler fails inside the loader's MixinExtras 0.5.4 (ClassCastException in FactoryRedirectWrapperMixinTransformer), which its metadata does not show. Measured in a real client, 2026-11-12"
+    },
     { "slug": "libipn", "reason": "Required by Inventory Profiles Next" },
     { "slug": "searchables", "reason": "Required by Controlling" },
     { "slug": "cloth-config", "reason": "Config screens" },
@@ -48,13 +53,21 @@
     { "slug": "fabric-permissions-api", "reason": "Permission checks the server mods delegate to LuckPerms" },
 
     { "slug": "sodium", "reason": "Rendering engine rewrite — the single biggest FPS win" },
-    { "slug": "sodium-extra", "reason": "Extra Sodium video options" },
+    {
+      "slug": "sodium-extra",
+      "version": "mc26.2-0.9.4+fabric",
+      "reason": "Extra Sodium video options. Held to 0.9.4: 0.9.5 needs Fabric Loader 0.20.1, and this pack is on 0.19.3"
+    },
     { "slug": "reeses-sodium-options", "reason": "Nicer Sodium options screen" },
     { "slug": "iris", "reason": "Shader support, Sodium-compatible" },
     { "slug": "lithium", "reason": "General game-logic optimisation — helps the server as much as the client" },
     { "slug": "ferrite-core", "reason": "Cuts memory usage" },
     { "slug": "krypton", "reason": "Network stack optimisation" },
-    { "slug": "entityculling", "reason": "Skips rendering entities behind walls" },
+    {
+      "slug": "entityculling",
+      "version": "1.11.3",
+      "reason": "Skips rendering entities behind walls. Held to 1.11.3 until 2026-11-19: 1.12.0 came out on 2026-11-12, and a new version waits seven days"
+    },
     { "slug": "immediatelyfast", "reason": "Speeds up immediate-mode rendering" },
     { "slug": "dynamic-fps", "reason": "Throttles FPS when the window is unfocused" },
     { "slug": "bobby", "reason": "Keeps far chunks cached beyond the server view distance" },
@@ -67,14 +80,35 @@
       "reason": "Recipe viewer. 26.2 only has a beta build; EMI and REI have none at all",
       "side": "client"
     },
+    {
+      "slug": "mezzconfig",
+      "version": "0.6.11",
+      "reason": "Required by JEI (>=0.6.3 <1.0.0) — the config library mezz split out of it. Every 26.2 build is a beta. Held to 0.6.11 until 2026-11-16: 0.7.1 came out on 2026-11-09, and a new version waits seven days",
+      "side": "client"
+    },
+    {
+      "slug": "mezzconfiggui",
+      "reason": "JEI's settings screen in game. Since JEI keeps its settings in MezzConfig, Configured no longer opens them, and the button says to install this. Every 26.2 build is a beta",
+      "side": "client"
+    },
     { "slug": "jade", "reason": "What am I looking at — block and mob tooltips", "side": "client" },
     { "slug": "appleskin", "reason": "Shows saturation and what food actually does" },
     { "slug": "mouse-tweaks", "reason": "Drag-to-move stacks in every inventory", "side": "client" },
     { "slug": "inventory-profiles-next", "reason": "Inventory sorting", "side": "client" },
     { "slug": "controlling", "reason": "Searchable, conflict-aware key bindings", "side": "client" },
-    { "slug": "zoomify", "reason": "Zoom key — the one thing OptiFine users miss first", "side": "client" },
+    {
+      "slug": "zoomify",
+      "ignoreDependencies": ["kotlin-lang-forge"],
+      "reason": "Zoom key — the one thing OptiFine users miss first. One release serves Fabric and NeoForge, so Modrinth lists NeoForge's Kotlin library as required; on Fabric that job is Fabric Language Kotlin's, which this pack carries",
+      "side": "client"
+    },
     { "slug": "no-chat-reports", "reason": "Keeps chat off Mojang's reporting pipeline" },
-    { "slug": "not-enough-animations", "reason": "Third-person animations for what your hands are doing", "side": "client" },
+    {
+      "slug": "not-enough-animations",
+      "version": "1.12.4",
+      "reason": "Third-person animations for what your hands are doing. Held to 1.12.4: with 1.12.7 the game crashes at start on Fabric Loader 0.19.3. Its mixin into Player fails inside the loader's MixinExtras 0.5.4 (ClassCastException in FactoryRedirectWrapperMixinTransformer), which its metadata does not show. Measured in a real client, 2026-11-12",
+      "side": "client"
+    },
     { "slug": "lambdynamiclights", "reason": "Held torches light the world", "side": "client" },
     { "slug": "continuity", "reason": "Connected textures" },
     { "slug": "betterf3", "reason": "Readable debug screen", "side": "client" },
@@ -117,7 +151,8 @@
     },
     {
       "slug": "staffsee-moderation",
-      "reason": "Mute, warn and freeze — vanilla offers only kick and ban",
+      "version": "26.2",
+      "reason": "Mute, warn and freeze — vanilla offers only kick and ban. Held to 26.2: from 1.1.0 its /kick, and from 1.2.0 its /ban, /tempban and /unban, take the place of the vanilla commands docs/staff.txt is built on, and whether a Moderator still cannot ban an Administrator through them is untested. Moving is its own decision, with a test on the stand",
       "side": "server"
     },
     {
@@ -131,7 +166,8 @@
     { "slug": "ledger", "reason": "Logs every block change and rolls grief back", "side": "server" },
     {
       "slug": "meowanti-xray",
-      "reason": "Paper-style ore obfuscation — the server sends fake block data underground, so an x-ray client sees noise instead of veins",
+      "version": "1.5.0+mc26.2.fabric",
+      "reason": "Paper-style ore obfuscation — the server sends fake block data underground, so an x-ray client sees noise instead of veins. Held to 1.5.0: 1.6.0 needs Fabric Loader 0.19.4 and 1.7.0 needs 0.19.5, and this pack is on 0.19.3. 1.6.0 also starts sending anonymous bStats metrics unless they are turned off",
       "side": "server"
     },
     { "slug": "easyauth", "reason": "Password login. Without it an offline-mode server lets anyone take any name", "side": "server" },
@@ -145,7 +181,12 @@
       "reason": "Tab list — header, footer and per-player line, driven by the same LuckPerms ranks as chat",
       "side": "server"
     },
-    { "slug": "vanish", "reason": "Staff can look without being seen", "side": "server" },
+    {
+      "slug": "vanish",
+      "version": "1.6.15+26.2",
+      "reason": "Staff can look without being seen. Held to 1.6.15: with 1.6.16 the server does not start on Fabric Loader 0.19.3. Its mixin into Player fails inside the loader's MixinExtras 0.5.4 (ClassCastException in FactoryRedirectWrapperMixinTransformer), although the jar asks only for loader 0.18.4, so check-deps cannot see it. Measured on a server stand, 2026-11-12; 1.6.16 itself only fixes a boss bar",
+      "side": "server"
+    },
     { "slug": "collective", "reason": "Required by Starter Kit", "side": "server" },
     {
       "slug": "starter-kit",
