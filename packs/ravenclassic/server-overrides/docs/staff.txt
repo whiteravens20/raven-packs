@@ -148,8 +148,10 @@ of any of them. The reasoning is written out in full in
 world/serverconfig/openpartiesandclaims-server.toml, above
 forcedBlockProtectionExceptionList. A lectern is now protected like a chest.
 
-File: config/starterkit/kits/Start.txt, the description in
-config/starterkit/descriptions/. The format is one line per slot, and the value
+File: config/serilum/starterkit/kits/Start.txt, the description in
+config/serilum/starterkit/descriptions/. Starter Kit reads them from there
+since 9.0, and on its first start it moves there a config/starterkit/ left by an
+older version. The format is one line per slot, and the value
 goes straight through the ItemStack codec, so items with components work — that
 is exactly how the book is written down:
 
