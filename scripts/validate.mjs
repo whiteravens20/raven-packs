@@ -144,6 +144,7 @@ function validateSummary(slug, pack) {
 
 async function validatePack(slug) {
   console.log(`\n\x1b[1m${slug}\x1b[0m`);
+  const before = problems.length;
 
   const file = path.join(PACKS_DIR, slug, 'pack.json');
   let pack;
@@ -168,7 +169,8 @@ async function validatePack(slug) {
     fail(slug, 'loader.version is required — pin it so builds are reproducible');
   }
   validateSummary(slug, pack);
-  if (problems.length > 0) return;
+  // Only this pack's own problems stop it; another pack's must not skip it.
+  if (problems.length > before) return;
 
   const entries = [
     ...(pack.mods ?? []).map((e) => ['mod', e]),
