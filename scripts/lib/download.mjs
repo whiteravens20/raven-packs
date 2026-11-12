@@ -37,6 +37,9 @@ export async function fetchFile(url, expected = {}) {
   const key = expected.sha1 ?? hash(Buffer.from(url), 'sha1');
 
   let data = await readCached(key);
+  // The cache outlives the run that filled it (CI keeps it between builds), so a
+  // cached file is held to the hash it is filed under, like a fresh download.
+  if (data !== null && expected.sha1 && hash(data, 'sha1') !== expected.sha1) data = null;
   let cached = data !== null;
 
   if (!cached) {
