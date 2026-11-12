@@ -282,6 +282,11 @@ references to their files, never their code.
 
 - Every push validates each pack definition against its lockfile and builds
   every pack ([validate.yml](.github/workflows/validate.yml)).
+- CodeQL reads the scripts and the workflows, Trivy looks for secrets and
+  misconfiguration, and each action is held to the commit of the version it
+  names and looked up in the advisory database, on every push and every week
+  ([codeql.yml](.github/workflows/codeql.yml),
+  [security.yml](.github/workflows/security.yml)).
 - Commits are signed.
 
 **What the maintainer decided and read**
